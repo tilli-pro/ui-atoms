@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.cache/
+.turbo/
+coverage/
+storybook-static/
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+# local tarballs written by pnpm pack:tarball
+.tarballs/
+# build-time copies made by the package `build` script (shipped from the tarball via `files`, never committed)
+packages/ui-atoms/LICENSE
+packages/ui-atoms/THIRD-PARTY-NOTICES.md
+# local pre-port baseline import; never committed
+apps/storybook/visual/preport/

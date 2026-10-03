@@ -1,0 +1,36 @@
+{
+  "root": true,
+  "extends": ["@tilli-pro/biome"],
+  "overrides": [
+    {
+      "includes": [
+        "**/dist/**",
+        "**/coverage/**",
+        "**/storybook-static/**",
+        "**/.cache/**"
+      ],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false },
+      "formatter": { "enabled": false }
+    },
+    {
+      "includes": ["packages/ui-atoms/src/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": { "noExplicitAny": "off" },
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx"],
+      "linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } }
+    },
+    {
+      "includes": [".coss-base/**"],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false },
+      "formatter": { "enabled": false }
+    }
+  ]
+}

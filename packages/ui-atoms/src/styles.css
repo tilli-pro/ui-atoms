@@ -1,0 +1,252 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is([data-theme="dark"]));
+
+@theme inline {
+  --font-header: var(--font-header);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --font-button: var(--font-button, var(--font-body));
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --animate-skeleton: skeleton 2s -1s infinite linear;
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning: var(--warning);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-info-foreground: var(--info-foreground);
+  --color-info: var(--info);
+  /*
+   * TST-4 replay animations. coss's toast drives them through
+   * `upsertReplayClassName()` but keeps the keyframes outside the registry, so
+   * they are authored here — the one place the pinned base is incomplete. The
+   * odd/even pair per type is not decoration: swapping the class name is what
+   * restarts the animation when the same toast is updated again.
+   */
+  --animate-toast-success-odd: toast-success-odd 0.5s ease-out;
+  --animate-toast-success-even: toast-success-even 0.5s ease-out;
+  --animate-toast-error-odd: toast-error-odd 0.5s ease-out;
+  --animate-toast-error-even: toast-error-even 0.5s ease-out;
+
+  @keyframes skeleton {
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes toast-success-odd {
+    0% {
+      outline: 2px solid var(--success);
+      outline-offset: 0;
+    }
+    70% {
+      outline: 2px solid var(--success);
+      outline-offset: 2px;
+    }
+    100% {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+  }
+
+  @keyframes toast-success-even {
+    0% {
+      outline: 2px solid var(--success);
+      outline-offset: 0;
+    }
+    70% {
+      outline: 2px solid var(--success);
+      outline-offset: 2px;
+    }
+    100% {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+  }
+
+  @keyframes toast-error-odd {
+    0% {
+      outline: 2px solid var(--destructive);
+      outline-offset: 0;
+    }
+    70% {
+      outline: 2px solid var(--destructive);
+      outline-offset: 2px;
+    }
+    100% {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+  }
+
+  @keyframes toast-error-even {
+    0% {
+      outline: 2px solid var(--destructive);
+      outline-offset: 0;
+    }
+    70% {
+      outline: 2px solid var(--destructive);
+      outline-offset: 2px;
+    }
+    100% {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+  }
+}
+
+/*
+ * Default theme: the tilli brand, light here and dark under [data-theme="dark"].
+ * This file is the canonical home of these values; override any of them after importing it.
+ */
+:root {
+  --background: oklch(1 0 0);
+  --background-secondary: oklch(0.97 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  /* a11y: 0.556 → 4.35:1 on #f5f5f5 (bg-muted), below the 4.5:1 AA
+   * text threshold — kbd, frame and alert-description all render on a
+   * near-white but non-pure-white surface. 0.5 clears every surface this
+   * token is used against (badge/kbd/frame/alert tints included) with margin. */
+  --muted-foreground: oklch(0.5 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  /* a11y: equal to --destructive (4.15:1 on badge's bg-destructive/8
+   * tint), below the 4.5:1 AA text threshold. --destructive itself is left
+   * alone (icon fills only, not checked by axe); only the token meant for
+   * readable destructive-colored text is darkened. */
+  --destructive-foreground: oklch(0.5 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --info: oklch(0.623 0.214 259.815);
+  --info-foreground: oklch(0.488 0.243 264.376);
+  --success: oklch(0.696 0.17 162.48);
+  --success-foreground: oklch(0.508 0.118 165.612);
+  --warning: oklch(0.769 0.188 70.08);
+  --warning-foreground: oklch(0.555 0.163 48.998);
+}
+
+[data-theme="dark"] {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+  --info: oklch(0.623 0.214 259.815);
+  --info-foreground: oklch(0.707 0.165 254.624);
+  --success: oklch(0.696 0.17 162.48);
+  --success-foreground: oklch(0.765 0.177 163.223);
+  --warning: oklch(0.769 0.188 70.08);
+  --warning-foreground: oklch(0.828 0.189 84.429);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50 font-body;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-header;
+  }
+
+  code,
+  pre {
+    @apply font-mono;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,28 @@
+// Standalone config (see packages/ui-atoms/tsconfig.json in this repo) — no shared
+// `@tilli-pro/tsconfig` base.
+{
+  "compilerOptions": {
+    "strict": true,
+    "rootDir": "./",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "types": ["vite/client", "node"],
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "${configDir}/.cache/typecheck.tsbuildinfo"
+  },
+  "include": [
+    "src",
+    ".storybook",
+    "visual",
+    "vite.config.ts",
+    "playwright.config.ts"
+  ]
+}

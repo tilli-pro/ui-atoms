@@ -1,0 +1,28 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Introduction" />
+
+# @tilli.dev/ui-atoms
+
+React 19 + Tailwind CSS v4 components on `@base-ui/react`, following the coss ui
+conventions: flat per-part named exports, `render` prop composition, `data-slot`
+selectors, styled parts plus `*Primitive` parts and exported cva variants.
+
+Every part comes in three flavours: `DialogPopup` (styled), `DialogPopupPrimitive`
+(behaviour + `data-slot`, unstyled) and `dialogPopupVariants` (the cva variants object).
+
+```tsx
+import { Button } from "@tilli.dev/ui-atoms/button";
+import { Dialog, DialogTrigger, DialogPopup, DialogTitle } from "@tilli.dev/ui-atoms/dialog";
+import { cn } from "@tilli.dev/ui-atoms/utils";
+```
+
+Each component under **Components** has a generated docs page, with its props and every story,
+and one story per state. The theme toolbar switches between the light and dark themes.
+
+- [Installation](?path=/docs/docs-installation--docs)
+- [Styling and tokens](?path=/docs/docs-styling-and-tokens--docs)
+- [Accessibility](?path=/docs/docs-accessibility--docs)
+
+Source, issues and releases: [github.com/tilli-pro/ui-atoms](https://github.com/tilli-pro/ui-atoms).
+MIT licensed; third-party notices are in `THIRD-PARTY-NOTICES.md`.

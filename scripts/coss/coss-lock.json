@@ -1,0 +1,459 @@
+{
+  "revision": "816348154874bbc0be230277c584cc38019b48b1",
+  "revisionDate": "2026-09-16",
+  "revisionSource": "https://github.com/cosscom/coss/tree/816348154874bbc0be230277c584cc38019b48b1/apps/ui/registry/",
+  "fetchedAt": "2026-09-20",
+  "revisionVerifiedAt": "2026-09-20",
+  "files": {
+    "accordion": {
+      "registry": "accordion",
+      "path": "registry/default/ui/accordion.tsx",
+      "base": "accordion.tsx",
+      "sha256": "b975e2a75b37fb44bca277dd85bf0825e98c3531036ca8d1543f6f4556cf56a5",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "alert": {
+      "registry": "alert",
+      "path": "registry/default/ui/alert.tsx",
+      "base": "alert.tsx",
+      "sha256": "340fc98fae7b30d038e1b7bcbb632f551360cfd8e0803b62a8ddfc04c002119f",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "alert-dialog": {
+      "registry": "alert-dialog",
+      "path": "registry/default/ui/alert-dialog.tsx",
+      "base": "alert-dialog.tsx",
+      "sha256": "e6e8d2aee4115cb2e2d5bba7e3f16941a2cfaa12a2bceae70d605b1751706d82",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "autocomplete": {
+      "registry": "autocomplete",
+      "path": "registry/default/ui/autocomplete.tsx",
+      "base": "autocomplete.tsx",
+      "sha256": "1298734859a47189abc821795ed082bc56b7dbe6de14859d539afc1adefc17d1",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/input", "@coss/scroll-area"]
+    },
+    "avatar": {
+      "registry": "avatar",
+      "path": "registry/default/ui/avatar.tsx",
+      "base": "avatar.tsx",
+      "sha256": "a742f2d7c3aa1a867799e66fa7f3b37615e455906fa0117b66c49cfedca0a4f1",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "badge": {
+      "registry": "badge",
+      "path": "registry/default/ui/badge.tsx",
+      "base": "badge.tsx",
+      "sha256": "60f73554b462ec5e2929ccc58c0522b069c07e1268dbfb67749c2837347b788b",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "breadcrumb": {
+      "registry": "breadcrumb",
+      "path": "registry/default/ui/breadcrumb.tsx",
+      "base": "breadcrumb.tsx",
+      "sha256": "e420178801b8d72238f1274c722a7ca4e9f9834bd58c7a45ba8d71a645f83c79",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "button": {
+      "registry": "button",
+      "path": "registry/default/ui/button.tsx",
+      "base": "button.tsx",
+      "sha256": "1e65556bde3071f90f61825cf573aec74bdd8695824470bea3dae4d68a6b8fc8",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/spinner"]
+    },
+    "calendar": {
+      "registry": "calendar",
+      "path": "registry/default/ui/calendar.tsx",
+      "base": "calendar.tsx",
+      "sha256": "e9046da3021b3bb1e77ae657cdacac79a15f71e99596984fbcd54f26f3b60179",
+      "dependencies": ["@daypicker/react", "lucide-react"],
+      "registryDependencies": []
+    },
+    "card": {
+      "registry": "card",
+      "path": "registry/default/ui/card.tsx",
+      "base": "card.tsx",
+      "sha256": "b59dbc0bd5d61694fcf1948fb8134795b0f5a1bf0a28d8d6bc817297c73a006e",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "checkbox": {
+      "registry": "checkbox",
+      "path": "registry/default/ui/checkbox.tsx",
+      "base": "checkbox.tsx",
+      "sha256": "a1b8b4180a39a47c47bd2b50e432d0911da6efe3b963b065b3b5cb8893760047",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "checkbox-group": {
+      "registry": "checkbox-group",
+      "path": "registry/default/ui/checkbox-group.tsx",
+      "base": "checkbox-group.tsx",
+      "sha256": "f78494035296e12c0ff602022338bb8f37a46f3a15647b53f0b2e8ac6c97f45e",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "collapsible": {
+      "registry": "collapsible",
+      "path": "registry/default/ui/collapsible.tsx",
+      "base": "collapsible.tsx",
+      "sha256": "f70e7b9fde220ce5f039c93176a545a46a9b553ecdb23595a320e5163a95a1e8",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "combobox": {
+      "registry": "combobox",
+      "path": "registry/default/ui/combobox.tsx",
+      "base": "combobox.tsx",
+      "sha256": "df233af98aa9141b3418489d20b71a693aa3d8672a3962e3d19576fb21383087",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/input", "@coss/scroll-area"]
+    },
+    "command": {
+      "registry": "command",
+      "path": "registry/default/ui/command.tsx",
+      "base": "command.tsx",
+      "sha256": "4b40973632f7b13bd2212f094b805470aad29fb190a46001f92b13ff2350b7bd",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/autocomplete"]
+    },
+    "context-menu": {
+      "registry": "context-menu",
+      "path": "registry/default/ui/context-menu.tsx",
+      "base": "context-menu.tsx",
+      "sha256": "a47c4563334813d12f0e46380a047483aed03d7ed3e37a9cfde5899f06761abf",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "dialog": {
+      "registry": "dialog",
+      "path": "registry/default/ui/dialog.tsx",
+      "base": "dialog.tsx",
+      "sha256": "14ad87a5f81d7753e9a954aa0624df49168eccc2c8d3074a41ea0a8bed3970d5",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/button", "@coss/scroll-area"]
+    },
+    "drawer": {
+      "registry": "drawer",
+      "path": "registry/default/ui/drawer.tsx",
+      "base": "drawer.tsx",
+      "sha256": "e8edbf8de6192c4858395e8a99ed4d3c35fd583618b9cef4b76f260e90f6e4d1",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/button", "@coss/scroll-area"]
+    },
+    "empty": {
+      "registry": "empty",
+      "path": "registry/default/ui/empty.tsx",
+      "base": "empty.tsx",
+      "sha256": "57341b5a985ba2cc229e4832ab8624b060d172706b678dd99a682fbb476d4aa9",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "field": {
+      "registry": "field",
+      "path": "registry/default/ui/field.tsx",
+      "base": "field.tsx",
+      "sha256": "02ffda39f73f04638f580fd1fbb76e783cb252f9a87ecebdd62fb4bd0d1393ff",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "fieldset": {
+      "registry": "fieldset",
+      "path": "registry/default/ui/fieldset.tsx",
+      "base": "fieldset.tsx",
+      "sha256": "1ec36d2a2c60fd1ba229682a876f8d672ade66019513bac1a6747885d369f2a6",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "form": {
+      "registry": "form",
+      "path": "registry/default/ui/form.tsx",
+      "base": "form.tsx",
+      "sha256": "c08b75b48a90dd349763720e4ffb5423ae348ec0ef43c8c96110695d6fcf7404",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "frame": {
+      "registry": "frame",
+      "path": "registry/default/ui/frame.tsx",
+      "base": "frame.tsx",
+      "sha256": "55da638812d093e74ab7fb3cb141f01d834492b63b3e2e09880b9b1df24ee45c",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "group": {
+      "registry": "group",
+      "path": "registry/default/ui/group.tsx",
+      "base": "group.tsx",
+      "sha256": "d2392c54a90e353762779639971bb9aaa44759a7bda81ea0cf1462afbf4492b0",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/separator"]
+    },
+    "input": {
+      "registry": "input",
+      "path": "registry/default/ui/input.tsx",
+      "base": "input.tsx",
+      "sha256": "3d488d491eb4e63642adc8b9354b0b0cc5b8ec4e284bbc26da7e2516f24980a4",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "input-group": {
+      "registry": "input-group",
+      "path": "registry/default/ui/input-group.tsx",
+      "base": "input-group.tsx",
+      "sha256": "999f1e8aa29d4520aa4086f508cfd55503547822e4a6c4a2314e2fb14a351452",
+      "dependencies": [],
+      "registryDependencies": ["@coss/input", "@coss/textarea"]
+    },
+    "kbd": {
+      "registry": "kbd",
+      "path": "registry/default/ui/kbd.tsx",
+      "base": "kbd.tsx",
+      "sha256": "ad8f26b95d8307f460316cd27a2b595d04069df2561395b5d39067a99e407cb5",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "label": {
+      "registry": "label",
+      "path": "registry/default/ui/label.tsx",
+      "base": "label.tsx",
+      "sha256": "edaf5fb049b3e2f27ddd70a6c6772c7d99e920c589b41019b8f4fa602113e695",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "menu": {
+      "registry": "menu",
+      "path": "registry/default/ui/menu.tsx",
+      "base": "menu.tsx",
+      "sha256": "aeb2ebda24c8c90453fd7087bae8f14510f98e4eee75da5c084dfecaa56f2625",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "meter": {
+      "registry": "meter",
+      "path": "registry/default/ui/meter.tsx",
+      "base": "meter.tsx",
+      "sha256": "f7f0b85f6878378c76e66887a111a1cb8476ebea84a2ebb4f6d41fe0fbad8653",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "number-field": {
+      "registry": "number-field",
+      "path": "registry/default/ui/number-field.tsx",
+      "base": "number-field.tsx",
+      "sha256": "e49f539416076d832d855e53be646fbc613ccaf0b419b8951f477267b81cdbde",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/label"]
+    },
+    "otp-field": {
+      "registry": "otp-field",
+      "path": "registry/default/ui/otp-field.tsx",
+      "base": "otp-field.tsx",
+      "sha256": "4122b6f91e0c011a9bfe40b4ecad4d0b89a7b371e773adac6af6b2bcc5ac033e",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/separator"]
+    },
+    "pagination": {
+      "registry": "pagination",
+      "path": "registry/default/ui/pagination.tsx",
+      "base": "pagination.tsx",
+      "sha256": "4c3d048be127d228ad199b8555b833ffc26cd9506b4a75b4b298754833474993",
+      "dependencies": [],
+      "registryDependencies": ["@coss/button"]
+    },
+    "popover": {
+      "registry": "popover",
+      "path": "registry/default/ui/popover.tsx",
+      "base": "popover.tsx",
+      "sha256": "ff9b981ce4e68b86a266f69480c59967c7065aacfa2d4ce927d91a1eff0035cf",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "preview-card": {
+      "registry": "preview-card",
+      "path": "registry/default/ui/preview-card.tsx",
+      "base": "preview-card.tsx",
+      "sha256": "44741ce4217d89c19a485d6973c22c821ed9cf86b15dc03c7094308ae7faa6ba",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "progress": {
+      "registry": "progress",
+      "path": "registry/default/ui/progress.tsx",
+      "base": "progress.tsx",
+      "sha256": "605ea95436094735fc94d2ae38fd50df2dcce1617b2a67c504114bd0e55cc2b2",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "radio-group": {
+      "registry": "radio-group",
+      "path": "registry/default/ui/radio-group.tsx",
+      "base": "radio-group.tsx",
+      "sha256": "b2479e9967f0ba48d1acbb58a4fff7b919aa746bb8a61cbbff389baac02abbb7",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "scroll-area": {
+      "registry": "scroll-area",
+      "path": "registry/default/ui/scroll-area.tsx",
+      "base": "scroll-area.tsx",
+      "sha256": "6274eace4599cba26e731b0f02cd2307d2207947162ccc575e45984e87aa269f",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "select": {
+      "registry": "select",
+      "path": "registry/default/ui/select.tsx",
+      "base": "select.tsx",
+      "sha256": "aa8821bbb4bd6b8b52a6cbaaf8d995f48b1001ad93d4bfa4e5b91b5e6d5f66a0",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "separator": {
+      "registry": "separator",
+      "path": "registry/default/ui/separator.tsx",
+      "base": "separator.tsx",
+      "sha256": "48393a9f365097e350bb33f0e84d2df25efd6b374868aa075f8d6011378c1d6e",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "sheet": {
+      "registry": "sheet",
+      "path": "registry/default/ui/sheet.tsx",
+      "base": "sheet.tsx",
+      "sha256": "74ce70050415c0ac6ad033a4d6770f023a736a9f24540c994e88c6934c16d9a4",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/button", "@coss/scroll-area"]
+    },
+    "sidebar": {
+      "registry": "sidebar",
+      "path": "registry/default/ui/sidebar.tsx",
+      "base": "sidebar.tsx",
+      "sha256": "11e0381340b46a53f5a52c6a2a6a81a4c957c3690f889089764b60ba3da51965",
+      "dependencies": [],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/input",
+        "@coss/scroll-area",
+        "@coss/separator",
+        "@coss/sheet",
+        "@coss/skeleton",
+        "@coss/tooltip",
+        "@coss/use-media-query",
+        "@coss/utils"
+      ]
+    },
+    "skeleton": {
+      "registry": "skeleton",
+      "path": "registry/default/ui/skeleton.tsx",
+      "base": "skeleton.tsx",
+      "sha256": "02e61d00c76b7ed5a1979c37c2a86b8a837a013909e84ac21c40bb5b56f9afd2",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "slider": {
+      "registry": "slider",
+      "path": "registry/default/ui/slider.tsx",
+      "base": "slider.tsx",
+      "sha256": "abf488cac56c237b5eebef7c7c25ff38d07f72581a2b46c7158c019576c7fa71",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "spinner": {
+      "registry": "spinner",
+      "path": "registry/default/ui/spinner.tsx",
+      "base": "spinner.tsx",
+      "sha256": "5116d0ec549bf70d20d5359a485e6792b6c87d89a389102ad6c3f44312c23972",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "switch": {
+      "registry": "switch",
+      "path": "registry/default/ui/switch.tsx",
+      "base": "switch.tsx",
+      "sha256": "2b3bada3d7234149b4d29918d5e312e62919938c2ae0ee61db81350438ad43c4",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "table": {
+      "registry": "table",
+      "path": "registry/default/ui/table.tsx",
+      "base": "table.tsx",
+      "sha256": "b21f811291d6a1706874cb37dd568b922fb5d8b053e6636b7b0e9e9c6320c98d",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "tabs": {
+      "registry": "tabs",
+      "path": "registry/default/ui/tabs.tsx",
+      "base": "tabs.tsx",
+      "sha256": "cbfe21ce54efe39cc02eb073a8327a4ab81b918d5745d986fdfae07d32204a7a",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/segmented-control"]
+    },
+    "textarea": {
+      "registry": "textarea",
+      "path": "registry/default/ui/textarea.tsx",
+      "base": "textarea.tsx",
+      "sha256": "d153ed8f568a6ffb7b5438ea83385e3d327db9af45ef9fdd0822575d15c4e745",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "toast": {
+      "registry": "toast",
+      "path": "registry/default/ui/toast.tsx",
+      "base": "toast.tsx",
+      "sha256": "6c83bd6ab5a90388aa06380924381058746bf2bd5ebb7b2187496a59e7c517d6",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/button"]
+    },
+    "toggle": {
+      "registry": "toggle",
+      "path": "registry/default/ui/toggle.tsx",
+      "base": "toggle.tsx",
+      "sha256": "a32372d0eaa291bc81f61f4ddb1f5bb827c507fd53de03c6f709adc242ee5bfb",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "toggle-group": {
+      "registry": "toggle-group",
+      "path": "registry/default/ui/toggle-group.tsx",
+      "base": "toggle-group.tsx",
+      "sha256": "8c67854bffcf762299fb989721e47da30fea3268cb969fdc6c775c3fe89982bb",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/separator", "@coss/toggle"]
+    },
+    "toolbar": {
+      "registry": "toolbar",
+      "path": "registry/default/ui/toolbar.tsx",
+      "base": "toolbar.tsx",
+      "sha256": "f08696682ad171b5a0d2c918202bcee10b9f6de1408a2a2e864f61e8d424dba2",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "tooltip": {
+      "registry": "tooltip",
+      "path": "registry/default/ui/tooltip.tsx",
+      "base": "tooltip.tsx",
+      "sha256": "0ac59089d1d813b7eb1cd9e08ed2ff3b3931e4024df649ddb45b1eb43d50f694",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
+    "lib/segmented-control": {
+      "registry": "segmented-control",
+      "path": "registry/default/lib/segmented-control.ts",
+      "base": "lib/segmented-control.ts",
+      "sha256": "c1cb84d02ac5b75aa08a70c205feb9cc8668ffbc19751e013364f547ae41a8a8",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": []
+    }
+  }
+}

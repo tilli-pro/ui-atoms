@@ -1,0 +1,21 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Styling and tokens" />
+
+# Styling and tokens
+
+Your Tailwind entry css needs the package's sheet and its class strings in scan scope:
+
+```css
+@import "tailwindcss";
+@import "@tilli.dev/ui-atoms/styles.css";
+@source "../node_modules/@tilli.dev/ui-atoms/dist";
+```
+
+`styles.css` is the default theme: the tilli brand, in light and dark. Every colour token and the
+base radius are CSS custom properties on `:root`, with the dark values on `[data-theme="dark"]`;
+set `data-theme="dark"` on the `html` element to switch. The sheet is the canonical home of these
+values: override any of them in your own stylesheet after importing it.
+
+Fonts are consumer-provided CSS variables: `--font-header`, `--font-body`, `--font-mono`,
+optional `--font-button`. The package ships no font files.

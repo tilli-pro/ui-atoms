@@ -1,0 +1,33 @@
+# Upstream drift watch: has the coss registry moved away from the revision
+# `scripts/coss/manifest.ts` pins? Deliberately NOT a required check — a red run here
+# means "upstream changed", which is a refresh to schedule, not a reason to block an
+# unrelated pull request. CI's required job verifies the committed `.coss-base/` bytes
+# against the lock offline instead.
+name: coss drift
+
+on:
+  schedule:
+    # Mondays, 07:00 UTC.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Live registry + committed bytes, both against the lock. When this fails, read the
+      # printed list as the refresh diff: `pnpm fetch-coss --update`, re-apply our
+      # divergences, commit the lock and `.coss-base/` together.
+      - run: pnpm fetch-coss --check

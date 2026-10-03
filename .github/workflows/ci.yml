@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: "run visual:update and upload __screenshots__ instead of asserting"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm gen-exports --check
+      - run: pnpm exec tsx scripts/use-client-audit.ts --check
+      - name: no legacy leftovers
+        run: |
+          set -uo pipefail
+          check() {
+            desc="$1"; shift
+            out=$(git grep -n "$@") && rc=0 || rc=$?
+            if [ "$rc" -eq 0 ]; then echo "::error::$desc"; echo "$out"; exit 1; fi
+            if [ "$rc" -ne 1 ]; then echo "::error::git grep failed (rc=$rc) checking $desc"; exit 1; fi
+          }
+          check "forwardRef/displayName/cva/#ui-atoms//PORT-TODO" -E "forwardRef|displayName|class-variance-authority|#ui-atoms/|PORT-TODO" -- packages/ui-atoms/src
+          check "tenant reference" -i "tenant" -- packages/ui-atoms/src
+          check "kit-object access" -P "\b(Card|Dialog|Select|Table|Fieldset|Tooltip|Form|Field)\.[A-Z]" -- packages/ui-atoms/src/components
+          check "Base* identifier" -P "\bBase(?!UI)[A-Z][A-Za-z0-9]*\b" -- packages/ui-atoms/src/components
+      - run: pnpm content-scan
+      # Offline half only: the committed `.coss-base/` bytes against the lock. The
+      # live-registry drift check is `.github/workflows/coss-drift.yml`, on a schedule —
+      # upstream is actively developed, and a required job that fails the moment coss
+      # edits any of the 55 locked files would red every unrelated pull request until a
+      # full refresh (which itself needs a green pull request) lands.
+      - run: pnpm fetch-coss --check --offline
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - name: package lint (exports map / types)
+        run: |
+          cd packages/ui-atoms
+          pnpm exec publint --strict
+          # `./styles.css` is a stylesheet entrypoint: it resolves to no JS and no
+          # type declarations by design, which attw can only report as a failure.
+          pnpm exec attw --pack . --profile esm-only --exclude-entrypoints styles.css
+      - run: scripts/pack-smoke.sh
+
+  commitlint:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+  storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter storybook exec playwright install --with-deps chromium
+      - run: pnpm build
+      - run: pnpm --filter storybook test:stories
+      - run: pnpm --filter playground test
+      - run: pnpm --filter @tilli.dev/icons test
+
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter storybook exec playwright install --with-deps chromium
+      - run: pnpm build
+      # A workflow_dispatch with update_snapshots=true re-captures instead of asserting (exit 0, PNGs land in __screenshots__).
+      - run: pnpm --filter storybook ${{ github.event_name == 'workflow_dispatch' && inputs.update_snapshots && 'visual:update' || 'visual' }}
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-screenshots
+          path: apps/storybook/visual/__screenshots__
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs
+          path: apps/storybook/test-results

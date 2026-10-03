@@ -1,0 +1,37 @@
+{
+  "name": "@tilli.dev/ui-atoms-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.19.0",
+  "engines": { "node": ">=22", "pnpm": ">=10" },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint && biome check .",
+    "lint:fix": "biome check --write .",
+    "test": "turbo run test && pnpm test:scripts",
+    "test:scripts": "vitest run --config vitest.config.ts",
+    "content-scan": "tsx scripts/content-scan.ts",
+    "fetch-coss": "tsx scripts/coss/fetch-coss.ts",
+    "gen-exports": "tsx scripts/gen-exports.ts",
+    "check-provisional": "tsx scripts/check-provisional.ts",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "pack:tarball": "pnpm content-scan && pnpm check-provisional && pnpm build && pnpm -C packages/ui-atoms pack --pack-destination ../../.tarballs",
+    "release": "pnpm content-scan && pnpm check-provisional && pnpm build && changeset publish",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@changesets/cli": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@tilli-pro/biome": "catalog:",
+    "@types/node": "catalog:",
+    "lefthook": "catalog:",
+    "tsx": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

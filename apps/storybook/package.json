@@ -1,0 +1,47 @@
+{
+  "name": "storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build --quiet",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "test:stories": "vitest run --project storybook",
+    "visual": "playwright test --config playwright.config.ts",
+    "visual:update": "playwright test --config playwright.config.ts --update-snapshots",
+    "serve": "http-server storybook-static -p 6007 -s"
+  },
+  "dependencies": {
+    "@tilli.dev/ui-atoms": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@base-ui/react": "catalog:",
+    "@playwright/test": "catalog:",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-docs": "catalog:",
+    "@storybook/addon-vitest": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "embla-carousel-react": "catalog:",
+    "@daypicker/react": "catalog:",
+    "@headless-tree/core": "catalog:",
+    "http-server": "catalog:",
+    "motion": "catalog:",
+    "playwright": "catalog:",
+    "react-resizable-panels": "catalog:",
+    "storybook": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}

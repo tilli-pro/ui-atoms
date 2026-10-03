@@ -1,0 +1,29 @@
+// Standalone config (module/target esnext, moduleResolution bundler) — no shared
+// `@tilli-pro/tsconfig` base. Two deliberate choices:
+//   1. `jsx: "react-jsx"` instead of `"preserve"` — this package ships compiled output:
+//      `tsup` (esbuild, automatic JSX runtime) emits the JS and `tsc -p tsconfig.build.json`
+//      emits the declarations, so the type-level JSX setting must match what actually gets
+//      compiled, not stay "preserve".
+//   2. The `paths` alias `#ui-atoms/*` -> `./src/*` is omitted — nothing under `src/` imports
+//      it (verified by grep across the package). Re-add it if that changes.
+{
+  "compilerOptions": {
+    "strict": true,
+    "rootDir": "./",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "stripInternal": true,
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": false,
+    "types": ["node", "vitest/globals"],
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "${configDir}/.cache/typecheck.tsbuildinfo"
+  },
+  "include": ["src", "__tests__", "vitest.setup.ts"]
+}

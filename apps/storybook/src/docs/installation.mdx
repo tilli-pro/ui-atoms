@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Installation" />
+
+# Installation
+
+```bash
+pnpm add @tilli.dev/ui-atoms @base-ui/react react react-dom tailwindcss
+```
+
+Optional peers, one per subpath. Install only what you import:
+
+- `./carousel`: `embla-carousel-react`
+- `./calendar`: `@daypicker/react`
+- `./number-ticker` and `./spinning-text`: `motion`
+- `./resizable`: `react-resizable-panels`
+- `./tree`: `@headless-tree/core`
+
+`./currency-input`, `./drawer`, `./command` and `./otp-field` need no optional peer: they are
+built on `@base-ui/react`, which is already a required peer.
+
+An absent optional peer surfaces as your bundler's module-not-found error naming that
+package; nothing is swallowed.
