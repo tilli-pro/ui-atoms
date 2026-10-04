@@ -1,6 +1,6 @@
 {
   "name": "@tilli.dev/ui-atoms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React 19 + Tailwind v4 components on @base-ui/react, coss ui conventions",
   "type": "module",
   "license": "MIT",

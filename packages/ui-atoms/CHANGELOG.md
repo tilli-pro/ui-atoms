@@ -1,5 +1,11 @@
 # @tilli.dev/ui-atoms
 
+## 1.0.1
+
+### Patch Changes
+
+- 3de9c46: 1.0.0 release
+
 ## 1.0.0
 
 ### Major Changes
