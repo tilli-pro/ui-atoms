@@ -1,8 +1,9 @@
 # Upstream drift watch: has the coss registry moved away from the revision
-# `scripts/coss/manifest.ts` pins? Deliberately NOT a required check — a red run here
-# means "upstream changed", which is a refresh to schedule, not a reason to block an
-# unrelated pull request. CI's required job verifies the committed `.coss-base/` bytes
-# against the lock offline instead.
+# `scripts/coss/manifest.ts` pins, or the shadcn registry away from the bytes
+# `scripts/shadcn/shadcn-lock.json` pins? Deliberately NOT a required check — a red run
+# here means "upstream changed", which is a refresh to schedule, not a reason to block an
+# unrelated pull request. CI's required job verifies the committed `.coss-base/` and
+# `.shadcn-base/` bytes against the locks offline instead.
 name: coss drift
 
 on:
@@ -31,3 +32,6 @@ jobs:
       # printed list as the refresh diff: `pnpm fetch-coss --update`, re-apply our
       # divergences, commit the lock and `.coss-base/` together.
       - run: pnpm fetch-coss --check
+      # Same shape for the shadcn-sourced components: `pnpm fetch-shadcn --update`,
+      # re-apply our divergences, commit the lock and `.shadcn-base/` together.
+      - run: pnpm fetch-shadcn --check

@@ -94,6 +94,11 @@
       "import": "./dist/components/carousel/index.js",
       "default": "./dist/components/carousel/index.js"
     },
+    "./chat": {
+      "types": "./dist/components/chat/index.d.ts",
+      "import": "./dist/components/chat/index.js",
+      "default": "./dist/components/chat/index.js"
+    },
     "./checkbox": {
       "types": "./dist/components/checkbox/index.d.ts",
       "import": "./dist/components/checkbox/index.js",
@@ -118,6 +123,11 @@
       "types": "./dist/components/command/index.d.ts",
       "import": "./dist/components/command/index.js",
       "default": "./dist/components/command/index.js"
+    },
+    "./composer": {
+      "types": "./dist/components/composer/index.d.ts",
+      "import": "./dist/components/composer/index.js",
+      "default": "./dist/components/composer/index.js"
     },
     "./context-menu": {
       "types": "./dist/components/context-menu/index.d.ts",
@@ -362,6 +372,8 @@
   },
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css && cp ../../LICENSE ../../THIRD-PARTY-NOTICES.md .",
+    "dev": "tsup --watch --onSuccess \"cp src/styles.css dist/styles.css\"",
+    "dev:types": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "biome check .",
     "test": "vitest run",

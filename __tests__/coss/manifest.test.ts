@@ -15,20 +15,26 @@ describe("COSS pin", () => {
 });
 
 describe("COMPONENTS", () => {
-  it("covers 65 components, each named once", () => {
+  it("covers 67 components, each named once", () => {
     const names = COMPONENTS.map((c) => c.name);
     expect(new Set(names).size).toBe(names.length);
-    expect(names).toHaveLength(65);
+    expect(names).toHaveLength(67);
     expect([...names].sort()).toEqual(names);
   });
-  it("splits 50 coss-based from 15 v2-based, and fetches a reference base for 4 of the 15", () => {
-    expect(COMPONENTS.filter((c) => c.source === "coss")).toHaveLength(50);
-    expect(COMPONENTS.filter((c) => c.source === "v2")).toHaveLength(15);
+  it("splits 53 coss-based from 14 v2-based, none shadcn-based, and fetches a reference base for 3 of the 14", () => {
+    expect(COMPONENTS.filter((c) => c.source === "coss")).toHaveLength(53);
+    expect(COMPONENTS.filter((c) => c.source === "v2")).toHaveLength(14);
+    expect(
+      COMPONENTS.filter((c) => c.source === "shadcn").map((c) => c.name),
+    ).toEqual([]);
+    // A shadcn-sourced component is pinned by scripts/shadcn/, never fetched from coss.
+    for (const c of COMPONENTS.filter((c) => c.source === "shadcn"))
+      expect(c.registry, c.name).toBeUndefined();
     expect(
       COMPONENTS.filter((c) => c.source === "v2" && c.registry).map(
         (c) => c.name,
       ),
-    ).toEqual(["number-field", "sheet", "sidebar", "toolbar"]);
+    ).toEqual(["number-field", "sheet", "toolbar"]);
     for (const c of COMPONENTS.filter((c) => c.source === "v2" && c.registry)) {
       expect(c.disposition, c.name).toBe("measure-first");
     }
@@ -86,12 +92,44 @@ describe("COMPONENTS", () => {
 });
 
 describe("COSS_LIBS", () => {
-  it("vendors exactly the one non-component registry item, outside components/", () => {
-    expect(COSS_LIBS.map((l) => l.registry)).toEqual(["segmented-control"]);
+  it("vendors the non-component registry items (libs and hooks), outside components/", () => {
+    expect(COSS_LIBS.map((l) => l.registry)).toEqual([
+      "segmented-control",
+      "use-media-query",
+      "use-copy-to-clipboard",
+      "composer-editor",
+      "composer-document",
+      "composer-query",
+      "composer-clipboard",
+      "use-composer-editor",
+    ]);
     for (const l of COSS_LIBS) {
-      expect(l.base.startsWith("lib/"), l.registry).toBe(true);
-      expect(l.dest.startsWith("lib/"), l.registry).toBe(true);
+      expect(l.base, l.registry).toMatch(/^(lib|hooks)\//);
+      expect(l.dest, l.registry).toBe(l.base);
     }
+  });
+  it("marks every item added after the pin with its upstream source path", () => {
+    const postPin = [
+      ...COMPONENTS.filter((c) => c.postPin),
+      ...COSS_LIBS.filter((l) => l.postPin),
+    ];
+    expect(postPin.map((e) => e.registry ?? e.name).sort()).toEqual([
+      "chat",
+      "composer",
+      "composer-clipboard",
+      "composer-document",
+      "composer-editor",
+      "composer-query",
+      "use-composer-editor",
+    ]);
+    for (const e of postPin)
+      expect(e.postPin, e.registry).toMatch(/^packages\/ui\/src\//);
+    // Only a kit locks more than one file; its postPin is a directory, not a file.
+    expect(COMPONENTS.filter((c) => c.multiFile).map((c) => c.name)).toEqual([
+      "chat",
+    ]);
+    for (const c of COMPONENTS.filter((c) => c.multiFile))
+      expect(c.postPin, c.name).not.toMatch(/\.tsx?$/);
     // must NOT also be a COMPONENTS registry name: that would write .coss-base/segmented-control.tsx
     expect(
       COMPONENTS.find((c) => c.name === "segmented-control")?.registry,
@@ -100,8 +138,8 @@ describe("COSS_LIBS", () => {
 });
 
 describe("LIVE_IDS", () => {
-  it("is exactly the 33 ids that stay live, each with a resolution", () => {
-    expect(Object.keys(LIVE_IDS)).toHaveLength(33);
+  it("is exactly the 40 ids that stay live, each with a resolution", () => {
+    expect(Object.keys(LIVE_IDS)).toHaveLength(40);
     for (const [id, r] of Object.entries(LIVE_IDS)) {
       expect(id, id).toMatch(/^[A-Z]{2,4}-\d$/);
       expect(r.resolution, id).toMatch(

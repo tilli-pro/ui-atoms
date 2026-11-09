@@ -1,7 +1,7 @@
 {
   "revision": "816348154874bbc0be230277c584cc38019b48b1",
   "revisionDate": "2026-09-16",
-  "revisionSource": "https://github.com/cosscom/coss/tree/816348154874bbc0be230277c584cc38019b48b1/apps/ui/registry/",
+  "revisionSource": "https://github.com/cosscom/ui/tree/816348154874bbc0be230277c584cc38019b48b1/apps/ui/registry/",
   "fetchedAt": "2026-09-20",
   "revisionVerifiedAt": "2026-09-20",
   "files": {
@@ -85,6 +85,581 @@
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
+    "chat/chat-bubble": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-bubble.tsx",
+      "base": "chat/chat-bubble.tsx",
+      "sha256": "de364abf74352d9918e81e7fe326c54731cf7892605a02afb3c56b9a6ca83654",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-bubble.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-collapsible-message": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-collapsible-message.tsx",
+      "base": "chat/chat-collapsible-message.tsx",
+      "sha256": "8574b5963ed2fa49e65e6f677505dfc54b2e8d58a175655d85a49282f6ea6ebc",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-collapsible-message.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-conversation": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-conversation.tsx",
+      "base": "chat/chat-conversation.tsx",
+      "sha256": "097feeddec230ba36d74ed16d0c64a1537cf739e7077b777e48481a7cfb8bdd7",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-conversation.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-date-pill": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-date-pill.tsx",
+      "base": "chat/chat-date-pill.tsx",
+      "sha256": "9ee3e67fe8004e1656303d54cd6e9b8a7acda86ddaefa3245a385e6bba6f1786",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-date-pill.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-delivery-indicator": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-delivery-indicator.tsx",
+      "base": "chat/chat-delivery-indicator.tsx",
+      "sha256": "64dd09618dec12b74f9dd5aa17bae22358cfdfa28db0c87df2eb2f44567e4669",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-delivery-indicator.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-jump-to-latest-button": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-jump-to-latest-button.tsx",
+      "base": "chat/chat-jump-to-latest-button.tsx",
+      "sha256": "7bef8520f5a2cffbbc490b8baaed8e532727d7c49c68fe24ea1e22f663eba7e5",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-jump-to-latest-button.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-members": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-members.tsx",
+      "base": "chat/chat-members.tsx",
+      "sha256": "3b15ec99dc77b987a5ddd56e42f00b20e66e94373644bf7411a99b5782f29d96",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-members.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-message-actions": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-actions.tsx",
+      "base": "chat/chat-message-actions.tsx",
+      "sha256": "c68ccda6c59eafa9355329bc4ed8b0d416be6a4a04ffcc2bd8e9f8a3406362f7",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-message-actions.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-message-bubble": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-bubble.tsx",
+      "base": "chat/chat-message-bubble.tsx",
+      "sha256": "d3532cd1603f6ab1162db14ccfd025942f3baa0f87a3025409be64d3ebdb9471",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-message-bubble.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-message-info": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-info.tsx",
+      "base": "chat/chat-message-info.tsx",
+      "sha256": "bbef707c99d55268f0c762d5ed8b70999fa6578c88b292bcfa75b57929332102",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-message-info.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-message-layout": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-layout.tsx",
+      "base": "chat/chat-message-layout.tsx",
+      "sha256": "7b53c09abb5afc25eed06b3ce2bd2887e68223ab349d4bea97ff38166b414f06",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-message-layout.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-message-text": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-text.tsx",
+      "base": "chat/chat-message-text.tsx",
+      "sha256": "d6fd2b372485c442b6b9b404d895c797f35afab80a19909d39e0de4235e1e203",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-message-text.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-message": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message.tsx",
+      "base": "chat/chat-message.tsx",
+      "sha256": "7b91ba983b78ceff03746c4c59fa6308e8aaa9078b81c6840cdd98936cbc6120",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-message.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-reaction-chip": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reaction-chip.tsx",
+      "base": "chat/chat-reaction-chip.tsx",
+      "sha256": "098c1cae2c920bb56ce36e394526671dc636992f774bb5af46d01229c420baad",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-reaction-chip.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-reaction-picker": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reaction-picker.tsx",
+      "base": "chat/chat-reaction-picker.tsx",
+      "sha256": "fc0007a133519f40f5e7d7559da04280f71b4fd50b5bc5a6e07fbb7cf8767e24",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-reaction-picker.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-reply-preview": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reply-preview.tsx",
+      "base": "chat/chat-reply-preview.tsx",
+      "sha256": "f9db2490d2eaa535b1f41a3675c090ae3aa82695b50d00c9873b2059c5e8ee35",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-reply-preview.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-reply-reference": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reply-reference.tsx",
+      "base": "chat/chat-reply-reference.tsx",
+      "sha256": "10cee00334c0cf00145dfc82336c5077aa21deab014035c0f1ee4098eba8990a",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-reply-reference.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-states": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-states.tsx",
+      "base": "chat/chat-states.tsx",
+      "sha256": "4d0e2a3613074c9a9bfa356176a22b790a94cc7007ff4a75ccbd67f316ee6f33",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-states.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-typing-indicator": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-typing-indicator.tsx",
+      "base": "chat/chat-typing-indicator.tsx",
+      "sha256": "29d32676b0bd2e1bf0b835dd77e6a82f7306df0a85a5d3c45f02e3ee51cfcff3",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-typing-indicator.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/chat-unread-divider": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-unread-divider.tsx",
+      "base": "chat/chat-unread-divider.tsx",
+      "sha256": "343ffb669b44fbeab57978151dad8952e967c65809b0d4efc51ee0533370027f",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/chat-unread-divider.tsx",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/hooks/use-chat-popup-dismissal": {
+      "registry": "chat",
+      "path": "registry/default/chat/hooks/use-chat-popup-dismissal.ts",
+      "base": "chat/hooks/use-chat-popup-dismissal.ts",
+      "sha256": "4cf22bfba4ceadd5ba45258a2315827a9f10170c82543f9ac0d520c82965650d",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/hooks/use-chat-popup-dismissal.ts",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/hooks/use-chat-scroll": {
+      "registry": "chat",
+      "path": "registry/default/chat/hooks/use-chat-scroll.ts",
+      "base": "chat/hooks/use-chat-scroll.ts",
+      "sha256": "f8da666545393b449d71a066b723f4aa0f999cac8680e2272609a3a910e2d208",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/hooks/use-chat-scroll.ts",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "chat/lib/split-chat-message-preview": {
+      "registry": "chat",
+      "path": "registry/default/chat/lib/split-chat-message-preview.ts",
+      "base": "chat/lib/split-chat-message-preview.ts",
+      "sha256": "0e9ecf9b6ea145aa1bf881c81ed36b1f26e32a7bb2037d08a5bd7a55dc958ad3",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/chat/lib/split-chat-message-preview.ts",
+        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
+        "revisionDate": "2026-10-13"
+      }
+    },
     "checkbox": {
       "registry": "checkbox",
       "path": "registry/default/ui/checkbox.tsx",
@@ -124,6 +699,19 @@
       "sha256": "4b40973632f7b13bd2212f094b805470aad29fb190a46001f92b13ff2350b7bd",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/autocomplete"]
+    },
+    "composer": {
+      "registry": "composer",
+      "path": "registry/default/ui/composer.tsx",
+      "base": "composer.tsx",
+      "sha256": "6aef440608b84382e473ac1487189394d5dd4a66e8801ea6edbd54a4565045f3",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/composer-editor", "@coss/scroll-area"],
+      "provenance": {
+        "path": "packages/ui/src/components/composer.tsx",
+        "revision": "3d8ca28e7d90123e9e0f44665944dc240b026ccb",
+        "revisionDate": "2026-10-22"
+      }
     },
     "context-menu": {
       "registry": "context-menu",
@@ -454,6 +1042,90 @@
       "sha256": "c1cb84d02ac5b75aa08a70c205feb9cc8668ffbc19751e013364f547ae41a8a8",
       "dependencies": ["class-variance-authority"],
       "registryDependencies": []
+    },
+    "hooks/use-media-query": {
+      "registry": "use-media-query",
+      "path": "registry/default/hooks/use-media-query.ts",
+      "base": "hooks/use-media-query.ts",
+      "sha256": "17d75ccaf898415db77dd72659c9b1fdb9338290ae54e8371b772e0b221c9fca",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "hooks/use-copy-to-clipboard": {
+      "registry": "use-copy-to-clipboard",
+      "path": "registry/default/hooks/use-copy-to-clipboard.ts",
+      "base": "hooks/use-copy-to-clipboard.ts",
+      "sha256": "d2e9ba430e34dafd4ae7fe5403d2ad4987fdcd73f2a47bd0571c1f84c143536d",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/composer-editor": {
+      "registry": "composer-editor",
+      "path": "registry/default/lib/composer-editor.ts",
+      "base": "lib/composer-editor.ts",
+      "sha256": "d2e2b65cad6530854be0f111475d56cdeb5614fe34bb0120e67fe9997c37f42c",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/use-composer-editor"],
+      "provenance": {
+        "path": "packages/ui/src/lib/composer-editor.ts",
+        "revision": "107dc0a1f011cd99ff047e2beef8201947a17ff2",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "lib/composer-document": {
+      "registry": "composer-document",
+      "path": "registry/default/lib/composer-document.ts",
+      "base": "lib/composer-document.ts",
+      "sha256": "95cc5a3a602f37472d4bc3d2820c58c52f4f5893e3d1cfde2344f8b2a287f492",
+      "dependencies": [],
+      "registryDependencies": ["@coss/composer-query"],
+      "provenance": {
+        "path": "packages/ui/src/lib/composer-document.ts",
+        "revision": "3686270c94c9d856ee1669bd06cfe3f7939d6796",
+        "revisionDate": "2026-11-05"
+      }
+    },
+    "lib/composer-query": {
+      "registry": "composer-query",
+      "path": "registry/default/lib/composer-query.ts",
+      "base": "lib/composer-query.ts",
+      "sha256": "35afd934063e1b7b7a6aa3611e006cc1740a0e732338a9bdaf94eaf8d08cacb7",
+      "dependencies": [],
+      "registryDependencies": [],
+      "provenance": {
+        "path": "packages/ui/src/lib/composer-query.ts",
+        "revision": "6e01ad4aa460841c79d041559dfd63731af72488",
+        "revisionDate": "2026-10-12"
+      }
+    },
+    "lib/composer-clipboard": {
+      "registry": "composer-clipboard",
+      "path": "registry/default/lib/composer-clipboard.ts",
+      "base": "lib/composer-clipboard.ts",
+      "sha256": "0c9d85b0a2068ef37d6bb86e55075a3c0bd2f391cc636f68c0f3fd91fdf97667",
+      "dependencies": [],
+      "registryDependencies": ["@coss/composer-document"],
+      "provenance": {
+        "path": "packages/ui/src/lib/composer-clipboard.ts",
+        "revision": "107dc0a1f011cd99ff047e2beef8201947a17ff2",
+        "revisionDate": "2026-10-13"
+      }
+    },
+    "hooks/use-composer-editor": {
+      "registry": "use-composer-editor",
+      "path": "registry/default/hooks/use-composer-editor.ts",
+      "base": "hooks/use-composer-editor.ts",
+      "sha256": "6a7f24fae95f1372bf1e2476ff32c4745ada9b2656b9afaf53b40e6f370b53f8",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": [
+        "@coss/composer-document",
+        "@coss/composer-clipboard"
+      ],
+      "provenance": {
+        "path": "packages/ui/src/hooks/use-composer-editor.ts",
+        "revision": "107dc0a1f011cd99ff047e2beef8201947a17ff2",
+        "revisionDate": "2026-10-13"
+      }
     }
   }
 }

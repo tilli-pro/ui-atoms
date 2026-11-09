@@ -11,6 +11,7 @@ describe("THIRD-PARTY-NOTICES", () => {
   it("carries every required third-party notice", () => {
     for (const heading of [
       "## coss ui",
+      "## shadcn/ui",
       "## @base-ui/react",
       "## lucide",
       "## cva",
@@ -38,6 +39,26 @@ describe("THIRD-PARTY-NOTICES", () => {
       "the notices must quote the same revision coss-lock.json pins",
     ).toContain(lock.revision);
     expect(text).toContain(".coss-base/");
+  });
+  it("records the digest of the shadcn base the sidebar was taken from", () => {
+    const lock = JSON.parse(
+      readFileSync(
+        resolve(
+          import.meta.dirname,
+          "..",
+          "scripts",
+          "shadcn",
+          "shadcn-lock.json",
+        ),
+        "utf8",
+      ),
+    ) as { files: Record<string, { sha256: string }> };
+    for (const [name, entry] of Object.entries(lock.files))
+      expect(
+        text,
+        `the notices must quote the digest shadcn-lock.json pins for ${name}`,
+      ).toContain(entry.sha256);
+    expect(text).toContain(".shadcn-base/");
   });
   it("has no unfilled markers", () => {
     expect(text).not.toMatch(/PASTE|TBD|TODO/);

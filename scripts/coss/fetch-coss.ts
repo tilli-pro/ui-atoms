@@ -25,6 +25,12 @@
  *     from `apps/ui/registry/**` at that exact commit and refuses to write the lock if
  *     one byte differs or the commit cannot be read. A label nobody checked would make
  *     THIRD-PARTY-NOTICES and the manifest provenance point at a tree we do not have.
+ *     Items added after the pin (`postPin` in the manifest) are the exception: the
+ *     registry rewrites their import paths, so no commit holds those bytes verbatim.
+ *     Their digest is the pin and the lock records provenance (source path, last commit)
+ *     instead of proving it.
+ *     A `multiFile` item (a kit such as `chat`) locks every file it serves, each under its
+ *     own key and, when post-pin, with its own provenance.
  *  2. The committed bytes. `.coss-base/` exists only as byte-identical upstream
  *     provenance (which is why biome.json exempts it), so `--check` compares the files
  *     on disk against the lock as well as the live registry against the lock. Without
@@ -42,7 +48,12 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, join, posix, relative, resolve, sep } from "node:path";
-import { COMPONENTS, COSS, COSS_LIBS } from "./manifest.js";
+import {
+  COMPONENTS,
+  COSS,
+  COSS_LIBS,
+  type ComponentEntry,
+} from "./manifest.js";
 
 const ROOT = resolve(import.meta.dirname, "..", "..");
 const BASE_DIR = join(ROOT, ".coss-base");
@@ -51,12 +62,12 @@ const LOCK = join(ROOT, "scripts", "coss", "coss-lock.json");
 /** The one subtree of the coss repository this package is permitted to read. */
 const REGISTRY_PREFIX = "registry/";
 
-interface RegistryFile {
+export interface RegistryFile {
   path: string;
   content: string;
   type: string;
 }
-interface RegistryItem {
+export interface RegistryItem {
   name: string;
   files: RegistryFile[];
   dependencies?: string[];
@@ -71,6 +82,18 @@ export interface LockEntry {
   sha256: string;
   dependencies: string[];
   registryDependencies: string[];
+  /** Present on items that did not exist at `COSS.revision`: the digest above is the
+   *  pin, and this records where the source stood in the coss repository when the bytes
+   *  were fetched. The registry rewrites import paths, so these bytes exist at no commit
+   *  verbatim and `--update` does not try to prove otherwise for them. */
+  provenance?: Provenance;
+}
+export interface Provenance {
+  /** Source path in the coss repository (`packages/ui/src/...` since the move). */
+  path: string;
+  /** Last commit on the default branch that touched `path`. */
+  revision: string;
+  revisionDate: string;
 }
 export interface Lock {
   revision: string;
@@ -99,7 +122,7 @@ const TRAILING_SLASH_RE = /\/$/;
 const SLUG_RE = /^[\w.-]+\/[\w.-]+$/;
 const EXT_RE = /\.tsx?$/;
 
-/** `https://github.com/cosscom/coss` → `cosscom/coss`. */
+/** `https://github.com/cosscom/ui` → `cosscom/ui`. */
 export function repoSlug(repoUrl: string): string {
   const slug = repoUrl
     .replace(GITHUB_ORIGIN_RE, "")
@@ -156,6 +179,62 @@ export async function revisionMismatches(
   return bad;
 }
 
+/** One file a COMPONENTS entry contributes to the lock, before it is hashed. */
+export interface ComponentFile {
+  key: string;
+  /** Path under `.coss-base/`. */
+  base: string;
+  file: RegistryFile;
+  /** Source path in the coss repository, for a post-pin item. */
+  postPin?: string;
+}
+
+/**
+ * The files a component's registry item contributes: its `registry:ui` file, keyed by
+ * the component name — or, for a `multiFile` kit, every file it serves, keyed
+ * `<name>/<path inside the item, without extension>` (`chat/chat-bubble`,
+ * `chat/hooks/use-chat-scroll`) and written under `.coss-base/<name>/`. A post-pin kit's
+ * `postPin` is its source directory, so each file's provenance is that directory plus the
+ * file's path inside the item.
+ */
+export function componentFiles(
+  component: Pick<ComponentEntry, "name" | "multiFile" | "postPin">,
+  registry: string,
+  item: Pick<RegistryItem, "files">,
+): ComponentFile[] {
+  if (component.multiFile) {
+    const prefix = `${REGISTRY_PREFIX}default/${registry}/`;
+    return item.files.map((file) => {
+      if (!file.path.startsWith(prefix))
+        throw new Error(
+          `${registry}: served file ${file.path} is outside ${prefix} — cannot key it`,
+        );
+      const inner = file.path.slice(prefix.length);
+      return {
+        key: `${component.name}/${inner.replace(EXT_RE, "")}`,
+        base: `${component.name}/${inner}`,
+        file,
+        postPin:
+          component.postPin === undefined
+            ? undefined
+            : `${component.postPin}/${inner}`,
+      };
+    });
+  }
+  const file =
+    item.files.find((f) => f.type === "registry:ui") ?? item.files[0];
+  if (file === undefined)
+    throw new Error(`${registry}: registry item has no usable file`);
+  return [
+    {
+      key: component.name,
+      base: `${component.name}.tsx`,
+      file,
+      postPin: component.postPin,
+    },
+  ];
+}
+
 /** Every file under `dir`, as paths relative to it, in posix spelling. */
 function listFiles(dir: string): string[] {
   if (!existsSync(dir)) return [];
@@ -164,7 +243,8 @@ function listFiles(dir: string): string[] {
     recursive: true,
     withFileTypes: true,
   })) {
-    if (!entry.isFile()) continue;
+    // `.gitkeep` holds an otherwise empty base directory; nothing else dotted belongs here.
+    if (!entry.isFile() || entry.name.startsWith(".")) continue;
     const abs = join(entry.parentPath, entry.name);
     out.push(relative(dir, abs).split(sep).join(posix.sep));
   }
@@ -172,11 +252,16 @@ function listFiles(dir: string): string[] {
 }
 
 /**
- * Compare the bytes committed under `.coss-base/` against the lock: the guard that
+ * Compare the bytes committed under `baseDir` (`.coss-base/`, or `.shadcn-base/` for
+ * `scripts/shadcn/fetch-shadcn.ts`) against the lock: the guard that
  * makes the directory's byte-identity to upstream an enforced property rather than a
  * promise. Returns one line per divergence; empty means the tree is intact.
  */
-export function committedBaseFindings(lock: Lock, baseDir: string): string[] {
+export function committedBaseFindings(
+  lock: Pick<Lock, "files">,
+  baseDir: string,
+  label = ".coss-base",
+): string[] {
   const findings: string[] = [];
   const expected = new Set<string>();
   for (const [key, entry] of Object.entries(lock.files)) {
@@ -184,7 +269,7 @@ export function committedBaseFindings(lock: Lock, baseDir: string): string[] {
     const abs = join(baseDir, entry.base);
     if (!existsSync(abs)) {
       findings.push(
-        `${entry.base}: missing from .coss-base/ (locked for ${key})`,
+        `${entry.base}: missing from ${label}/ (locked for ${key})`,
       );
       continue;
     }
@@ -196,7 +281,7 @@ export function committedBaseFindings(lock: Lock, baseDir: string): string[] {
   }
   for (const found of listFiles(baseDir))
     if (!expected.has(found))
-      findings.push(`${found}: present in .coss-base/ but not in the lock`);
+      findings.push(`${found}: present in ${label}/ but not in the lock`);
   return findings.sort();
 }
 
@@ -218,9 +303,7 @@ export async function resolveRevision(
   revision: string,
 ): Promise<{ sha: string; date: string }> {
   const url = `https://api.github.com/repos/${repoSlug(COSS.repo)}/commits/${revision}`;
-  const res = await fetch(url, {
-    headers: { accept: "application/vnd.github+json" },
-  });
+  const res = await fetch(url, { headers: githubHeaders() });
   if (!res.ok)
     throw new Error(
       `cannot resolve ${revision.slice(0, 7)} at ${COSS.repo}: ${url} → HTTP ${res.status}`,
@@ -234,6 +317,42 @@ export async function resolveRevision(
   if (typeof sha !== "string" || typeof date !== "string")
     throw new Error(`${url} → no sha/committer date in the response`);
   return { sha, date: date.slice(0, 10) };
+}
+
+/** `accept` plus a token when the environment has one; the API allows 60/h without. */
+function githubHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    accept: "application/vnd.github+json",
+  };
+  const token = process.env.GITHUB_TOKEN;
+  if (token) headers.authorization = `Bearer ${token}`;
+  return headers;
+}
+
+/**
+ * Provenance for a post-pin item: the last commit on the default branch that touched
+ * its source, verified to still hold the file. Fails loudly rather than recording a
+ * path nobody can open.
+ */
+export async function resolveProvenance(path: string): Promise<Provenance> {
+  const url = `https://api.github.com/repos/${repoSlug(COSS.repo)}/commits?path=${encodeURIComponent(path)}&per_page=1`;
+  const res = await fetch(url, { headers: githubHeaders() });
+  if (!res.ok) throw new Error(`${url} → HTTP ${res.status}`);
+  const body = (await res.json()) as {
+    sha?: string;
+    commit?: { committer?: { date?: string } };
+  }[];
+  const head = body[0];
+  const sha = head?.sha;
+  const date = head?.commit?.committer?.date;
+  if (typeof sha !== "string" || typeof date !== "string")
+    throw new Error(`${path}: no commit at ${COSS.repo} touches it`);
+  const raw = `https://raw.githubusercontent.com/${repoSlug(COSS.repo)}/${sha}/${path}`;
+  if ((await fetchText(raw)) === null)
+    throw new Error(
+      `${path} does not exist at ${sha.slice(0, 7)} — fix postPin in manifest.ts`,
+    );
+  return { path, revision: sha, revisionDate: date.slice(0, 10) };
 }
 
 /** Print the committed-bytes findings, if any. True when the tree is intact. */
@@ -288,16 +407,17 @@ export async function main(): Promise<void> {
     }
   };
 
-  const record = (
+  const record = async (
     key: string,
     base: string,
     registry: string,
     item: RegistryItem,
     file: RegistryFile,
     label: string,
-  ): void => {
+    postPin?: string,
+  ): Promise<void> => {
     const digest = sha256(file.content);
-    files[key] = {
+    const entry: LockEntry = {
       registry,
       path: file.path,
       base,
@@ -305,7 +425,20 @@ export async function main(): Promise<void> {
       dependencies: item.dependencies ?? [],
       registryDependencies: item.registryDependencies ?? [],
     };
-    served.push({ key, path: file.path, content: file.content });
+    if (postPin !== undefined) {
+      // Not at the tree pin: the digest is the pin; provenance is recorded, not proven.
+      entry.provenance =
+        mode === "update"
+          ? await resolveProvenance(postPin)
+          : (previous?.files[key]?.provenance ?? {
+              path: postPin,
+              revision: "",
+              revisionDate: "",
+            });
+    } else {
+      served.push({ key, path: file.path, content: file.content });
+    }
+    files[key] = entry;
     if (previous !== undefined && previous.files[key]?.sha256 !== digest)
       drift.push(`${key} (${registry}) — ${label}`);
     if (mode !== "check")
@@ -318,28 +451,40 @@ export async function main(): Promise<void> {
       (component.source === "coss" ? component.name : undefined);
     if (registry === undefined) continue;
     const item = await fetchItem(registry);
-    const file =
-      item.files.find((f) => f.type === "registry:ui") ?? item.files[0];
-    if (file === undefined)
-      throw new Error(`${registry}: registry item has no usable file`);
-    record(
-      component.name,
-      `${component.name}.tsx`,
+    for (const { key, base, file, postPin } of componentFiles(
+      component,
       registry,
       item,
-      file,
-      component.disposition,
-    );
+    ))
+      await record(
+        key,
+        base,
+        registry,
+        item,
+        file,
+        component.disposition,
+        postPin,
+      );
   }
 
   for (const lib of COSS_LIBS) {
     const item = await fetchItem(lib.registry);
     const file =
-      item.files.find((f) => f.type === "registry:lib") ?? item.files[0];
+      item.files.find(
+        (f) => f.type === "registry:lib" || f.type === "registry:hook",
+      ) ?? item.files[0];
     if (file === undefined)
       throw new Error(`${lib.registry}: registry item has no usable file`);
-    const key = lib.base.replace(EXT_RE, ""); // "lib/segmented-control"
-    record(key, lib.base, lib.registry, item, file, "vendored lib");
+    const key = lib.base.replace(EXT_RE, ""); // "lib/segmented-control", "hooks/use-media-query"
+    await record(
+      key,
+      lib.base,
+      lib.registry,
+      item,
+      file,
+      "vendored lib",
+      lib.postPin,
+    );
   }
 
   const count = Object.keys(files).length;

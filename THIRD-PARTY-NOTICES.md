@@ -3,7 +3,7 @@
 `@tilli.dev/ui-atoms` is MIT (see LICENSE). It contains code derived from, and depends on,
 the works below. Notices are preserved as their licenses require.
 
-## coss ui (component registry, `apps/ui/` of github.com/cosscom/coss) — MIT
+## coss ui (component registry, `apps/ui/` of github.com/cosscom/ui, formerly cosscom/coss) — MIT
 
 Components in `src/components/`, and the vendored lib in `src/lib/`, are **re-based on** the coss ui registry (MIT) at a single
 pinned revision: commit `816348154874bbc0be230277c584cc38019b48b1` of
@@ -11,8 +11,11 @@ pinned revision: commit `816348154874bbc0be230277c584cc38019b48b1` of
 `https://coss.com/ui/r/<name>.json`. The exact bytes each component was derived from are
 committed in this repository under `.coss-base/`, and `scripts/coss/coss-lock.json` records
 a SHA-256 per file, so the derivation is reproducible rather than asserted. The coss monorepo
-root is AGPL-3.0; only `apps/ui/` and `apps/origin/` are MIT per the repository's README and
-LICENSING.md, and nothing outside `apps/ui/` is used here.
+root was AGPL-3.0 at that revision; only `apps/ui/` and `apps/origin/` are MIT per the
+repository's README and LICENSING.md, and nothing outside `apps/ui/` is used here. The
+repository has since been renamed from `cosscom/coss` to `cosscom/ui` with its history intact
+(the pinned commit resolves there), and its `main` now carries a root MIT license with the
+components under `packages/ui/src/components/`.
 
 The calendar's optional time field takes its time parsing, typing format and list filtering
 from the registry particle `p-calendar-25` (`apps/ui/registry/default/particles/p-calendar-25.tsx`,
@@ -22,8 +25,25 @@ under `.coss-base/`; this one is covered by this same MIT notice.
 
 Eleven components have no coss counterpart and are not derived from it — `aspect-ratio`,
 `carousel`, `currency-input`, `form-root-error`, `number-ticker`, `resizable`,
-`segmented-control`, `spinning-text`, `stepper`, `timeline`, `tree` — and four more
-(`number-field`, `sheet`, `sidebar`, `toolbar`) are not derived from it yet.
+`segmented-control`, `spinning-text`, `stepper`, `timeline`, `tree` — and three more
+(`number-field`, `sheet`, `toolbar`) are not derived from it yet.
+
+`composer` and its libs (`src/lib/composer-*.ts`, `src/hooks/use-composer-editor.ts`) were
+added to the coss registry after the pinned revision. They are derived from the registry as
+served in 2026-11 (`https://coss.com/ui/r/<name>.json`), committed under `.coss-base/` and
+digest-pinned in `coss-lock.json` like every other file; because the registry rewrites import
+paths, those bytes exist at no single commit, so each lock entry records the source path and
+its last commit in `packages/ui/src/` as provenance (`provenance`) rather than claiming the
+tree revision. The two registry hooks (`use-media-query`, `use-copy-to-clipboard`) are
+byte-identical to `apps/ui/registry/default/hooks/` at the pinned revision.
+
+`chat` (`src/components/chat/`) is likewise a post-pin item: coss's chat kit, served as one
+registry item of 23 files (20 parts, `hooks/use-chat-scroll.ts`,
+`hooks/use-chat-popup-dismissal.ts` and `lib/split-chat-message-preview.ts`). Every file is
+derived from the registry as served in 2026-11 (`https://coss.com/ui/r/chat.json`),
+committed byte-identical under `.coss-base/chat/` and digest-pinned in `coss-lock.json`
+under its own key (`chat/<file>`), each with per-file provenance pointing at the source in
+`packages/ui/src/chat/` and its last commit.
 
 The `segmented-control` *component* is tilli's own. The unrelated coss registry item of the
 same name is a cva lib, not a component; it is vendored separately as
@@ -73,7 +93,38 @@ The MIT License so designated, in its standard text:
 
 MIT License
 
-Copyright (c) coss.com contributors (github.com/cosscom/coss, `apps/ui/`)
+Copyright (c) coss.com contributors (github.com/cosscom/ui, formerly cosscom/coss, `apps/ui/`)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## shadcn/ui (component registry, `apps/v4/registry/` of github.com/shadcn-ui/ui) — MIT
+
+No component is derived from shadcn/ui today. The tooling for pinning one exists
+(`scripts/shadcn/`, `.shadcn-base/`, `shadcn-lock.json`, style `base-nova` served from
+`https://ui.shadcn.com/r/styles/base-nova/<name>.json`): a component sourced there would be
+committed under `.shadcn-base/` and digest-pinned, with the generating template's last commit
+recorded as provenance, since the shadcn registry serves generated files that exist at no
+commit verbatim. The notice below is kept so that adding one never ships without it.
+
+MIT License
+
+Copyright (c) 2023 shadcn
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

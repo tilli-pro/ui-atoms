@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
  *
  * The offline half (committed `.coss-base/` bytes vs. the lock) can only fail because
  * of the branch under review, so it gates merges. The live half fails whenever coss
- * edits one of the 55 locked files — an event nobody's pull request caused and nobody's
+ * edits one of the 86 locked files — an event nobody's pull request caused and nobody's
  * pull request can fix without a full refresh — so it runs on a schedule instead. Put
  * the live check back in the required job and every open branch goes red the next time
  * upstream lands a commit.
@@ -20,6 +20,8 @@ const SCHEDULE_RE = /^ {2}schedule:$/m;
 const DISPATCH_RE = /^ {2}workflow_dispatch:$/m;
 const PULL_REQUEST_RE = /^ {2}pull_request:$/m;
 const LIVE_CHECK_RE = /pnpm fetch-coss --check\s*$/m;
+const SHADCN_ONLINE_CHECK_RE = /fetch-shadcn --check(?! --offline)/;
+const SHADCN_LIVE_CHECK_RE = /pnpm fetch-shadcn --check\s*$/m;
 
 const ci = read(".github/workflows/ci.yml");
 const drift = read(".github/workflows/coss-drift.yml");
@@ -35,5 +37,13 @@ describe("the coss checks", () => {
     expect(drift).toMatch(DISPATCH_RE);
     expect(drift).not.toMatch(PULL_REQUEST_RE);
     expect(drift).toMatch(LIVE_CHECK_RE);
+  });
+});
+
+describe("the shadcn checks", () => {
+  it("follow the same split: offline in CI, live on the schedule", () => {
+    expect(ci).toContain("pnpm fetch-shadcn --check --offline");
+    expect(ci).not.toMatch(SHADCN_ONLINE_CHECK_RE);
+    expect(drift).toMatch(SHADCN_LIVE_CHECK_RE);
   });
 });

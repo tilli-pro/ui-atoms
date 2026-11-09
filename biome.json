@@ -27,7 +27,7 @@
       "linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } }
     },
     {
-      "includes": [".coss-base/**"],
+      "includes": [".coss-base/**", ".shadcn-base/**"],
       "linter": { "enabled": false },
       "assist": { "enabled": false },
       "formatter": { "enabled": false }

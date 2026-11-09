@@ -18,8 +18,11 @@ type Story = StoryObj<typeof meta>;
 export const WithImage: Story = {
   render: () => (
     <Avatar>
-      <AvatarImage alt="User" src="https://github.com/shadcn.png" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage
+        alt="User"
+        src="https://avatars.githubusercontent.com/u/2670350"
+      />
+      <AvatarFallback>JD</AvatarFallback>
     </Avatar>
   ),
 };

@@ -3,10 +3,12 @@
  * tree, so "current coss" means one thing. Re-pinned only by `fetch-coss.ts --update`,
  * always in its own commit, always with the resulting diff reviewed.
  *
- * Provenance: `apps/ui/registry/default/{ui,lib}` at github.com/cosscom/coss. The label is
+ * Provenance: `apps/ui/registry/default/{ui,lib}` at github.com/cosscom/ui (the repository
+ * was cosscom/coss when this pin was taken; it moved with its history intact, so the commit
+ * below still resolves there — `main` has since reorganised into `packages/ui/src/`). The label is
  * not taken on trust: `fetch-coss.ts --update` resolves this commit at that repository and
  * re-reads every file it just fetched from the registry at exactly this revision, and
- * refuses to write `coss-lock.json` unless all 55 are byte-identical — so the revision,
+ * refuses to write `coss-lock.json` unless all 54 are byte-identical — so the revision,
  * the digests, `.coss-base/` and THIRD-PARTY-NOTICES all describe one tree. The lock
  * records when that verification last ran (`revisionVerifiedAt`) and when the bytes were
  * fetched (`fetchedAt`); the values below are the pin itself. `4b1240b` ("chore(ui): update
@@ -15,7 +17,7 @@
  */
 export const COSS = {
   registry: "https://coss.com/ui/r",
-  repo: "https://github.com/cosscom/coss",
+  repo: "https://github.com/cosscom/ui",
   revision: "816348154874bbc0be230277c584cc38019b48b1",
   revisionDate: "2026-09-16",
   /** Date the bytes in `.coss-base/` were fetched; `coss-lock.json` is the record. */
@@ -24,8 +26,9 @@ export const COSS = {
   license: "MIT",
 } as const;
 
-/** Where a component's base comes from. */
-export type Source = "coss" | "v2";
+/** Where a component's base comes from. `shadcn` entries are pinned by
+ *  `scripts/shadcn/manifest.ts` and never fetched from the coss registry. */
+export type Source = "coss" | "v2" | "shadcn";
 
 /**
  * What re-porting does to that base.
@@ -68,8 +71,18 @@ export interface ComponentEntry {
   readonly drops?: readonly string[];
   /** Set on the three tilli-only divergences that were explicitly approved as deliberate. */
   readonly approvedKeep?: true;
-  /** Re-port order: the batch this component was re-ported in. */
-  readonly task: 5 | 6 | 7 | 8 | 9 | 10;
+  /** Set when the registry item did not exist at `COSS.revision`: the source path in the
+   *  coss repository's default branch. The lock then carries `provenance` for it and the
+   *  digest alone is the pin (see fetch-coss.ts). */
+  readonly postPin?: string;
+  /** Set when the registry item is a kit of many files (`chat`) rather than one
+   *  `registry:ui` file: every served file is locked, under the key
+   *  `<name>/<path inside the item, without extension>`, and written to
+   *  `.coss-base/<name>/<path inside the item>`. With `postPin`, `postPin` names the
+   *  item's source directory and each file's provenance is `<postPin>/<path inside the item>`. */
+  readonly multiFile?: true;
+  /** Re-port order: the batch this component was re-ported in. 11 = the 2026-11 additions. */
+  readonly task: 5 | 6 | 7 | 8 | 9 | 10 | 11;
   readonly note?: string;
 }
 
@@ -101,7 +114,7 @@ const v2 = (
   ...rest,
 });
 
-/** 65 components, alphabetical. 50 re-based on coss, 15 still on v2. */
+/** 67 components, alphabetical. 53 re-based on coss, 14 still on v2, none sourced from shadcn/ui today. */
 export const COMPONENTS: readonly ComponentEntry[] = [
   coss("accordion", "merge-selectively", 10, {
     reapply: ["ACC-2"],
@@ -135,6 +148,11 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     note: "sequence after scroll-area",
   }),
   v2("carousel", "tilli-only", 10, { reapply: ["CAR-1"], approvedKeep: true }),
+  coss("chat", "take-upstream-wholesale", 11, {
+    postPin: "packages/ui/src/chat",
+    multiFile: true,
+    note: "added to coss after the pin (first served 2026-11). A composite kit rather than an atom — messages and bubbles, reactions, reply previews, the typing indicator, member lists, empty/loading states and the scroll controller — served as 23 files (20 parts, two hooks, one lib) that are all locked and taken wholesale with imports rewritten, keeping coss's file-per-part layout under src/components/chat/. Not split into the styled/primitive/variants triple: it carries no cva variants.",
+  }),
   coss("checkbox", "take-with-token-remap", 8),
   coss("checkbox-group", "merge-selectively", 10),
   coss("collapsible", "keep-ours", 10, {
@@ -147,6 +165,10 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     reapply: ["CMD-2"],
     drops: ["cmdk"],
     note: "sequence after autocomplete",
+  }),
+  coss("composer", "take-upstream-wholesale", 11, {
+    postPin: "packages/ui/src/components/composer.tsx",
+    note: "added to coss after the pin (first shipped 2026-10); taken wholesale with imports rewritten, together with its libs and hook in COSS_LIBS. Not split into the styled/primitive/variants triple: it carries no cva variants.",
   }),
   coss("context-menu", "take-upstream-wholesale", 10, {
     reapply: ["CTX-1"],
@@ -217,7 +239,10 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     registry: "sheet",
     note: "unmeasured; check first whether coss still treats sheet and drawer as distinct",
   }),
-  v2("sidebar", "measure-first", 10, { registry: "sidebar" }),
+  coss("sidebar", "merge-selectively", 10, {
+    reapply: ["SBR-1", "SBR-2", "SBR-3", "SBR-4", "SBR-5", "SBR-6", "SBR-7"],
+    note: "coss's own Base UI sidebar (the registry serves it, undocumented). Measured 2026-11: same skeleton as shadcn's base-nova build, better icon sizing and RTL, ScrollArea content; chosen over shadcn's. The hsl() wrapper on the outline shadow is dropped — our tokens are oklch.",
+  }),
   coss("skeleton", "keep-ours", 5, {
     note: "byte-equivalent modulo house style — a no-op",
   }),
@@ -253,7 +278,9 @@ export interface LibEntry {
   readonly base: string;
   /** Path under `packages/ui-atoms/src/` the ported file lands at. */
   readonly dest: string;
-  readonly task: 10;
+  /** As on ComponentEntry: source path in the coss repository for an item newer than the pin. */
+  readonly postPin?: string;
+  readonly task: 10 | 11;
   readonly why: string;
 }
 
@@ -265,6 +292,60 @@ export const COSS_LIBS: readonly LibEntry[] = [
     task: 10,
     why: "TAB-2 — coss's tabs declares registryDependencies ['@coss/segmented-control'] and imports SegmentedControlSize / segmentedControlItemSizeClassNames / segmentedControlItemLayoutClassName from it. It is a registry:lib, not a component, and is unrelated to our tilli-only segmented-control component.",
   },
+  {
+    registry: "use-media-query",
+    base: "hooks/use-media-query.ts",
+    dest: "hooks/use-media-query.ts",
+    task: 11,
+    why: "sidebar imports useMediaQuery('max-md') from it; it also supplies useIsMobile, replacing the shadcn use-mobile hook.",
+  },
+  {
+    registry: "use-copy-to-clipboard",
+    base: "hooks/use-copy-to-clipboard.ts",
+    dest: "hooks/use-copy-to-clipboard.ts",
+    task: 11,
+    why: "the one other registry:hook coss publishes; exported from ./hooks for parity with the registry.",
+  },
+  {
+    registry: "composer-editor",
+    base: "lib/composer-editor.ts",
+    dest: "lib/composer-editor.ts",
+    postPin: "packages/ui/src/lib/composer-editor.ts",
+    task: 11,
+    why: "composer's editor context and provider; a registry:lib the component re-exports from.",
+  },
+  {
+    registry: "composer-document",
+    base: "lib/composer-document.ts",
+    dest: "lib/composer-document.ts",
+    postPin: "packages/ui/src/lib/composer-document.ts",
+    task: 11,
+    why: "composer's value model (parts, tokens, text) used by the editor hook.",
+  },
+  {
+    registry: "composer-query",
+    base: "lib/composer-query.ts",
+    dest: "lib/composer-query.ts",
+    postPin: "packages/ui/src/lib/composer-query.ts",
+    task: 11,
+    why: "composer's trigger-query parser, a dependency of composer-document.",
+  },
+  {
+    registry: "composer-clipboard",
+    base: "lib/composer-clipboard.ts",
+    dest: "lib/composer-clipboard.ts",
+    postPin: "packages/ui/src/lib/composer-clipboard.ts",
+    task: 11,
+    why: "composer's clipboard (de)serialisation, a dependency of the editor hook.",
+  },
+  {
+    registry: "use-composer-editor",
+    base: "hooks/use-composer-editor.ts",
+    dest: "hooks/use-composer-editor.ts",
+    postPin: "packages/ui/src/hooks/use-composer-editor.ts",
+    task: 11,
+    why: "composer's contenteditable engine; a registry:hook the editor lib wraps.",
+  },
 ];
 
 export interface LiveId {
@@ -274,7 +355,7 @@ export interface LiveId {
 }
 
 /**
- * The 32 divergence ids that stay LIVE under re-basing, each with the answer the port builds
+ * The 40 divergence ids that stay LIVE under re-basing, each with the answer the port builds
  * on. The other 68 have DISSOLVED: the base supplies them, and none of them is re-litigated
  * per component.
  *
@@ -288,6 +369,39 @@ export interface LiveId {
  *   adopt / drop / keep / deferred → as written.
  */
 export const LIVE_IDS: Readonly<Record<string, LiveId>> = {
+  "SBR-1": {
+    resolution:
+      "re-apply the exported SIDEBAR_WIDTH / SIDEBAR_WIDTH_MOBILE / SIDEBAR_WIDTH_ICON constants, with SIDEBAR_WIDTH = 14rem",
+    why: "published API: consumers size layouts from them. 14rem is the house density; the base's 16rem would widen every existing sidebar.",
+  },
+  "SBR-2": {
+    resolution: "re-apply the 7-year cookie lifetime",
+    why: "the base's 7 days forgets the user's collapsed state weekly; ours is a persisted preference.",
+  },
+  "SBR-3": {
+    resolution:
+      "re-apply the TooltipProvider delay={0} wrapper in SidebarProvider",
+    why: "collapsed-rail tooltips are labels for icon-only buttons and should open instantly.",
+  },
+  "SBR-4": {
+    resolution:
+      "re-apply the OS-aware rail title (⌘B / Ctrl+B), resolved after mount",
+    why: "the shortcut is otherwise undiscoverable; the post-mount resolution avoids a hydration mismatch.",
+  },
+  "SBR-5": {
+    resolution:
+      're-apply type="button" as SidebarMenuButton\'s default when render is not set',
+    why: "a menu button inside a <form> must not submit it; the base leaves the browser default (submit).",
+  },
+  "SBR-6": {
+    resolution: "re-apply SidebarTriggerMobile",
+    why: "published API: a trigger that mounts only on mobile, for headers that already show the rail on desktop.",
+  },
+  "SBR-7": {
+    resolution:
+      "re-apply the document.cookie fallback behind a cookieStore feature check",
+    why: "the base writes only through the Cookie Store API, which Safari gained in 18.4 and Firefox in 142; a library must not throw on older engines, and a consumer-side polyfill (npm `cookie-store`, last published 2020) is not something to require.",
+  },
   "XC-3": {
     resolution: "adopt @base-ui/react 1.8.0",
     why: "bump to the latest 1.x. Verified latest = 1.8.0; coss's pinned revision targets the same line.",

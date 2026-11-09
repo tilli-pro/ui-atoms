@@ -44,12 +44,13 @@ jobs:
           check "kit-object access" -P "\b(Card|Dialog|Select|Table|Fieldset|Tooltip|Form|Field)\.[A-Z]" -- packages/ui-atoms/src/components
           check "Base* identifier" -P "\bBase(?!UI)[A-Z][A-Za-z0-9]*\b" -- packages/ui-atoms/src/components
       - run: pnpm content-scan
-      # Offline half only: the committed `.coss-base/` bytes against the lock. The
-      # live-registry drift check is `.github/workflows/coss-drift.yml`, on a schedule —
-      # upstream is actively developed, and a required job that fails the moment coss
-      # edits any of the 55 locked files would red every unrelated pull request until a
-      # full refresh (which itself needs a green pull request) lands.
+      # Offline half only: the committed `.coss-base/` and `.shadcn-base/` bytes against
+      # their locks. The live-registry drift checks are `.github/workflows/coss-drift.yml`,
+      # on a schedule — both upstreams are actively developed, and a required job that
+      # fails the moment coss edits any of the 86 locked files would red every unrelated
+      # pull request until a full refresh (which itself needs a green pull request) lands.
       - run: pnpm fetch-coss --check --offline
+      - run: pnpm fetch-shadcn --check --offline
       - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm lint

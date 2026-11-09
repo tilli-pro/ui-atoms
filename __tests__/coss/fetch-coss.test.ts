@@ -10,6 +10,7 @@ import { dirname, join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   committedBaseFindings,
+  componentFiles,
   type Lock,
   rawUrl,
   revisionMismatches,
@@ -24,7 +25,11 @@ const REAL_LOCK = JSON.parse(
 ) as Lock;
 
 const EXT_RE = /\.tsx?$/;
-const REGISTRY_PATH_RE = /^registry\/default\/(ui|lib)\//;
+const REGISTRY_PATH_RE = /^registry\/default\/(ui|lib|hooks|chat)\//;
+/** A `.ts` base: a vendored lib or hook, or one inside a multi-file kit (`chat/hooks/…`). */
+const TS_BASE_KEY_RE = /^(chat\/)?(lib|hooks)\//;
+const CHAT_KEY_RE = /^chat\//;
+const SHA40_RE = /^[0-9a-f]{40}$/;
 const CARVE_OUT_RE = /only apps\/ui\/registry/;
 
 const temps: string[] = [];
@@ -76,16 +81,71 @@ describe("the committed .coss-base/ bytes", () => {
     );
   });
 
-  it("locks one entry per file on disk, all of them under the pinned revision", () => {
-    expect(Object.keys(REAL_LOCK.files)).toHaveLength(55);
+  it("locks one entry per file on disk: at the pinned revision, or digest-pinned with provenance", () => {
+    expect(Object.keys(REAL_LOCK.files)).toHaveLength(86);
     expect(REAL_LOCK.revision).toBe(COSS.revision);
     expect(REAL_LOCK.revisionDate).toBe(COSS.revisionDate);
     for (const [key, entry] of Object.entries(REAL_LOCK.files)) {
       expect(entry.path, key).toMatch(REGISTRY_PATH_RE);
       expect(entry.base, key).toBe(
-        key.startsWith("lib/") ? `${key}.ts` : `${key}.tsx`,
+        TS_BASE_KEY_RE.test(key) ? `${key}.ts` : `${key}.tsx`,
       );
+      if (CHAT_KEY_RE.test(key)) {
+        expect(entry.path, key).toBe(`registry/default/${entry.base}`);
+        expect(entry.provenance?.path, key).toBe(
+          `packages/ui/src/${entry.base}`,
+        );
+      }
+      if (entry.provenance) {
+        expect(entry.provenance.path, key).toMatch(/^packages\/ui\/src\//);
+        expect(entry.provenance.revision, key).toMatch(SHA40_RE);
+        expect(entry.provenance.revisionDate, key).toMatch(
+          /^\d{4}-\d{2}-\d{2}$/,
+        );
+      }
     }
+    expect(
+      Object.entries(REAL_LOCK.files)
+        .filter(([, e]) => e.provenance)
+        .map(([k]) => k)
+        .sort(),
+    ).toEqual([
+      "chat/chat-bubble",
+      "chat/chat-collapsible-message",
+      "chat/chat-conversation",
+      "chat/chat-date-pill",
+      "chat/chat-delivery-indicator",
+      "chat/chat-jump-to-latest-button",
+      "chat/chat-members",
+      "chat/chat-message",
+      "chat/chat-message-actions",
+      "chat/chat-message-bubble",
+      "chat/chat-message-info",
+      "chat/chat-message-layout",
+      "chat/chat-message-text",
+      "chat/chat-reaction-chip",
+      "chat/chat-reaction-picker",
+      "chat/chat-reply-preview",
+      "chat/chat-reply-reference",
+      "chat/chat-states",
+      "chat/chat-typing-indicator",
+      "chat/chat-unread-divider",
+      "chat/hooks/use-chat-popup-dismissal",
+      "chat/hooks/use-chat-scroll",
+      "chat/lib/split-chat-message-preview",
+      "composer",
+      "hooks/use-composer-editor",
+      "lib/composer-clipboard",
+      "lib/composer-document",
+      "lib/composer-editor",
+      "lib/composer-query",
+    ]);
+  });
+
+  it("ignores the .gitkeep that holds an empty base directory", () => {
+    const l = lockOf({});
+    const dir = scratch({ ".gitkeep": "" });
+    expect(committedBaseFindings(l, dir)).toEqual([]);
   });
 });
 
@@ -129,10 +189,63 @@ describe("committedBaseFindings", () => {
   });
 });
 
+describe("componentFiles", () => {
+  const file = (path: string, type = "registry:component") => ({
+    path,
+    type,
+    content: "x\n",
+  });
+
+  it("locks the registry:ui file of a single-file item under the component name", () => {
+    const got = componentFiles({ name: "select" }, "select", {
+      files: [
+        file("registry/default/lib/utils.ts", "registry:lib"),
+        file("registry/default/ui/select.tsx", "registry:ui"),
+      ],
+    });
+    expect(got.map(({ key, base, file }) => [key, base, file.path])).toEqual([
+      ["select", "select.tsx", "registry/default/ui/select.tsx"],
+    ]);
+  });
+
+  it("locks every file of a multi-file kit under <name>/, with per-file provenance", () => {
+    const got = componentFiles(
+      { name: "chat", multiFile: true, postPin: "packages/ui/src/chat" },
+      "chat",
+      {
+        files: [
+          file("registry/default/chat/chat-bubble.tsx"),
+          file("registry/default/chat/hooks/use-chat-scroll.ts"),
+        ],
+      },
+    );
+    expect(got.map(({ key, base, postPin }) => [key, base, postPin])).toEqual([
+      [
+        "chat/chat-bubble",
+        "chat/chat-bubble.tsx",
+        "packages/ui/src/chat/chat-bubble.tsx",
+      ],
+      [
+        "chat/hooks/use-chat-scroll",
+        "chat/hooks/use-chat-scroll.ts",
+        "packages/ui/src/chat/hooks/use-chat-scroll.ts",
+      ],
+    ]);
+  });
+
+  it("refuses a kit file served outside the item's own directory", () => {
+    expect(() =>
+      componentFiles({ name: "chat", multiFile: true }, "chat", {
+        files: [file("registry/default/ui/button.tsx")],
+      }),
+    ).toThrow(/outside registry\/default\/chat\//);
+  });
+});
+
 describe("rawUrl", () => {
   it("addresses one registry file inside apps/ui at an exact revision", () => {
     expect(rawUrl(COSS.revision, "registry/default/ui/separator.tsx")).toBe(
-      `https://raw.githubusercontent.com/cosscom/coss/${COSS.revision}/apps/ui/registry/default/ui/separator.tsx`,
+      `https://raw.githubusercontent.com/cosscom/ui/${COSS.revision}/apps/ui/registry/default/ui/separator.tsx`,
     );
   });
 
