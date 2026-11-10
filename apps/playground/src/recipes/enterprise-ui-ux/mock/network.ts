@@ -1,3 +1,4 @@
+import { moneyFrom } from "./money.js";
 import {
   address,
   cities,
@@ -6,7 +7,7 @@ import {
   personName,
   phone,
 } from "./names.js";
-import { createRng, type NumRange, type Rng, seedFor } from "./random.js";
+import { createRng, type Rng, seedFor } from "./random.js";
 import {
   accountsShape,
   companiesShape,
@@ -131,14 +132,6 @@ const DIRECTORY_REGIONS = [
   "West Coast",
   "Mountain",
 ] as const;
-
-/** Appendix money shapes can be 0/0/max (median = min): model the zero share as a point mass, then a skewed tail. */
-const moneyFrom = (rng: Rng, r: NumRange): number =>
-  r.median === r.min
-    ? rng.bool(0.55)
-      ? r.min
-      : rng.range({ min: r.min, median: r.max * 0.05, max: r.max })
-    : rng.range(r);
 
 const accountColumns = (
   rng: Rng,
