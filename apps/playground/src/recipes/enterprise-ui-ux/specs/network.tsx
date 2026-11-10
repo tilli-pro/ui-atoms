@@ -81,42 +81,78 @@ const organizationTotal = (persona: Persona) =>
 const contactColumns: ColumnSpec<NetworkContact>[] = [
   { key: "name", header: "Name", format: "link", sortable: true },
   { key: "email", header: "Email", format: "text", sortable: true },
-  { key: "phone", header: "Phone", format: "text" },
-  { key: "accountNumber", header: "Account #", format: "link" },
-  { key: "premiseAddress", header: "Premise address", format: "text" },
+  { key: "phone", header: "Phone", format: "text", sortable: false },
+  {
+    key: "accountNumber",
+    header: "Account #",
+    format: "link",
+    sortable: false,
+  },
+  {
+    key: "premiseAddress",
+    header: "Premise address",
+    format: "text",
+    sortable: false,
+  },
   {
     key: "balance",
     header: "Balance",
     format: "money",
     align: "end",
-    sortable: true,
+    sortable: false,
   },
-  { key: "pastDueDate", header: "Past due date", format: "date" },
+  {
+    key: "pastDueDate",
+    header: "Past due date",
+    format: "date",
+    sortable: false,
+  },
   { key: "createdAt", header: "Created", format: "date", sortable: true },
 ];
 
 const organizationColumns: ColumnSpec<NetworkOrganization>[] = [
   { key: "name", header: "Name", format: "link", sortable: true },
   { key: "email", header: "Email", format: "text", sortable: true },
-  { key: "phone", header: "Phone", format: "text" },
-  { key: "accountNumber", header: "Account #", format: "link" },
-  { key: "premiseAddress", header: "Premise address", format: "text" },
+  { key: "phone", header: "Phone", format: "text", sortable: false },
+  {
+    key: "accountNumber",
+    header: "Account #",
+    format: "link",
+    sortable: false,
+  },
+  {
+    key: "premiseAddress",
+    header: "Premise address",
+    format: "text",
+    sortable: false,
+  },
   {
     key: "balance",
     header: "Balance",
     format: "money",
     align: "end",
-    sortable: true,
+    sortable: false,
   },
-  { key: "pastDueDate", header: "Past due date", format: "date" },
+  {
+    key: "pastDueDate",
+    header: "Past due date",
+    format: "date",
+    sortable: false,
+  },
   { key: "createdAt", header: "Created", format: "date", sortable: true },
-  { key: "classification", header: "Classification", format: "text" },
-  { key: "industry", header: "Industry", format: "text", sortable: true },
+  {
+    key: "classification",
+    header: "Classification",
+    format: "text",
+    sortable: false,
+  },
+  { key: "industry", header: "Industry", format: "text", sortable: false },
   {
     key: "networkStatus",
     header: "Network status",
     format: "status",
     accessor: (row) => networkStatusLabel[row.networkStatus],
+    sortable: false,
   },
 ];
 
@@ -125,17 +161,22 @@ const directoryColumns: ColumnSpec<NetworkDirectoryCompany>[] = [
     key: "displayName",
     header: "Display name",
     format: "party",
-    sortable: true,
+    sortable: false,
     accessor: (row) =>
       row.isMine
         ? { name: row.displayName, subline: "This is your company" }
         : row.displayName,
   },
-  { key: "legalName", header: "Legal name", format: "text" },
-  { key: "industry", header: "Industry", format: "text" },
-  { key: "region", header: "Region", format: "text" },
-  { key: "tradesWith", header: "Trades with", format: "count" },
-  { key: "joinedAt", header: "Joined", format: "date", sortable: true },
+  { key: "legalName", header: "Legal name", format: "text", sortable: false },
+  { key: "industry", header: "Industry", format: "text", sortable: false },
+  { key: "region", header: "Region", format: "text", sortable: false },
+  {
+    key: "tradesWith",
+    header: "Trades with",
+    format: "count",
+    sortable: false,
+  },
+  { key: "joinedAt", header: "Joined", format: "date", sortable: false },
 ];
 
 const exchangeColumns: ColumnSpec<NetworkExchange>[] = [
@@ -144,38 +185,43 @@ const exchangeColumns: ColumnSpec<NetworkExchange>[] = [
     header: "Direction",
     format: "badge",
     accessor: direction,
+    sortable: false,
   },
   {
     key: "documentType",
     header: "Document type",
     format: "text",
     accessor: (row) => capitalise(row.documentType),
+    sortable: false,
   },
   {
     key: "status",
     header: "Status",
     format: "status",
     accessor: (row) => exchangeStatusLabel[row.status],
+    sortable: false,
   },
-  { key: "partner", header: "Partner", format: "text" },
-  { key: "createdAt", header: "Created", format: "date", sortable: true },
+  { key: "partner", header: "Partner", format: "text", sortable: false },
+  { key: "createdAt", header: "Created", format: "date", sortable: false },
 ];
 
 const inviteColumns: ColumnSpec<NetworkInvite>[] = [
-  { key: "recipient", header: "Recipient", format: "text" },
+  { key: "recipient", header: "Recipient", format: "text", sortable: false },
   {
     key: "status",
     header: "Status",
     format: "status",
     accessor: (row) => inviteStatusLabel[row.status],
+    sortable: false,
   },
   {
     key: "payment",
     header: "Payment",
     format: "text",
     accessor: (row) => (row.payment === "paid" ? "Paid" : null),
+    sortable: false,
   },
-  { key: "sentAt", header: "Sent", format: "date", sortable: true },
+  { key: "sentAt", header: "Sent", format: "date", sortable: false },
 ];
 
 const contactChips: ChipSpec<NetworkContact>[] = [
@@ -256,6 +302,17 @@ const inviteChips: ChipSpec<NetworkInvite>[] = [
   },
 ];
 
+const exchangeRowActions: ActionSpec[] = [
+  { label: "Accept", icon: Check },
+  { label: "Reject", icon: X, variant: "destructive" },
+  { label: "Open", icon: ExternalLink },
+];
+
+const inviteRowActions: ActionSpec[] = [
+  { label: "Resend", icon: RotateCw },
+  { label: "Revoke", icon: Ban, variant: "destructive" },
+];
+
 const partyPageActions = (create: ActionSpec): ActionSpec[] => [
   { label: "Import", icon: Upload, variant: "outline", gap: "file-import" },
   { label: "Export", icon: Download, variant: "outline" },
@@ -301,9 +358,8 @@ export const networkSpecs: ModuleSpecs = {
       search: (row: NetworkContact, query) =>
         includes(row.name, query) || includes(row.email, query),
       empty: {
-        title: (t) => `No ${t.contacts.toLowerCase()} yet`,
-        description: (t) =>
-          `Get started by adding your first ${t.contact.toLowerCase()} or importing from a CSV file.`,
+        title: (t) => `No ${t.contacts.toLowerCase()} found`,
+        description: "Try adjusting your search criteria.",
       },
     },
     organizations: {
@@ -350,9 +406,8 @@ export const networkSpecs: ModuleSpecs = {
       search: (row: NetworkOrganization, query) =>
         includes(row.name, query) || includes(row.email, query),
       empty: {
-        title: (t) => `No ${t.organizations.toLowerCase()} yet`,
-        description: (t) =>
-          `Get started by adding your first ${t.organization.toLowerCase()}.`,
+        title: (t) => `No ${t.organizations.toLowerCase()} found`,
+        description: "Try adjusting your search criteria.",
       },
     },
     directory: {
@@ -381,13 +436,7 @@ export const networkSpecs: ModuleSpecs = {
       rows: (persona) => networkData(persona).exchanges,
       columns: exchangeColumns,
       chips: exchangeChips,
-      rowActions: [
-        { label: "Accept", icon: Check },
-        { label: "Reject", icon: X, variant: "destructive" },
-        { label: "Open", icon: ExternalLink },
-        { label: "Resend", icon: RotateCw },
-        { label: "Revoke", icon: Ban, variant: "destructive" },
-      ],
+      rowActions: exchangeRowActions,
       pageActions: [
         { label: "Send to external email", icon: Mail, variant: "outline" },
         { label: "Attach an invoice", icon: Plus, variant: "outline" },
@@ -405,6 +454,7 @@ export const networkSpecs: ModuleSpecs = {
           rows: (persona) => networkData(persona).exchanges,
           columns: exchangeColumns,
           chips: exchangeChips,
+          rowActions: exchangeRowActions,
           selects: [
             {
               key: "status",
@@ -429,6 +479,7 @@ export const networkSpecs: ModuleSpecs = {
           rows: (persona) => networkData(persona).invites,
           columns: inviteColumns,
           chips: inviteChips,
+          rowActions: inviteRowActions,
           empty: {
             title: "No invites sent yet",
             description: "Invites to partners outside the network appear here.",
@@ -488,14 +539,18 @@ export const networkSpecs: ModuleSpecs = {
         {
           kind: "list",
           title: "Connect requests",
-          description: "Organizations you have invited.",
-          items: data.organizations
-            .filter((row) => row.networkStatus === "invited")
-            .slice(0, 5)
+          description: "Partners asking to connect with you.",
+          items: data.directory
+            .filter((row) => !row.isMine)
+            .slice(0, 4)
             .map((row) => ({
-              label: row.name,
-              value: "Invited",
-              hint: row.email,
+              label: row.displayName,
+              value: "Wants to connect",
+              hint: new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }).format(row.joinedAt),
             })),
         },
         {

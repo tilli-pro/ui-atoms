@@ -102,6 +102,7 @@ function ListViewInner<R extends Row>({
   const chips = segment?.chips ?? spec.chips;
   const selects = segment?.selects ?? spec.selects ?? [];
   const empty = segment?.empty ?? spec.empty;
+  const rowActions = segment?.rowActions ?? spec.rowActions;
   const totalFn = segment?.total ?? spec.total;
   const gapIds = [...(spec.gaps ?? []), ...(segment?.gaps ?? [])];
 
@@ -129,7 +130,15 @@ function ListViewInner<R extends Row>({
   const current = Math.min(Math.max(page, 1), pageCount);
   const start = (current - 1) * PAGE_SIZE;
   const pageRows = filtered.slice(start, start + PAGE_SIZE);
-  const total = Math.max(totalFn ? totalFn(persona) : 0, filtered.length);
+  const filtering =
+    chipKey !== "all" ||
+    query.trim() !== "" ||
+    selects.some((select) =>
+      select.options.some((o) => o.value === chosen[select.key]),
+    );
+  const total = filtering
+    ? filtered.length
+    : Math.max(totalFn ? totalFn(persona) : 0, filtered.length);
 
   const resetPage = () => setPage(1);
   const cycleSort = (key: string) => {
@@ -397,7 +406,7 @@ function ListViewInner<R extends Row>({
                         <Ellipsis />
                       </MenuTrigger>
                       <MenuPopup align="end">
-                        {spec.rowActions.map((action) => (
+                        {rowActions.map((action) => (
                           <MenuItem key={t(action.label)}>
                             {action.icon ? <action.icon /> : null}
                             {t(action.label)}

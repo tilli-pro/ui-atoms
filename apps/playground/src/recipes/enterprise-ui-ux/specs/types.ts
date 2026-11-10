@@ -99,6 +99,7 @@ export type SegmentSpec<R extends Row = Row> = {
   chips?: ChipSpec<R>[];
   selects?: SelectFilterSpec<R>[];
   empty?: EmptyCopy;
+  rowActions?: ActionSpec[];
   total?: (persona: Persona) => number;
   gaps?: GapId[];
 };
