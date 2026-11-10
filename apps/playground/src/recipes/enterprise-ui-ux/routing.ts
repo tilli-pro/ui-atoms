@@ -15,13 +15,13 @@ export const itemSlug = (item: SectionItem): string =>
 /**
  * The recipe's internal route, `#/<module>` or `#/<module>/<item>`: a module
  * view (its dashboard), or one of its menu items as its own view. Anything
- * unknown falls back to the module, then to Beacon.
+ * unknown falls back to the module, then to Enterprise.
  */
 export type Route = { module: ModuleKey; item?: SectionItem };
 
 export const routeFromHash = (hash: string): Route => {
   const [moduleKey = "", slug] = hash.replace(HASH_PREFIX, "").split("/");
-  if (!isModuleKey(moduleKey)) return { module: "beacon" };
+  if (!isModuleKey(moduleKey)) return { module: "enterprise" };
   if (slug === undefined) return { module: moduleKey };
   const item = itemsOf(moduleKey).find(
     (candidate) => itemSlug(candidate) === slug,

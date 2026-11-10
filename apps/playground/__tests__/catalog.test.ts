@@ -36,8 +36,8 @@ const moduleSlugs = Object.keys(modules)
 const manifestSlugs = recipes.map((r) => r.slug);
 
 describe("recipes.json <-> src/recipes", () => {
-  it("contains the beacon-ui-ux recipe", () => {
-    expect(manifestSlugs).toContain("beacon-ui-ux");
+  it("contains the enterprise-ui-ux recipe", () => {
+    expect(manifestSlugs).toContain("enterprise-ui-ux");
   });
 
   it("has a module for every entry and an entry for every module", () => {

@@ -27,8 +27,8 @@ const stubLoader =
 describe("recipe list (/)", () => {
   it("shows a card per recipe linking to its route", async () => {
     renderAt("/");
-    const link = await screen.findByRole("link", { name: /Beacon UI\/UX/ });
-    expect(link).toHaveAttribute("href", "/recipes/beacon-ui-ux");
+    const link = await screen.findByRole("link", { name: /Enterprise UI\/UX/ });
+    expect(link).toHaveAttribute("href", "/recipes/enterprise-ui-ux");
     expect(link).toHaveAttribute("data-slot", "card");
     expect(within(link).getByText("v1.1.0")).toHaveAttribute(
       "data-slot",

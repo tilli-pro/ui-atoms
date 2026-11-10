@@ -74,7 +74,7 @@ export const sections = [
       stats: [
         { label: "Organizations", value: "1,284", hint: "+12 this week" },
         {
-          label: "Connected on Beacon",
+          label: "Connected on Enterprise",
           value: "86",
           hint: "7% of organizations",
         },
@@ -101,7 +101,7 @@ export const sections = [
         {
           title: "Directory matches",
           description:
-            "Organizations in your book that are on Beacon but not connected.",
+            "Organizations in your book that are on Enterprise but not connected.",
         },
       ],
     },
@@ -308,11 +308,11 @@ export const defaultIcons = Object.fromEntries(
 ) as Record<SectionKey, IconName>;
 
 /**
- * Beacon is the cross-cutting module behind the brand square: what spans every
+ * Enterprise is the cross-cutting module behind the brand square: what spans every
  * other module (the user's own inbox, search, analytics, automation) rather
  * than a seventh business area.
  */
-export const beaconItems: readonly SectionItem[] = [
+export const enterpriseItems: readonly SectionItem[] = [
   { label: "Inbox", icon: Inbox },
   { label: "Search", icon: Search },
   { label: "Analytics", icon: ChartColumn },
@@ -320,7 +320,7 @@ export const beaconItems: readonly SectionItem[] = [
   { label: "AI agents", icon: Bot },
 ];
 
-export const beaconHome: ModuleHome = {
+export const enterpriseHome: ModuleHome = {
   blurb: "Everything that needs you today, across every module.",
   stats: [
     { label: "Inbox unread", value: "12", hint: "4 mention you" },
@@ -345,31 +345,31 @@ export const beaconHome: ModuleHome = {
 };
 
 /**
- * A module is what the second sidebar shows: Beacon (the default view, Command
+ * A module is what the second sidebar shows: Enterprise (the default view, Command
  * icon, no color) or one of the rail sections. The active module is the URL
  * hash, `#/<key>`, so it survives reloads without a second router; no hash or
- * an unknown one means Beacon.
+ * an unknown one means Enterprise.
  */
-export type ModuleKey = "beacon" | SectionKey;
+export type ModuleKey = "enterprise" | SectionKey;
 
-export const moduleKeys: readonly ModuleKey[] = ["beacon", ...sectionKeys];
+export const moduleKeys: readonly ModuleKey[] = ["enterprise", ...sectionKeys];
 
 export const isModuleKey = (value: string): value is ModuleKey =>
   (moduleKeys as readonly string[]).includes(value);
 
-/** Menu items of a module: Beacon's own list, or the rail section's. */
+/** Menu items of a module: Enterprise's own list, or the rail section's. */
 export const itemsOf = (module: ModuleKey): readonly SectionItem[] =>
-  module === "beacon" ? beaconItems : sectionByKey[module].items;
+  module === "enterprise" ? enterpriseItems : sectionByKey[module].items;
 
 /**
  * The module's overview as a menu row: "Overview" for a rail module, "Home"
- * for Beacon. It routes to the bare module hash (its dashboard), not to a
+ * for Enterprise. It routes to the bare module hash (its dashboard), not to a
  * slug, so the rail button, this row and a fresh load all share one active
  * state. Shown only when the "overview" control is on; otherwise the panel
  * header is the link.
  */
 export const overviewItemOf = (module: ModuleKey): SectionItem =>
-  module === "beacon"
+  module === "enterprise"
     ? { label: "Home", icon: House }
     : { label: "Overview", icon: LayoutDashboard };
 
@@ -377,6 +377,6 @@ export const overviewItemOf = (module: ModuleKey): SectionItem =>
 export const homeOf = (
   module: ModuleKey,
 ): { title: string; home: ModuleHome } =>
-  module === "beacon"
-    ? { title: "Beacon", home: beaconHome }
+  module === "enterprise"
+    ? { title: "Enterprise", home: enterpriseHome }
     : { title: sectionByKey[module].title, home: sectionByKey[module].home };

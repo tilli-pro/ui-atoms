@@ -34,12 +34,12 @@ import {
 import { ContentView, ItemView, ModuleHomeView } from "./views.js";
 
 /**
- * Beacon UI/UX: the authenticated shell of Beacon Enterprise, redesigned. An
+ * Enterprise UI/UX: the authenticated shell of Enterprise, redesigned. An
  * icon rail of modules (Rail) beside the active module's menu (ModulePanel),
  * and a content area whose root view per module is that module's dashboard.
  * The active module and item live in the URL hash (routing.ts).
  */
-export default function BeaconUiUx() {
+export default function EnterpriseUiUx() {
   const [selected, setSelected] =
     useState<Record<SectionKey, IconName>>(defaultIcons);
   const location = useLocation();
@@ -52,7 +52,8 @@ export default function BeaconUiUx() {
       { replace: true },
     );
   const setActive = (key: ModuleKey): void => go(hashFor(key));
-  const ActiveIcon = active === "beacon" ? Command : icons[selected[active]];
+  const ActiveIcon =
+    active === "enterprise" ? Command : icons[selected[active]];
   const [colorful, setColorful] = useState(true);
   const [inset, setInset] = useState(false);
   const [overview, setOverview] = useState(true);

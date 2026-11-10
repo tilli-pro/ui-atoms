@@ -56,14 +56,14 @@ export const colorfulMenuHeaderClassName =
 
 /**
  * Second-sidebar header for a colorful section: the same faint tint as its rail
- * item behind the heading-mix text. Beacon and monochrome mode use the plain header.
+ * item behind the heading-mix text. Enterprise and monochrome mode use the plain header.
  */
 export const colorfulPanelHeaderClassName = classes(
   "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--from)_20%,transparent),color-mix(in_oklab,var(--to)_8%,transparent))]",
   colorfulMenuHeaderClassName,
 );
 
-/** The brand square in the rail header: solid primary, or outlined while Beacon is the active module. */
+/** The brand square in the rail header: solid primary, or outlined while Enterprise is the active module. */
 export const brandSquareClassName =
   "flex aspect-square size-8 items-center justify-center rounded-lg";
 export const brandSquareIdleClassName =

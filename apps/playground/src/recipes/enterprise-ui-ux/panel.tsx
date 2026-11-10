@@ -45,7 +45,7 @@ function OverviewRow({
 }
 
 export type ModulePanelProps = {
-  /** The rail icon of the active module, or Command for Beacon. */
+  /** The rail icon of the active module, or Command for Enterprise. */
   ActiveIcon: LucideIcon;
   colorful: boolean;
   gradients: Record<SectionKey, Gradient>;
@@ -67,7 +67,8 @@ export function ModulePanel({
   onSelectItem,
 }: ModulePanelProps) {
   const active = route.module;
-  const activeSection = active === "beacon" ? undefined : sectionByKey[active];
+  const activeSection =
+    active === "enterprise" ? undefined : sectionByKey[active];
   return (
     <Sidebar
       className="hidden min-w-0 flex-1 overflow-hidden md:flex"

@@ -83,7 +83,7 @@ export type RailProps = {
 };
 
 /**
- * The icon rail: the brand square (Beacon), one button per module, settings
+ * The icon rail: the brand square (Enterprise), one button per module, settings
  * and the account. Hovering a module previews its menu, except the active
  * module while the panel is open: its menu is already on screen, so the button
  * shows only a tooltip. With the panel collapsed the hover menu is the only way
@@ -111,15 +111,15 @@ export function Rail({
           <SidebarMenuItem>
             <SidebarMenuButton
               className="md:h-8 md:p-0"
-              isActive={active === "beacon"}
-              onClick={() => onSelectModule("beacon")}
+              isActive={active === "enterprise"}
+              onClick={() => onSelectModule("enterprise")}
               size="lg"
-              tooltip={{ children: "Beacon", hidden: false }}
+              tooltip={{ children: "Enterprise", hidden: false }}
             >
               <div
                 className={classes(
                   brandSquareClassName,
-                  active === "beacon"
+                  active === "enterprise"
                     ? brandSquareSelectedClassName
                     : brandSquareIdleClassName,
                 )}
