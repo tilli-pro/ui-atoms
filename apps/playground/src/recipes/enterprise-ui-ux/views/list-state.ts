@@ -12,7 +12,17 @@ export const readValue = <R extends Row>(
 const isNil = (value: unknown): value is null | undefined =>
   value === null || value === undefined;
 
-const compareValues = (a: unknown, b: unknown): number => {
+const sortable = (value: unknown): unknown =>
+  typeof value === "object" &&
+  value !== null &&
+  !(value instanceof Date) &&
+  "name" in value
+    ? (value as { name: unknown }).name
+    : value;
+
+const compareValues = (x: unknown, y: unknown): number => {
+  const a = sortable(x);
+  const b = sortable(y);
   if (typeof a === "number" && typeof b === "number") return a - b;
   if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
   return String(a).localeCompare(String(b));

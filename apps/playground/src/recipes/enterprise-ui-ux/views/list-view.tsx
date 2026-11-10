@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Badge } from "@tilli.dev/ui-atoms/badge";
-import { Button } from "@tilli.dev/ui-atoms/button";
+import { Button, buttonVariants } from "@tilli.dev/ui-atoms/button";
 import { Checkbox } from "@tilli.dev/ui-atoms/checkbox";
 import {
   Empty,
@@ -126,7 +126,7 @@ function ListViewInner<R extends Row>({
   );
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const current = Math.min(page, pageCount);
+  const current = Math.min(Math.max(page, 1), pageCount);
   const start = (current - 1) * PAGE_SIZE;
   const pageRows = filtered.slice(start, start + PAGE_SIZE);
   const total = Math.max(totalFn ? totalFn(persona) : 0, filtered.length);
@@ -274,7 +274,10 @@ function ListViewInner<R extends Row>({
               items={items}
               key={select.key}
               onValueChange={(value) => {
-                setChosen((prev) => ({ ...prev, [select.key]: String(value) }));
+                setChosen((prev) => ({
+                  ...prev,
+                  [select.key]: value ?? "all",
+                }));
                 resetPage();
               }}
               value={chosen[select.key] ?? "all"}
@@ -423,8 +426,17 @@ function ListViewInner<R extends Row>({
                   className={cn(
                     current === 1 && "pointer-events-none opacity-50",
                   )}
-                  onClick={() => setPage(current - 1)}
-                  render={<button type="button" />}
+                  onClick={() => setPage(Math.max(current - 1, 1))}
+                  render={
+                    <button
+                      className={buttonVariants({
+                        size: "default",
+                        variant: "ghost",
+                      })}
+                      disabled={current === 1}
+                      type="button"
+                    />
+                  }
                 />
               </PaginationItem>
               {pageWindow(current, pageCount).map((n) => (
@@ -432,7 +444,15 @@ function ListViewInner<R extends Row>({
                   <PaginationLink
                     isActive={n === current}
                     onClick={() => setPage(n)}
-                    render={<button type="button" />}
+                    render={
+                      <button
+                        className={buttonVariants({
+                          size: "icon",
+                          variant: n === current ? "outline" : "ghost",
+                        })}
+                        type="button"
+                      />
+                    }
                   >
                     {n}
                   </PaginationLink>
@@ -444,8 +464,17 @@ function ListViewInner<R extends Row>({
                   className={cn(
                     current === pageCount && "pointer-events-none opacity-50",
                   )}
-                  onClick={() => setPage(current + 1)}
-                  render={<button type="button" />}
+                  onClick={() => setPage(Math.min(current + 1, pageCount))}
+                  render={
+                    <button
+                      className={buttonVariants({
+                        size: "default",
+                        variant: "ghost",
+                      })}
+                      disabled={current === pageCount}
+                      type="button"
+                    />
+                  }
                 />
               </PaginationItem>
             </PaginationContent>
