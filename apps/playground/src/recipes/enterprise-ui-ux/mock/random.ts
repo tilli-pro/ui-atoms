@@ -54,12 +54,22 @@ export const createRng = (seed: number): Rng => {
   const range = ({ min, median, max }: NumRange, decimals = 2): number => {
     const u = next();
     const span = max - min;
+    const factor = 10 ** decimals;
+    // A triangular sampler cannot reach a median below ~29% of the span, so
+    // skewed shapes drew far above the request: sample each half around the
+    // requested median instead, leaving the degenerate shapes unchanged.
+    if (span > 0 && median > min && median < max) {
+      const value =
+        u < 0.5
+          ? median - (median - min) * (1 - 2 * u) ** 2
+          : median + (max - median) * (2 * u - 1) ** 2;
+      return Math.round(value * factor) / factor;
+    }
     const split = span === 0 ? 0 : (median - min) / span;
     const value =
       u < split
         ? min + Math.sqrt(u * span * (median - min))
         : max - Math.sqrt((1 - u) * span * (max - median));
-    const factor = 10 ** decimals;
     return Math.round(value * factor) / factor;
   };
 
