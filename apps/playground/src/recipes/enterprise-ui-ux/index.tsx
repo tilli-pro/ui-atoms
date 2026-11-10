@@ -1,11 +1,5 @@
 import { useState } from "react";
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@tilli.dev/ui-atoms/card";
-import {
   Sidebar,
   SidebarProvider,
   SidebarRail,
@@ -163,7 +157,7 @@ export default function EnterpriseUiUx() {
         />
       );
     }
-    if (!route.item && moduleSpec) {
+    if (!route.item) {
       return (
         <DashboardView
           blurb={blurb}
@@ -174,18 +168,7 @@ export default function EnterpriseUiUx() {
         />
       );
     }
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Mock to come</CardTitle>
-          <CardDescription>
-            {route.item
-              ? `${title} / ${route.item.label}`
-              : `${title} dashboard`}
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
+    return null;
   };
 
   return (

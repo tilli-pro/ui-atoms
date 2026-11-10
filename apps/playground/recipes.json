@@ -2,9 +2,29 @@
   {
     "slug": "enterprise-ui-ux",
     "title": "Enterprise UI/UX",
-    "description": "A ground-up redesign of the authenticated Enterprise UI/UX: an icon rail for Network, Engage, Sales, Finance, Operations and Support with an Enterprise brand square for cross-cutting views, beside a menu panel for the active module, built by nesting Sidebar parts; the inset sidebar variant can be toggled from the control panel. Each module's root route is a dashboard for that module; menu items open placeholder list views. The rail's icons are chosen from the control panel (Cmd/Ctrl+K).",
-    "version": "1.1.0",
-    "components": ["avatar", "card", "menu", "sidebar", "skeleton"],
+    "description": "A ground-up redesign of the authenticated Enterprise UI/UX: an icon rail for Network, Engage, Sales, Finance, Operations and Support with an Enterprise brand square for cross-cutting views, beside a menu panel for the active module, built by nesting Sidebar parts; the inset sidebar variant can be toggled from the control panel. Each module's root route is a dashboard mock and every menu item opens a list mock, composed from ui-atoms and fed by seeded mock data. A persona control (utilities, financial, government federal) reshapes the data and copy. The rail's icons are chosen from the control panel (Cmd/Ctrl+K).",
+    "version": "1.2.0",
+    "components": [
+      "avatar",
+      "badge",
+      "button",
+      "card",
+      "checkbox",
+      "empty",
+      "frame",
+      "input-group",
+      "menu",
+      "meter",
+      "number-ticker",
+      "pagination",
+      "segmented-control",
+      "select",
+      "sidebar",
+      "table",
+      "toggle-group",
+      "toolbar",
+      "tooltip"
+    ],
     "changelog": [
       {
         "version": "1.0.0",
@@ -15,6 +35,11 @@
         "version": "1.1.0",
         "date": "2026-11-10",
         "changes": "Add the Operations module, make Enterprise a cross-cutting module with its own menu, give every module a dashboard as its root view, re-plan the module menus from the beacon-enterprise duplication audit, add an inset toggle to the control panel, and split the recipe into a folder, add an Overview control (overview as a menu row, or the panel header as the link), and show only a tooltip on the active module's rail button while the panel is open."
+      },
+      {
+        "version": "1.2.0",
+        "date": "2026-11-10",
+        "changes": "Replace the placeholder views with persona-switchable list mocks for all 33 menu items and real-shaped dashboards for all 7 modules, composed from ui-atoms and fed by seeded mock data shaped on the QA database; add a persona control (utilities, financial, government_federal); flag every concept ui-atoms cannot render with a Needs review badge."
       }
     ]
   }
