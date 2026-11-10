@@ -330,9 +330,12 @@ export const genTemplates = (persona: Persona): EngageTemplate[] => {
       const channel = rng.weighted(
         lookup<TemplateChannel>(e, "channel", tenant),
       );
-      const approval = rng.weighted(
+      const drawn = rng.weighted(
         lookup<TemplateApproval>(e, "approval", tenant),
       );
+      // QA government has 3 approved of 67; a 60-row sample can miss them, so force 3.
+      const approval: TemplateApproval =
+        tenant === "G1" && i < 3 ? "approved" : drawn;
       const base = rng.pick(TEMPLATE_BASES[key] ?? TEMPLATE_BASES.none ?? []);
       let name = `${base}_${channel}`;
       for (let n = 2; used.has(name); n++) name = `${base}_${channel}_v${n}`;
@@ -365,12 +368,19 @@ export const genSent = (
   const ran = campaigns.filter((c) => c.lastRun !== null);
   const orgs = organizationsByIndustry[persona.key];
   const rows = Array.from({ length: COUNTS.sent }, (_, i): EngageSent => {
-    const channel = rng.weighted(weights<CampaignChannel>(e, "channel"));
     const status = rng.weighted(weights<SentStatus>(e, "status"));
     const person = personName(rng);
+    // Pick the campaign first: its sends are never older than the campaign.
+    const campaign =
+      rng.weighted(weights<string>(e, "campaign")) === "true"
+        ? rng.pick(ran.length ? ran : campaigns)
+        : null;
+    const channel = campaign
+      ? campaign.channel
+      : rng.weighted(weights<CampaignChannel>(e, "channel"));
     // Skewed recent so the Today preset has rows.
     const roll = rng.next();
-    const createdAt =
+    const drawnAt =
       roll < 0.2
         ? rng.daysAgo(0, 0)
         : roll < 0.55
@@ -378,14 +388,13 @@ export const genSent = (
           : roll < 0.85
             ? rng.daysAgo(7, 29)
             : rng.daysAgo(30, 90);
+    const createdAt = campaign
+      ? between(rng, campaign.lastRun ?? campaign.createdAt, ANCHOR)
+      : drawnAt;
     const sentAt =
       status === "pending"
         ? null
         : between(rng, createdAt, plusDays(createdAt, 0.04));
-    const campaign =
-      rng.weighted(weights<string>(e, "campaign")) === "true"
-        ? rng.pick(ran.length ? ran : campaigns)
-        : null;
     return {
       id: `sent-${i + 1}`,
       channel,

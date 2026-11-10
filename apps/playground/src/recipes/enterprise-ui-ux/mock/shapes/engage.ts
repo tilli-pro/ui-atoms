@@ -152,8 +152,8 @@ export const templatesShape: TableShape = {
 
 export const sentShape: TableShape = {
   table: "outreach_messages (direction = outbound)",
-  // QA u/f/g 3314/14226/7519 includes AR outbox (source omnichannel); 14,650 of 25,059 are campaign sends, so the mock scales by that share (derived).
-  totals: { utilities: 1937, financial: 8316, government_federal: 4396 },
+  // Live outbound counts (direction = outbound): u/f/g 3314/14226/7519. The appendix defines Sent as all outbound rows; 14,650 of 25,059 is only the campaign-name share.
+  totals: { utilities: 3314, financial: 14226, government_federal: 7519 },
   source: {
     utilities: { tenant: "U1", borrowed: false },
     financial: { tenant: "F1", borrowed: false },
