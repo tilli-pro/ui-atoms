@@ -68,7 +68,7 @@ export const accountsShape: TableShape = {
     // attributes.balance: utilities 10/10/10, financial 0/1411.44/49402.83, gov 0/0/1628066.28
     balance_utilities: { min: 10, median: 10, max: 10 },
     balance_financial: { min: 0, median: 1411.44, max: 49_402.83 },
-    balance_government_federal: { min: 0, median: 1693.83, max: 1_628_066.28 },
+    balance_government_federal: { min: 0, median: 0, max: 1_628_066.28 },
     // attributes.pastDueAmount (> 0)
     pastDue_financial: { min: 1, median: 623.62, max: 1992.26 },
     pastDue_government_federal: { min: 1, median: 1693.83, max: 1_313_429.25 },
@@ -121,17 +121,14 @@ export const organizationsShape: TableShape = {
       ["Unspecified", 3],
       ["Federal Agency", 2],
     ],
-    // supplier_type (financial): drives the classification column.
+    // Classification column: roster flags is_supplier (513/1164), is_partner (6), is_customer (7); no flag shows "—".
     classification: [
-      ["Unclassified", 662],
-      ["Contractor", 100],
-      ["Distributor", 92],
-      ["Service provider", 83],
-      ["Manufacturer", 75],
-      ["Utility", 44],
-      ["Inventory", 43],
-      ["Aggregator", 33],
-      ["Service", 31],
+      ["—", 646],
+      ["Supplier", 505],
+      ["Partner", 5],
+      ["Customer", 6],
+      ["Supplier · Partner", 1],
+      ["Supplier · Customer", 1],
     ],
     // Derived roster status per persona.
     networkStatus_utilities: [
@@ -200,6 +197,7 @@ export const partnerInvitationsShape: TableShape = {
 
 export const companiesShape: TableShape = {
   table: "network_companies",
+  // Registry count (3 platform rows), not a list total: the directory list is synthetic.
   // Platform registry, not tenant scoped: 3 rows, no industry/region/logo, so the rest is synthetic.
   totals: { utilities: 3, financial: 3, government_federal: 3 },
   source: {
@@ -209,10 +207,7 @@ export const companiesShape: TableShape = {
   },
   enums: {
     status: [["active", 3]],
-    isMine: [
-      ["yes", 1],
-      ["no", 19],
-    ],
+    // isMine: exactly one deterministic own company per persona (generator).
   },
   dates: { fromDaysAgo: 22, toDaysAgo: 60 },
 };
@@ -257,17 +252,21 @@ export const preExchangesShape: TableShape = {
     government_federal: { tenant: "any", borrowed: true },
   },
   enums: {
+    // Synthetic weights over the appendix vocabulary.
     status: [
-      ["sent", 40],
-      ["opened", 25],
-      ["accepted", 20],
-      ["expired", 15],
+      ["created", 8],
+      ["sent", 25],
+      ["viewed", 18],
+      ["authenticated", 8],
+      ["claimed", 20],
+      ["expired", 10],
+      ["revoked", 6],
+      ["declined", 5],
     ],
+    // "Paid" when succeeded, otherwise no value.
     payment: [
-      ["unpaid", 40],
-      ["pending", 20],
       ["paid", 30],
-      ["not_required", 10],
+      ["none", 70],
     ],
   },
   numbers: { amount: { min: 12.75, median: 210, max: 47_925 } },

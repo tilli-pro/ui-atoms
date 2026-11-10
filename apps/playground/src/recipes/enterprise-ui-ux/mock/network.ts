@@ -27,8 +27,16 @@ export type ExchangeStatus =
   | "dead_letter"
   | "rejected"
   | "transport_delivered";
-export type InviteStatus = "sent" | "opened" | "accepted" | "expired";
-export type InvitePayment = "unpaid" | "pending" | "paid" | "not_required";
+export type InviteStatus =
+  | "created"
+  | "sent"
+  | "viewed"
+  | "authenticated"
+  | "claimed"
+  | "expired"
+  | "revoked"
+  | "declined";
+export type InvitePayment = "paid" | null;
 
 type PartyColumns = {
   name: string;
@@ -252,6 +260,7 @@ const genDirectory = (persona: Persona): NetworkDirectoryCompany[] => {
   const rng = createRng(seedFor(persona, "network.directory"));
   const window = companiesShape.dates ?? { fromDaysAgo: 22, toDaysAgo: 60 };
   const names = orgNamePool(rng, persona.key, COUNTS.directory);
+  const ownIndex = rng.int(0, names.length - 1);
   return names.map((displayName, i) => ({
     id: `company-${i + 1}`,
     displayName,
@@ -260,12 +269,7 @@ const genDirectory = (persona: Persona): NetworkDirectoryCompany[] => {
     region: `${rng.pick(DIRECTORY_REGIONS)}, ${rng.pick(cities)}`,
     tradesWith: rng.int(1, 24),
     joinedAt: rng.daysAgo(window.fromDaysAgo, window.toDaysAgo),
-    isMine:
-      rng.weighted(
-        companiesShape.enums.isMine as NonNullable<
-          (typeof companiesShape.enums)[string]
-        >,
-      ) === "yes",
+    isMine: i === ownIndex,
   }));
 };
 
@@ -318,9 +322,11 @@ const genInvites = (persona: Persona): NetworkInvite[] => {
       status: rng.weighted(
         enums.status as NonNullable<(typeof enums)[string]>,
       ) as InviteStatus,
-      payment: rng.weighted(
-        enums.payment as NonNullable<(typeof enums)[string]>,
-      ) as InvitePayment,
+      payment:
+        rng.weighted(enums.payment as NonNullable<(typeof enums)[string]>) ===
+        "paid"
+          ? "paid"
+          : null,
       sentAt: rng.daysAgo(window.fromDaysAgo, window.toDaysAgo),
     }),
   ).sort((a, b) => b.sentAt.getTime() - a.sentAt.getTime());
