@@ -236,8 +236,11 @@ function SelectValue({ className, ...props }: SelectValueProps) {
   );
 }
 
+// SEL-3: the open/close transition the base removed (refresh plan §4.18, the
+// carve-out that was never applied). Base UI sets data-starting-style /
+// data-ending-style on Select.Popup, not on the chrome `<div>` or the List.
 const selectPopupVariants = cva({
-  base: "origin-(--transform-origin) text-foreground outline-none",
+  base: "origin-(--transform-origin) text-foreground outline-none transition-[scale,opacity] data-ending-style:scale-98 data-starting-style:scale-98 data-ending-style:opacity-0 data-starting-style:opacity-0",
 });
 
 /** The popup's inner chrome `<div>`: the border, surface and shadow that make

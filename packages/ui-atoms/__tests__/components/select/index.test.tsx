@@ -80,6 +80,28 @@ describe("Select family", () => {
       "select-separator",
     );
   });
+  it("SEL-3: the popup animates open and closed on Base UI's starting/ending style attributes", async () => {
+    render(
+      <Select defaultValue="one" items={items} open={true}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectPopup>
+          <SelectItem value="one">One</SelectItem>
+        </SelectPopup>
+      </Select>,
+    );
+    await screen.findByRole("listbox");
+    // The attributes land on Select.Popup, not on the chrome div or the list,
+    // so the transition belongs on the popup (coss removed it upstream).
+    const popup = document.querySelector('[data-slot="select-popup"]');
+    expect(popup).not.toBeNull();
+    expect(popup?.className).toContain("transition-[scale,opacity]");
+    expect(popup?.className).toContain("data-starting-style:scale-98");
+    expect(popup?.className).toContain("data-starting-style:opacity-0");
+    expect(popup?.className).toContain("data-ending-style:scale-98");
+    expect(popup?.className).toContain("data-ending-style:opacity-0");
+  });
   it("a11y: trigger gets aria-labelledby pointing at its SelectValue child — role=combobox has nameFrom:author, so axe's button-name check ignores visible text content", () => {
     render(
       <Select items={items}>
