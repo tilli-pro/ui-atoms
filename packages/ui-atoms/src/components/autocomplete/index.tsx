@@ -44,8 +44,12 @@ const autocompleteAffordanceVariants = cva({
   variants: { size: { default: "end-0.5", sm: "end-0" } },
 });
 
+// ACP-2: the open/close transition. Base UI marks the Popup inside this frame
+// with data-starting-style / data-ending-style, so the frame reacts through
+// `has-` variants; the base kept `transition-[scale,opacity]` but dropped the
+// rules that give it something to transition.
 const autocompletePopupFrameVariants = cva({
-  base: "relative flex max-h-full min-w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+  base: "relative flex max-h-full min-w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] has-data-ending-style:scale-98 has-data-starting-style:scale-98 has-data-ending-style:opacity-0 has-data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
 });
 
 const autocompleteItemVariants = cva({

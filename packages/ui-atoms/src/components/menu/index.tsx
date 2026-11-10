@@ -11,8 +11,13 @@ import { cn } from "../../utils.js";
 // submenus); MNU-3 (`MenuLinkItem`) is adopted here now that 1.8.0 makes
 // `Menu.LinkItem` reachable.
 
+// MNU-7: the open/close transition. coss's older shape wrapped the Popup in a
+// `<span>` that reacted to the child's state with `has-data-starting-style:`;
+// MNU-2 moved the classes onto the Popup and the base dropped the transition
+// instead of rewriting it as `data-starting-style:` (its popover kept it).
+// Base UI sets the attributes on this element, so the rules belong here.
 const menuPopupVariants = cva({
-  base: "relative flex not-[class*='w-']:min-w-32 origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 outline-none before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] focus:outline-none dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+  base: "relative flex not-[class*='w-']:min-w-32 origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 outline-none transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] focus:outline-none data-ending-style:scale-98 data-starting-style:scale-98 data-ending-style:opacity-0 data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
 });
 
 const menuItemVariants = cva({
