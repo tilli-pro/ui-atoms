@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "nested-sidebar",
+    "title": "Nested sidebar",
+    "description": "A two-pane sidebar: an icon rail for Network, Engage, Sales, Finance and Support with an avatar account menu in its footer, beside an empty full-width panel, built by nesting Sidebar parts. The rail's icons are chosen from the control panel (Cmd/Ctrl+K).",
+    "version": "1.0.0",
+    "components": ["avatar", "menu", "sidebar"],
+    "changelog": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-08",
+        "changes": "Initial recipe."
+      }
+    ]
+  }
+]

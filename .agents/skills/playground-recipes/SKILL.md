@@ -27,7 +27,7 @@ imports, and `recipes.json` is in the CLI's canonical (Biome) format.
 | No TTY (agent, CI) | Hand-edit `recipes.json` + write the module, then `pnpm lint:fix` to restore canonical format, then run the checks below |
 | Find a part's exported names | `packages/ui-atoms/src/components/<subpath>/index.tsx`, the `export {}` block at the bottom; usage in `apps/storybook/src/stories/<subpath>.stories.tsx` |
 | Checks | `pnpm --filter playground lint`, `typecheck`, `test`, `build` |
-| Optional test | `apps/playground/__tests__/recipes/<slug>.test.tsx` (mirror `nested-sidebar.test.tsx`) |
+| Recipe tests | None, ever: recipes are a sandbox (see root `CLAUDE.md`); the registry tests cover them |
 
 Limits: title ≤ 100 chars, slug ≤ 64 (kebab-case, derived from the title), description
 ≤ 1024, change note ≤ 2048. Versions are semver from `1.0.0`; `changelog` is oldest-first
@@ -45,7 +45,7 @@ and its last `version` equals the entry's `version`; dates are `YYYY-MM-DD`.
 4. **Version** with the CLI after a change: pick the recipe, write the change note, choose
    patch / minor / major. The CLI cannot create at a version other than `1.0.0`; reach
    `1.1.0` by creating, then bumping minor.
-5. **Run the checks** in the table. No changeset: the playground is a private package and
+5. **Run the checks** in the table. Do not add a test for the recipe. No changeset: the playground is a private package and
    `.changeset/` is for `@tilli.dev/ui-atoms` only.
 
 ## Hand-editing without a TTY

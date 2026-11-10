@@ -1,2 +1,46 @@
 @import "@tilli.dev/ui-atoms/styles.css";
 @source "../node_modules/@tilli.dev/ui-atoms/dist";
+
+/* Families behind the ui-atoms font tokens; the faces are loaded from Google Fonts in index.html. */
+:root {
+  --font-header: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ui-atoms puts the header face on h1–h3 only; extend it to every heading level. */
+@layer base {
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-header);
+  }
+}
+
+/* Hue strip of the control panel's color picker (src/control-panel/control.color.tsx). */
+.rgb-spectrum {
+  background: linear-gradient(
+    to right,
+    rgb(255, 0, 0) 0%,
+    rgb(255, 255, 0) 17%,
+    rgb(0, 255, 0) 33%,
+    rgb(0, 255, 255) 50%,
+    rgb(0, 0, 255) 67%,
+    rgb(255, 0, 255) 83%,
+    rgb(255, 0, 0) 100%
+  );
+}
+
+/* Nested-sidebar rail icons: the stroke is the gradient's first stop mixed with
+   black in light mode (80% hue, 20% black) and left untouched in dark mode.
+   Section menu headings: the first stop mixed 70/30 toward the theme's ink,
+   darkened on the light popover and lightened on the dark one. */
+:root {
+  --section-ink-mix: 80%;
+  --section-heading-mix: 70%;
+  --section-heading-ink: black;
+}
+[data-theme="dark"] {
+  --section-ink-mix: 100%;
+  --section-heading-ink: white;
+}
