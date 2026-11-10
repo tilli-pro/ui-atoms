@@ -1,6 +1,7 @@
 import { itemSlug } from "../routing.js";
 import { financeSpecs } from "./finance.js";
 import { networkSpecs } from "./network.js";
+import { operationsSpecs } from "./operations.js";
 import { salesSpecs } from "./sales.js";
 import { supportSpecs } from "./support.js";
 import type { ModuleKey, SectionItem } from "../modules.js";
@@ -10,6 +11,7 @@ import type { ListSpec, ModuleSpecs } from "./types.js";
 export const moduleSpecs: Partial<Record<ModuleKey, ModuleSpecs>> = {
   finance: financeSpecs,
   network: networkSpecs,
+  operations: operationsSpecs,
   sales: salesSpecs,
   support: supportSpecs,
 };
