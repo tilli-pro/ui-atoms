@@ -29,15 +29,18 @@ Other scripts: `build` (production build into `dist/`), `typecheck`, `lint`
   `{ version, date, changes }`; `components` lists the ui-atoms subpaths the
   recipe imports (`"sidebar"` for `@tilli.dev/ui-atoms/sidebar`).
 - `src/recipes/<slug>.tsx` is the recipe itself and must `export default` the
-  React component the route renders.
+  React component the route renders. A recipe that outgrows one file is a
+  folder instead: `src/recipes/<slug>/index.tsx` is the module (same default
+  export) and the folder holds whatever else it imports.
 - The routes are built from `recipes.json` (`src/routes.tsx`), with the
-  modules found by `import.meta.glob("./recipes/*.tsx")`.
+  modules found by `import.meta.glob(["./recipes/*.tsx", "./recipes/*/index.tsx"])`.
 
 The two must agree: `vite build` fails when an entry has no module or a module
 has no entry, and `__tests__/catalog.test.ts` also checks that every module
 default-exports a component, that each entry's `components` match the module's
-`@tilli.dev/ui-atoms/*` imports, and that `recipes.json` is in the CLI's
-canonical format. Prefer the CLI over hand edits; if you do edit by hand, keep
+`@tilli.dev/ui-atoms/*` component imports (every file of a folder recipe;
+`utils` and other non-component subpaths are ignored), and that `recipes.json`
+is in the CLI's canonical format. Prefer the CLI over hand edits; if you do edit by hand, keep
 that format (the test tells you when it drifts).
 
 ## The recipe CLI
@@ -63,7 +66,7 @@ nothing is written until an action's last answer is in):
   changelog entry with today's date is appended.
 - **List recipes**: a table of slug, title, version and component count.
 - **Delete recipe**: pick a recipe and confirm; its `recipes.json` entry and
-  its module file are removed.
+  its module (the file, or the whole folder) are removed.
 
 If a recipe later uses more or fewer ui-atoms components, update its
 `components` in `recipes.json` to match its imports.

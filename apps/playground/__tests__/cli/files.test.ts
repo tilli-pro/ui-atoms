@@ -87,6 +87,17 @@ describe("createRecipe", () => {
     expect(readdirSync(paths.recipesDir)).toEqual(["nested-sidebar.tsx"]);
   });
 
+  it("refuses a slug whose folder module already exists", () => {
+    mkdirSync(join(paths.recipesDir, "orphan"));
+    writeFileSync(join(paths.recipesDir, "orphan", "index.tsx"), "// mine\n");
+    const before = manifestText();
+    expect(() => createRecipe(paths, { name: "Orphan" }, "2026-11-08")).toThrow(
+      /already exists but has no recipes.json entry/,
+    );
+    expect(existsSync(modulePath(paths, "orphan"))).toBe(false);
+    expect(manifestText()).toBe(before);
+  });
+
   it("never overwrites an orphan module file", () => {
     writeFileSync(modulePath(paths, "orphan"), "// mine\n");
     const before = manifestText();
@@ -128,6 +139,17 @@ describe("deleteRecipe", () => {
     expect(readManifest(paths)).toEqual([]);
     expect(manifestText()).toBe("[]\n");
     expect(existsSync(modulePath(paths, "nested-sidebar"))).toBe(false);
+  });
+
+  it("removes a folder module whole", () => {
+    rmSync(modulePath(paths, "nested-sidebar"));
+    const dir = join(paths.recipesDir, "nested-sidebar");
+    mkdirSync(join(dir, "parts"), { recursive: true });
+    writeFileSync(join(dir, "index.tsx"), "export default function X() {}\n");
+    writeFileSync(join(dir, "parts", "a.tsx"), "export const a = 1;\n");
+    expect(deleteRecipe(paths, "nested-sidebar")).toBe(true);
+    expect(readManifest(paths)).toEqual([]);
+    expect(existsSync(dir)).toBe(false);
   });
 
   it("changes nothing for an unknown slug", () => {

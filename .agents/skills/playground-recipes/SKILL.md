@@ -10,13 +10,14 @@ description: Use when adding, editing, versioning, listing or deleting a recipe 
 A recipe is a small example composition of `@tilli.dev/ui-atoms` parts, living in
 `apps/playground`. `recipes.json` is the registry (sorted array of
 `{ slug, title, description, version, components, changelog }`); `src/recipes/<slug>.tsx`
-is the module and must `export default` the component. Routes and the root card list are
+is the module and must `export default` the component. A large recipe is a folder instead,
+`src/recipes/<slug>/index.tsx` plus the files it imports; the registry accepts either form. Routes and the root card list are
 generated from the registry, so nothing else is edited to publish a recipe.
 
 **Core rule:** the registry entry and the module must agree. `__tests__/catalog.test.ts`
 and `vite build` enforce: entry ⇄ module exist, module default-exports a component, the
-entry's `components` equals the set of `@tilli.dev/ui-atoms/<x>` subpaths the module
-imports, and `recipes.json` is in the CLI's canonical (Biome) format.
+entry's `components` equals the set of `@tilli.dev/ui-atoms/<x>` component subpaths the
+module imports (every file of a folder recipe; `utils` does not count), and `recipes.json` is in the CLI's canonical (Biome) format.
 
 ## Quick reference
 
@@ -28,6 +29,7 @@ imports, and `recipes.json` is in the CLI's canonical (Biome) format.
 | Find a part's exported names | `packages/ui-atoms/src/components/<subpath>/index.tsx`, the `export {}` block at the bottom; usage in `apps/storybook/src/stories/<subpath>.stories.tsx` |
 | Checks | `pnpm --filter playground lint`, `typecheck`, `test`, `build` |
 | Recipe tests | None, ever: recipes are a sandbox (see root `CLAUDE.md`); the registry tests cover them |
+| Split a big recipe | Move `<slug>.tsx` to `<slug>/index.tsx` (keep the default export) and extract the rest into sibling files; no registry change |
 
 Limits: title ≤ 100 chars, slug ≤ 64 (kebab-case, derived from the title), description
 ≤ 1024, change note ≤ 2048. Versions are semver from `1.0.0`; `changelog` is oldest-first

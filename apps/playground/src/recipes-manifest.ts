@@ -36,7 +36,8 @@ export const INITIAL_VERSION = "1.0.0";
 export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-const MODULE_PATH_PATTERN = /(?:^|\/)([^/]+)\.tsx$/;
+/** `<slug>.tsx`, or `<slug>/index.tsx` for a folder recipe; the slug is the last path segment before either. */
+const MODULE_PATH_PATTERN = /(?:^|\/)([^/]+)(?:\.tsx|\/index\.tsx)$/;
 
 const RECIPE_KEYS = [
   "slug",
@@ -243,7 +244,7 @@ export function serializeManifest(recipes: readonly Recipe[]): string {
   return `${printJson(normalized, 0, 0, 0)}\n`;
 }
 
-/** `./recipes/nested-sidebar.tsx` -> `nested-sidebar`. */
+/** `./recipes/nested-sidebar.tsx` -> `nested-sidebar`; `./recipes/nested-sidebar/index.tsx` -> `nested-sidebar`. */
 export function slugFromModulePath(path: string): string | undefined {
   return MODULE_PATH_PATTERN.exec(path)?.[1];
 }

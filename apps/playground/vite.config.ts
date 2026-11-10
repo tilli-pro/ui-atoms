@@ -1,17 +1,15 @@
 /// <reference types="vitest/config" />
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
-import {
-  diffRecipeModules,
-  parseManifest,
-  slugFromModulePath,
-} from "./src/recipes-manifest.js";
+import { listRecipeModules } from "./src/recipe-modules.js";
+import { diffRecipeModules, parseManifest } from "./src/recipes-manifest.js";
 
 /**
- * Fails `vite build` when recipes.json and src/recipes/*.tsx disagree, so a
+ * Fails `vite build` when recipes.json and src/recipes (`<slug>.tsx` or
+ * `<slug>/index.tsx`) disagree, so a
  * recipe can neither ship without its module nor exist without an entry.
  * (Default exports are checked by __tests__/catalog.test.ts.)
  */
@@ -24,9 +22,9 @@ function recipeParity(): Plugin {
       const manifest = parseManifest(
         JSON.parse(readFileSync(join(root, "recipes.json"), "utf8")),
       );
-      const modules = readdirSync(join(root, "src", "recipes"))
-        .map(slugFromModulePath)
-        .filter((slug) => slug !== undefined);
+      const modules = listRecipeModules(join(root, "src", "recipes")).map(
+        (m) => m.slug,
+      );
       const { missingModules, missingEntries } = diffRecipeModules(
         manifest.map((r) => r.slug),
         modules,
@@ -34,10 +32,10 @@ function recipeParity(): Plugin {
       const problems = [
         ...missingModules.map(
           (s) =>
-            `recipes.json lists "${s}" but src/recipes/${s}.tsx is missing`,
+            `recipes.json lists "${s}" but src/recipes/${s}.tsx (or ${s}/index.tsx) is missing`,
         ),
         ...missingEntries.map(
-          (s) => `src/recipes/${s}.tsx has no recipes.json entry`,
+          (s) => `src/recipes/${s} has no recipes.json entry`,
         ),
       ];
       if (problems.length > 0) this.error(problems.join("\n"));

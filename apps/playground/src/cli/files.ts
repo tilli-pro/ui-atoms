@@ -1,11 +1,6 @@
-import {
-  existsSync,
-  readFileSync,
-  renameSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { findRecipeModule, recipeModuleRoot } from "../recipe-modules.js";
 import {
   parseManifest,
   type Recipe,
@@ -37,6 +32,7 @@ export function resolvePaths(
   };
 }
 
+/** Where `createRecipe` writes a new single-file module. An existing recipe may instead be a folder; see `findRecipeModule`. */
 export function modulePath(paths: PlaygroundPaths, slug: string): string {
   return join(paths.recipesDir, `${slug}.tsx`);
 }
@@ -74,9 +70,9 @@ export function createRecipe(
   const current = readManifest(paths);
   const { recipes, recipe } = addRecipe(current, input, today, knownComponents);
   const file = modulePath(paths, recipe.slug);
-  if (existsSync(file))
+  if (findRecipeModule(paths.recipesDir, recipe.slug))
     throw new Error(
-      `src/recipes/${recipe.slug}.tsx already exists but has no recipes.json entry; remove or rename it first.`,
+      `src/recipes/${recipe.slug}.tsx or ${recipe.slug}/index.tsx already exists but has no recipes.json entry; remove or rename it first.`,
     );
   // `wx` fails rather than overwrite, should the file appear meanwhile.
   writeFileSync(file, renderRecipeModule(recipe.slug, recipe.components), {
@@ -109,12 +105,12 @@ export function versionRecipe(
   return recipe;
 }
 
-/** Removes the entry first, then the module; returns whether a module file was deleted. */
+/** Removes the entry first, then the module (file or folder); returns whether a module was deleted. */
 export function deleteRecipe(paths: PlaygroundPaths, slug: string): boolean {
   const recipes = removeRecipe(readManifest(paths), slug);
   writeManifest(paths, recipes);
-  const file = modulePath(paths, slug);
-  const existed = existsSync(file);
-  rmSync(file, { force: true });
-  return existed;
+  const module = findRecipeModule(paths.recipesDir, slug);
+  if (!module) return false;
+  rmSync(recipeModuleRoot(module), { recursive: true, force: true });
+  return true;
 }

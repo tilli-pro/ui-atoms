@@ -26,7 +26,7 @@ function assertRecipeModule(
     (typeof component === "object" && component !== null);
   if (!renderable)
     throw new Error(
-      `src/recipes/${slug}.tsx must default-export the React component the recipe route renders.`,
+      `src/recipes/${slug}.tsx (or ${slug}/index.tsx) must default-export the React component the recipe route renders.`,
     );
 }
 

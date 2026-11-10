@@ -140,6 +140,11 @@ describe("slugFromModulePath", () => {
       "nested-sidebar",
     );
     expect(slugFromModulePath("card.tsx")).toBe("card");
+    expect(slugFromModulePath("./recipes/beacon-ui-ux/index.tsx")).toBe(
+      "beacon-ui-ux",
+    );
+    expect(slugFromModulePath("beacon-ui-ux/index.tsx")).toBe("beacon-ui-ux");
+    expect(slugFromModulePath("./recipes/beacon-ui-ux/rail.tsx")).toBe("rail");
     expect(slugFromModulePath("notes.md")).toBe(undefined);
   });
 });

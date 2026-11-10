@@ -1,8 +1,13 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { recipes } from "../src/catalog.js";
 import { loadComponentSubpaths } from "../src/cli/components.js";
+import {
+  findRecipeModule,
+  listRecipeModules,
+  recipeSourceFiles,
+} from "../src/recipe-modules.js";
 import {
   serializeManifest,
   slugFromModulePath,
@@ -21,10 +26,8 @@ const RECIPES_DIR = resolve(PLAYGROUND, "src", "recipes");
 const UI_ATOMS_IMPORT = /from\s+["']@tilli\.dev\/ui-atoms\/([^"']+)["']/g;
 
 const modules = import.meta.glob<{ default?: unknown }>(
-  "../src/recipes/*.tsx",
-  {
-    eager: true,
-  },
+  ["../src/recipes/*.tsx", "../src/recipes/*/index.tsx"],
+  { eager: true },
 );
 const moduleSlugs = Object.keys(modules)
   .map(slugFromModulePath)
@@ -32,15 +35,17 @@ const moduleSlugs = Object.keys(modules)
   .sort();
 const manifestSlugs = recipes.map((r) => r.slug);
 
-describe("recipes.json <-> src/recipes/*.tsx", () => {
-  it("contains the nested-sidebar recipe", () => {
-    expect(manifestSlugs).toContain("nested-sidebar");
+describe("recipes.json <-> src/recipes", () => {
+  it("contains the beacon-ui-ux recipe", () => {
+    expect(manifestSlugs).toContain("beacon-ui-ux");
   });
 
   it("has a module for every entry and an entry for every module", () => {
     expect(moduleSlugs).toEqual([...manifestSlugs].sort());
-    expect(readdirSync(RECIPES_DIR).sort()).toEqual(
-      moduleSlugs.map((s) => `${s}.tsx`),
+    // The glob (what the app loads) and the directory walk (what the CLI and
+    // the build check see) must agree on which modules exist.
+    expect(listRecipeModules(RECIPES_DIR).map((m) => m.slug)).toEqual(
+      moduleSlugs,
     );
   });
 
@@ -52,16 +57,25 @@ describe("recipes.json <-> src/recipes/*.tsx", () => {
   );
 
   it.each(recipes.map((r) => [r.slug, r] as const))(
-    "%s lists exactly the ui-atoms subpaths its module imports",
+    "%s lists exactly the ui-atoms components its module imports",
     (slug, recipe) => {
-      const source = readFileSync(resolve(RECIPES_DIR, `${slug}.tsx`), "utf8");
-      const imported = [...source.matchAll(UI_ATOMS_IMPORT)]
-        .map((m) => m[1])
+      const module = findRecipeModule(RECIPES_DIR, slug);
+      if (!module) throw new Error(`no module for ${slug}`);
+      // Only component subpaths count: `@tilli.dev/ui-atoms/utils` and the
+      // like are not components and never appear in `components`.
+      const components = loadComponentSubpaths();
+      const imported = recipeSourceFiles(module)
+        .flatMap((file) =>
+          [...readFileSync(file, "utf8").matchAll(UI_ATOMS_IMPORT)].map(
+            (m) => m[1],
+          ),
+        )
+        .filter(
+          (subpath): subpath is string =>
+            subpath !== undefined && components.includes(subpath),
+        )
         .sort();
       expect([...new Set(imported)]).toEqual(recipe.components);
-      expect(loadComponentSubpaths()).toEqual(
-        expect.arrayContaining(recipe.components),
-      );
     },
   );
 

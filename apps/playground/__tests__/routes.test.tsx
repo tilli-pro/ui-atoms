@@ -27,14 +27,14 @@ const stubLoader =
 describe("recipe list (/)", () => {
   it("shows a card per recipe linking to its route", async () => {
     renderAt("/");
-    const link = await screen.findByRole("link", { name: /Nested sidebar/ });
-    expect(link).toHaveAttribute("href", "/recipes/nested-sidebar");
+    const link = await screen.findByRole("link", { name: /Beacon UI\/UX/ });
+    expect(link).toHaveAttribute("href", "/recipes/beacon-ui-ux");
     expect(link).toHaveAttribute("data-slot", "card");
-    expect(within(link).getByText("v1.0.0")).toHaveAttribute(
+    expect(within(link).getByText("v1.1.0")).toHaveAttribute(
       "data-slot",
       "badge",
     );
-    expect(within(link).getByText(/two-pane sidebar/)).toHaveAttribute(
+    expect(within(link).getByText(/icon rail/)).toHaveAttribute(
       "data-slot",
       "card-description",
     );
@@ -102,7 +102,9 @@ describe("recipe routes (/recipes/<slug>)", () => {
     const load = (() => Promise.resolve({})) as unknown as RecipeLoader;
     renderAt("/recipes/a", buildRoutes([makeRecipe("a")], { a: load }));
     expect(
-      await screen.findByText(/src\/recipes\/a.tsx must default-export/),
+      await screen.findByText(
+        /src\/recipes\/a.tsx \(or a\/index.tsx\) must default-export/,
+      ),
     ).toBeInTheDocument();
     spy.mockRestore();
   });

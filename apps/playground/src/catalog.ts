@@ -13,7 +13,7 @@ export interface RecipeModule {
 
 export type RecipeLoader = () => Promise<RecipeModule>;
 
-/** Every `src/recipes/<slug>.tsx`, keyed by slug, each its own lazy chunk. */
+/** Every `src/recipes/<slug>.tsx` or `src/recipes/<slug>/index.tsx`, keyed by slug, each its own lazy chunk. */
 export function loadersBySlug(
   modules: Record<string, RecipeLoader>,
 ): Record<string, RecipeLoader> {
@@ -28,7 +28,7 @@ export function loadersBySlug(
 export const recipes: readonly Recipe[] = parseManifest(manifestJson);
 
 export const recipeLoaders = loadersBySlug(
-  import.meta.glob<RecipeModule>("./recipes/*.tsx"),
+  import.meta.glob<RecipeModule>(["./recipes/*.tsx", "./recipes/*/index.tsx"]),
 );
 
 if (import.meta.env.DEV) {
@@ -38,10 +38,10 @@ if (import.meta.env.DEV) {
   );
   for (const slug of missingModules)
     console.error(
-      `recipes.json lists "${slug}" but src/recipes/${slug}.tsx does not exist; its route is skipped.`,
+      `recipes.json lists "${slug}" but neither src/recipes/${slug}.tsx nor src/recipes/${slug}/index.tsx exists; its route is skipped.`,
     );
   for (const slug of missingEntries)
     console.error(
-      `src/recipes/${slug}.tsx has no recipes.json entry; run \`pnpm --filter playground recipe\` or add one.`,
+      `src/recipes/${slug} has no recipes.json entry; run \`pnpm --filter playground recipe\` or add one.`,
     );
 }
