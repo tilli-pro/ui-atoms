@@ -551,6 +551,7 @@ const scheduleSegment: SegmentSpec<EngagePost> = {
     { label: "Open", icon: ExternalLink },
     { label: "Reschedule", icon: CalendarClock },
   ],
+  chips: [],
   gaps: ["drag-calendar"],
   empty: empty("No upcoming posts", adjustFilter),
 };
@@ -589,6 +590,9 @@ const analyticsSegment: SegmentSpec<EngagePlatformStat> = {
       sortable: false,
     },
   ],
+  chips: [],
+  selects: [],
+  rowActions: [],
   gaps: ["charts"],
   empty: empty("No analytics yet", adjustFilter),
 };
@@ -613,7 +617,7 @@ const formStatuses: FormStatus[] = ["draft", "published", "paused", "archived"];
 
 const formsSegment: SegmentSpec<EngageForm> = {
   key: "forms",
-  label: "Forms",
+  label: "Application forms",
   rows: (persona) => engageData(persona).forms,
   total: (persona) => engageData(persona).totals.forms,
   columns: [
@@ -706,7 +710,7 @@ const submissionsSegment: SegmentSpec<EngageSubmission> = {
 
 const applicationsSpec: AnyList = {
   key: "applications",
-  title: "Application forms",
+  title: "Applications",
   description: "Publish forms and review what applicants submit.",
   ...lead(formsSegment),
   segments: [formsSegment, submissionsSegment],
