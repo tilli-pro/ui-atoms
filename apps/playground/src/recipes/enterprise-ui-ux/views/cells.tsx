@@ -14,7 +14,7 @@ type Tone = "success" | "error" | "warning" | "info" | "secondary";
 
 const toneWords: Record<Exclude<Tone, "secondary">, ReadonlySet<string>> = {
   success: new Set(
-    "paid approved completed active connected resolved closed won delivered published confirmed accepted online available".split(
+    "paid approved completed active connected resolved closed won delivered published confirmed accepted online available met".split(
       " ",
     ),
   ),
@@ -79,6 +79,7 @@ export function DateCell({
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: "UTC",
     ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {}),
   }).format(date);
   return <span className="tabular-nums">{text}</span>;
@@ -121,7 +122,13 @@ export function PartyCell({
 export function GapBadge({ id }: { id: GapId }) {
   return (
     <Tooltip>
-      <TooltipTrigger render={<Badge variant="warning">Needs review</Badge>} />
+      <TooltipTrigger
+        render={
+          <Badge tabIndex={0} variant="warning">
+            Needs review
+          </Badge>
+        }
+      />
       <TooltipPopup>{gaps[id].reason}</TooltipPopup>
     </Tooltip>
   );

@@ -94,12 +94,27 @@ export type ResolvedSelect<R extends Row = Row> = Omit<
   "options"
 > & { options: SelectOption<R>[] };
 
-export type ActionSpec = {
+/** Content of the settlement-style Sheet a row action opens (nested rows). */
+export type PanelContent = {
+  title: string;
+  description?: string;
+  columns: ColumnSpec[];
+  rows: Row[];
+};
+
+export type ActionSpec<R extends Row = Row> = {
   label: Label;
   icon?: LucideIcon;
   variant?: "default" | "outline" | "ghost" | "destructive";
   gap?: GapId;
+  /** When set, choosing the action opens a Sheet with these rows. */
+  panel?: (row: R) => PanelContent;
 };
+
+export type FooterFn<R extends Row = Row> = (
+  rows: R[],
+  persona: Persona,
+) => { label: string; value: string }[];
 
 export type EmptyCopy = { title: Label; description: Label };
 
@@ -111,8 +126,14 @@ export type SegmentSpec<R extends Row = Row> = {
   chips?: ChipSpec<R>[];
   selects?: SelectFilterSpec<R>[];
   empty?: EmptyCopy;
-  rowActions?: ActionSpec[];
+  rowActions?: ActionSpec<R>[];
+  /** Full count behind the sample rows; the row count when absent. */
   total?: (persona: Persona) => number;
+  /** Footer totals over the filtered rows, shown before the paging text. */
+  footer?: FooterFn<R>;
+  pageActions?: ActionSpec[];
+  search?: (row: R, query: string) => boolean;
+  selectable?: boolean;
   gaps?: GapId[];
 };
 
@@ -122,11 +143,12 @@ export type ListSpec<R extends Row = Row> = {
   description?: Label;
   rows: (persona: Persona) => R[];
   total?: (persona: Persona) => number;
+  footer?: FooterFn<R>;
   columns: ColumnSpec<R>[];
   chips: ChipSpec<R>[];
   selects?: SelectFilterSpec<R>[];
   segments?: SegmentSpec<R>[];
-  rowActions: ActionSpec[];
+  rowActions: ActionSpec<R>[];
   pageActions: ActionSpec[];
   search: (row: R, query: string) => boolean;
   empty: EmptyCopy;

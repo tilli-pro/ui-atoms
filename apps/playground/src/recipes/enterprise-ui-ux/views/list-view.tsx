@@ -37,6 +37,13 @@ import {
   SelectValue,
 } from "@tilli.dev/ui-atoms/select";
 import {
+  Sheet,
+  SheetDescription,
+  SheetHeader,
+  SheetPopup,
+  SheetTitle,
+} from "@tilli.dev/ui-atoms/sheet";
+import {
   Table,
   TableBody,
   TableCell,
@@ -51,7 +58,9 @@ import type { LucideIcon } from "lucide-react";
 import { ArrowUpDown, Ellipsis, Search } from "lucide-react";
 import { gaps } from "../gaps.js";
 import {
+  type ActionSpec,
   type ListSpec,
+  type PanelContent,
   type Persona,
   type Row,
   resolveLabel,
@@ -76,7 +85,10 @@ type ListViewProps<R extends Row> = {
 
 export function ListView<R extends Row>(props: ListViewProps<R>) {
   return (
-    <ListViewInner key={`${props.spec.key}:${props.persona.key}`} {...props} />
+    <ListViewInner
+      key={`${props.moduleTitle}:${props.spec.key}:${props.persona.key}`}
+      {...props}
+    />
   );
 }
 
@@ -96,11 +108,16 @@ function ListViewInner<R extends Row>({
   const [sort, setSort] = useState<SortState>(null);
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
+  const [panel, setPanel] = useState<{ row: R; action: ActionSpec<R> } | null>(
+    null,
+  );
 
   const segment = spec.segments?.find((s) => s.key === segmentKey);
   const columns = segment?.columns ?? spec.columns;
-  const chips = segment?.chips ?? spec.chips;
-  const rawSelects = segment?.selects ?? spec.selects;
+  // A segmented list resolves everything from the active segment: a segment that
+  // declares no chips, selects, row actions or total has none (never the list's).
+  const chips = segment ? (segment.chips ?? []) : spec.chips;
+  const rawSelects = segment ? (segment.selects ?? []) : spec.selects;
   const selects = useMemo(
     () =>
       (rawSelects ?? []).map((select) => ({
@@ -113,8 +130,12 @@ function ListViewInner<R extends Row>({
     [rawSelects, persona],
   );
   const empty = segment?.empty ?? spec.empty;
-  const rowActions = segment?.rowActions ?? spec.rowActions;
-  const totalFn = segment?.total ?? spec.total;
+  const rowActions = segment ? (segment.rowActions ?? []) : spec.rowActions;
+  const totalFn = segment ? segment.total : spec.total;
+  const footerFn = segment ? segment.footer : spec.footer;
+  const pageActions = segment?.pageActions ?? spec.pageActions;
+  const selectable = segment?.selectable ?? spec.selectable;
+  const searchFn = segment?.search ?? spec.search;
   const gapIds = [...new Set([...(spec.gaps ?? []), ...(segment?.gaps ?? [])])];
 
   const baseRows = useMemo(
@@ -129,8 +150,8 @@ function ListViewInner<R extends Row>({
   const chipRows = chip ? selectedRows.filter(chip.predicate) : selectedRows;
   const searched = useMemo(() => {
     const q = query.trim();
-    return q ? chipRows.filter((row) => spec.search(row, q)) : chipRows;
-  }, [chipRows, query, spec]);
+    return q ? chipRows.filter((row) => searchFn(row, q)) : chipRows;
+  }, [chipRows, query, searchFn]);
   const sortColumn = columns.find((c) => c.key === sort?.key);
   const filtered = useMemo(
     () => sortRows(searched, sortColumn, sort?.dir ?? "asc"),
@@ -150,6 +171,8 @@ function ListViewInner<R extends Row>({
   const total = filtering
     ? filtered.length
     : Math.max(totalFn ? totalFn(persona) : 0, filtered.length);
+  const footer = footerFn ? footerFn(filtered, persona) : [];
+  const footerText = footer.map((f) => `${f.label} ${f.value}`).join(" · ");
 
   const resetPage = () => setPage(1);
   const cycleSort = (key: string) => {
@@ -190,7 +213,7 @@ function ListViewInner<R extends Row>({
             {t(spec.title)}
           </h1>
           <div className="flex flex-wrap items-center gap-2">
-            {spec.pageActions.map((action) => (
+            {pageActions.map((action) => (
               <span
                 className="inline-flex items-center gap-1.5"
                 key={t(action.label)}
@@ -317,7 +340,7 @@ function ListViewInner<R extends Row>({
         })}
       </div>
 
-      {spec.selectable && selected.size > 0 ? (
+      {selectable && selected.size > 0 ? (
         <Toolbar className="gap-2">
           <span className="px-2 text-sm">{selected.size} selected</span>
           <ToolbarButton render={<Button size="sm" variant="outline" />}>
@@ -345,7 +368,7 @@ function ListViewInner<R extends Row>({
           <Table>
             <TableHeader>
               <TableRow>
-                {spec.selectable ? (
+                {selectable ? (
                   <TableHead className="w-8">
                     <Checkbox
                       aria-label="Select all"
@@ -374,15 +397,17 @@ function ListViewInner<R extends Row>({
                     )}
                   </TableHead>
                 ))}
-                <TableHead className="w-10">
-                  <span className="sr-only">Actions</span>
-                </TableHead>
+                {rowActions.length > 0 ? (
+                  <TableHead className="w-10">
+                    <span className="sr-only">Actions</span>
+                  </TableHead>
+                ) : null}
               </TableRow>
             </TableHeader>
             <TableBody>
               {pageRows.map((row) => (
                 <TableRow key={row.id}>
-                  {spec.selectable ? (
+                  {selectable ? (
                     <TableCell>
                       <Checkbox
                         aria-label="Select row"
@@ -403,30 +428,37 @@ function ListViewInner<R extends Row>({
                       />
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <Menu>
-                      <MenuTrigger
-                        render={
-                          <Button
-                            aria-label="Actions"
-                            size="icon"
-                            variant="ghost"
-                          />
-                        }
-                      >
-                        <Ellipsis />
-                      </MenuTrigger>
-                      <MenuPopup align="end">
-                        {rowActions.map((action) => (
-                          <MenuItem key={t(action.label)}>
-                            {action.icon ? <action.icon /> : null}
-                            {t(action.label)}
-                            {action.gap ? <GapBadge id={action.gap} /> : null}
-                          </MenuItem>
-                        ))}
-                      </MenuPopup>
-                    </Menu>
-                  </TableCell>
+                  {rowActions.length > 0 ? (
+                    <TableCell>
+                      <Menu>
+                        <MenuTrigger
+                          render={
+                            <Button
+                              aria-label="Actions"
+                              size="icon"
+                              variant="ghost"
+                            />
+                          }
+                        >
+                          <Ellipsis />
+                        </MenuTrigger>
+                        <MenuPopup align="end">
+                          {rowActions.map((action) => (
+                            <MenuItem
+                              key={t(action.label)}
+                              onClick={() => {
+                                if (action.panel) setPanel({ row, action });
+                              }}
+                            >
+                              {action.icon ? <action.icon /> : null}
+                              {t(action.label)}
+                              {action.gap ? <GapBadge id={action.gap} /> : null}
+                            </MenuItem>
+                          ))}
+                        </MenuPopup>
+                      </Menu>
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               ))}
             </TableBody>
@@ -434,6 +466,11 @@ function ListViewInner<R extends Row>({
         )}
         <FrameFooter className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-muted-foreground text-sm">
+            {footerText ? (
+              <span className="font-medium text-foreground tabular-nums">
+                {`${footerText} · `}
+              </span>
+            ) : null}
             {filtered.length === 0
               ? `Showing 0 of ${total}`
               : `Showing ${start + 1}–${start + pageRows.length} of ${total}`}
@@ -501,6 +538,86 @@ function ListViewInner<R extends Row>({
           </Pagination>
         </FrameFooter>
       </Frame>
+      <RowPanel
+        onClose={() => setPanel(null)}
+        panel={panel}
+        persona={persona}
+      />
     </div>
+  );
+}
+
+/** The Sheet a `panel` row action opens: a compact table of the row's nested rows. */
+function RowPanel<R extends Row>({
+  panel,
+  persona,
+  onClose,
+}: {
+  panel: { row: R; action: ActionSpec<R> } | null;
+  persona: Persona;
+  onClose: () => void;
+}) {
+  // Keep the last content while the Sheet animates out.
+  const [last, setLast] = useState<PanelContent | null>(null);
+  const content = useMemo(
+    () => (panel ? (panel.action.panel?.(panel.row) ?? null) : null),
+    [panel],
+  );
+  if (content && content !== last) setLast(content);
+  const shown = content ?? last;
+  return (
+    <Sheet
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      open={panel !== null}
+    >
+      <SheetPopup className="sm:max-w-2xl" side="right">
+        <SheetHeader>
+          <SheetTitle>{shown?.title}</SheetTitle>
+          {shown?.description ? (
+            <SheetDescription>{shown.description}</SheetDescription>
+          ) : null}
+        </SheetHeader>
+        <div className="min-h-0 flex-1 overflow-auto px-4 pb-4">
+          {shown ? (
+            <Table variant="card">
+              <TableHeader>
+                <TableRow>
+                  {shown.columns.map((column) => (
+                    <TableHead
+                      className={cn(column.align === "end" && "text-end")}
+                      key={column.key}
+                    >
+                      {typeof column.header === "function"
+                        ? column.header(persona.terms)
+                        : column.header}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {shown.rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {shown.columns.map((column) => (
+                      <TableCell
+                        className={cn(column.align === "end" && "text-end")}
+                        key={column.key}
+                      >
+                        <Cell
+                          currency={persona.currency}
+                          format={column.format}
+                          value={readValue(column, row)}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : null}
+        </div>
+      </SheetPopup>
+    </Sheet>
   );
 }
