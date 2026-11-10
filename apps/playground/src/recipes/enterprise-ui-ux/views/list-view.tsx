@@ -104,7 +104,7 @@ function ListViewInner<R extends Row>({
   const empty = segment?.empty ?? spec.empty;
   const rowActions = segment?.rowActions ?? spec.rowActions;
   const totalFn = segment?.total ?? spec.total;
-  const gapIds = [...(spec.gaps ?? []), ...(segment?.gaps ?? [])];
+  const gapIds = [...new Set([...(spec.gaps ?? []), ...(segment?.gaps ?? [])])];
 
   const baseRows = useMemo(
     () => (segment ? segment.rows(persona) : spec.rows(persona)),

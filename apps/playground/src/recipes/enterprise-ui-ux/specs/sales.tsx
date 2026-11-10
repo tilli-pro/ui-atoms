@@ -91,7 +91,13 @@ const leadColumns: ColumnSpec<SalesLead>[] = [
     accessor: (row) => ({ name: row.name, subline: row.company }),
   },
   { key: "contact", header: "Contact", format: "text", sortable: false },
-  { key: "source", header: "Source", format: "text", sortable: false },
+  {
+    key: "source",
+    header: "Source",
+    format: "text",
+    accessor: (row) => (row.source ? capitalise(row.source) : null),
+    sortable: false,
+  },
   {
     key: "status",
     header: "Status",
@@ -386,7 +392,6 @@ export const salesSpecs: ModuleSpecs = {
             "cancelled",
           ]),
           rowActions: [{ label: "Open", icon: ExternalLink }],
-          gaps: ["data-grid"],
           empty: { ...orderEmpty, title: "No sales orders yet" },
         },
         {
@@ -397,7 +402,6 @@ export const salesSpecs: ModuleSpecs = {
           columns: orderColumns("Supplier", "Billed", "Unbilled"),
           chips: orderChips(["submitted", "confirmed", "closed"]),
           rowActions: [{ label: "Open", icon: ExternalLink }],
-          gaps: ["data-grid"],
           empty: { ...orderEmpty, title: "No purchase orders yet" },
         },
         {
@@ -405,14 +409,13 @@ export const salesSpecs: ModuleSpecs = {
           label: "Received",
           rows: ordersOf("received"),
           total: (persona) => ordersOf("received")(persona).length,
-          columns: orderColumns("Supplier", "Billed", "Unbilled"),
+          columns: orderColumns("Customer", "Invoiced", "Uninvoiced"),
           chips: orderChips(["received"]),
           rowActions: [
             { label: "Open", icon: ExternalLink },
             { label: "Accept", icon: Check },
             { label: "Reject", icon: X, variant: "destructive" },
           ],
-          gaps: ["data-grid"],
           empty: {
             title: "No orders from partners are waiting",
             description: "Orders your partners send appear here.",
@@ -430,14 +433,18 @@ export const salesSpecs: ModuleSpecs = {
     const sentQuotes = data.quotes.filter((row) => row.status === "sent");
     const monthOrders = count(
       data.orders,
-      (row) => ANCHOR.getTime() - row.date.getTime() <= 30 * DAY,
+      (row) =>
+        row.direction !== "received" &&
+        ANCHOR.getTime() - row.date.getTime() <= 30 * DAY,
     );
-    const byStage = pipelineStagesF1.map((stage) => ({
-      stage: stage.name,
-      amount: openDeals
-        .filter((row) => row.stage === stage.name)
-        .reduce((sum, row) => sum + row.amount, 0),
-    }));
+    const byStage = pipelineStagesF1
+      .filter((stage) => !(stage.isWon || stage.isLost))
+      .map((stage) => ({
+        stage: stage.name,
+        amount: openDeals
+          .filter((row) => row.stage === stage.name)
+          .reduce((sum, row) => sum + row.amount, 0),
+      }));
     const max = Math.max(1, ...byStage.map((entry) => entry.amount));
     const money = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -520,7 +527,9 @@ export const salesSpecs: ModuleSpecs = {
             { key: "party", header: "Party", format: "party" },
             { key: "total", header: "Total", format: "money", align: "end" },
           ],
-          rows: data.orders.slice(0, 6),
+          rows: data.orders
+            .filter((row) => row.direction !== "received")
+            .slice(0, 6),
         },
       ],
     };
