@@ -6,7 +6,7 @@ import {
   personName,
   phone,
 } from "./names.js";
-import { createRng, type Rng, seedFor } from "./random.js";
+import { createRng, type NumRange, type Rng, seedFor } from "./random.js";
 import {
   accountsShape,
   companiesShape,
@@ -132,6 +132,14 @@ const DIRECTORY_REGIONS = [
   "Mountain",
 ] as const;
 
+/** Appendix money shapes can be 0/0/max (median = min): model the zero share as a point mass, then a skewed tail. */
+const moneyFrom = (rng: Rng, r: NumRange): number =>
+  r.median === r.min
+    ? rng.bool(0.55)
+      ? r.min
+      : rng.range({ min: r.min, median: r.max * 0.05, max: r.max })
+    : rng.range(r);
+
 const accountColumns = (
   rng: Rng,
   key: PersonaKey,
@@ -149,8 +157,10 @@ const accountColumns = (
     ) === "yes";
   const pastDueRange = numbers[`pastDue_${key}`];
   const balanceRange = numbers[`balance_${key}`];
-  const pastDue = isPastDue && pastDueRange ? rng.range(pastDueRange) : 0;
-  const base = hasBalance && balanceRange ? rng.range(balanceRange) : 0;
+  const base = hasBalance && balanceRange ? moneyFrom(rng, balanceRange) : 0;
+  // A zero balance carries no past-due amount or date.
+  const pastDue =
+    isPastDue && pastDueRange && base > 0 ? moneyFrom(rng, pastDueRange) : 0;
   const accountNumber =
     key === "utilities"
       ? `${ACCOUNT_PREFIX[key]}-${String(rng.int(0, 999_999_999_999)).padStart(12, "0")}`

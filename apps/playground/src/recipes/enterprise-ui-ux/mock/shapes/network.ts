@@ -123,11 +123,11 @@ export const organizationsShape: TableShape = {
     ],
     // Classification column: roster flags is_supplier (513/1164), is_partner (6), is_customer (7); no flag shows "—".
     classification: [
-      ["—", 646],
-      ["Supplier", 505],
+      ["—", 640],
+      ["Supplier", 511],
       ["Partner", 5],
       ["Customer", 6],
-      ["Supplier · Partner", 1],
+      ["Partner · Supplier", 1],
       ["Supplier · Customer", 1],
     ],
     // Derived roster status per persona.
