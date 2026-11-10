@@ -1,4 +1,4 @@
-import type { ColumnSpec, Row, SelectFilterSpec } from "../specs/types.js";
+import type { ColumnSpec, ResolvedSelect, Row } from "../specs/types.js";
 
 export const PAGE_SIZE = 25;
 
@@ -48,7 +48,7 @@ export const sortRows = <R extends Row>(
 
 export const applySelects = <R extends Row>(
   rows: R[],
-  selects: SelectFilterSpec<R>[],
+  selects: ResolvedSelect<R>[],
   chosen: Record<string, string>,
 ): R[] =>
   selects.reduce((acc, select) => {

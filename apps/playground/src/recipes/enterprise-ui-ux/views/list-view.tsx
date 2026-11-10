@@ -100,7 +100,18 @@ function ListViewInner<R extends Row>({
   const segment = spec.segments?.find((s) => s.key === segmentKey);
   const columns = segment?.columns ?? spec.columns;
   const chips = segment?.chips ?? spec.chips;
-  const selects = segment?.selects ?? spec.selects ?? [];
+  const rawSelects = segment?.selects ?? spec.selects;
+  const selects = useMemo(
+    () =>
+      (rawSelects ?? []).map((select) => ({
+        ...select,
+        options:
+          typeof select.options === "function"
+            ? select.options(persona)
+            : select.options,
+      })),
+    [rawSelects, persona],
+  );
   const empty = segment?.empty ?? spec.empty;
   const rowActions = segment?.rowActions ?? spec.rowActions;
   const totalFn = segment?.total ?? spec.total;

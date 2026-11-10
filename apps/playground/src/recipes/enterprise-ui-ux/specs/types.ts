@@ -76,11 +76,23 @@ export type ChipSpec<R extends Row = Row> = {
 };
 
 /** A second, single-select filter dimension beside the chips (channel, status, date preset...). */
+export type SelectOption<R extends Row = Row> = {
+  value: string;
+  label: Label;
+  predicate: (row: R) => boolean;
+};
+
 export type SelectFilterSpec<R extends Row = Row> = {
   key: string;
   label: Label;
-  options: { value: string; label: Label; predicate: (row: R) => boolean }[];
+  options: SelectOption<R>[] | ((persona: Persona) => SelectOption<R>[]);
 };
+
+/** A select whose options have been resolved for the active persona. */
+export type ResolvedSelect<R extends Row = Row> = Omit<
+  SelectFilterSpec<R>,
+  "options"
+> & { options: SelectOption<R>[] };
 
 export type ActionSpec = {
   label: Label;

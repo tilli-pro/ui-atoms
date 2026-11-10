@@ -23,18 +23,18 @@ import {
   type OperationsTimesheet,
   type OperationsWorkOrder,
   operationsData,
+  type ServiceBilling,
+  type ServiceCreates,
   type ServiceLocation,
   type WorkOrderKind,
 } from "../mock/operations.js";
 import { ANCHOR } from "../mock/random.js";
-import { personaKeys, personas } from "../personas.js";
 import {
   type AnyList,
   adjust,
   capitalise,
   DAY,
   empty,
-  includes,
   lead,
   searchBy,
   statusChips,
@@ -120,22 +120,15 @@ const appointmentColumns: ColumnSpec<OperationsAppointment>[] = [
 const byStart = (a: OperationsAppointment, b: OperationsAppointment) =>
   a.startsAt.getTime() - b.startsAt.getTime();
 
-const staffNames = [
-  ...new Set(
-    personaKeys.flatMap((key) =>
-      operationsData(personas[key]).staff.map((member) => member.name),
-    ),
-  ),
-].sort();
-
 const staffSelect: SelectFilterSpec<OperationsAppointment> = {
   key: "staff",
   label: "staff",
-  options: staffNames.map((name) => ({
-    value: name,
-    label: name,
-    predicate: (row) => row.staff === name,
-  })),
+  options: (persona) =>
+    operationsData(persona).staff.map((member) => ({
+      value: member.name,
+      label: member.name,
+      predicate: (row) => row.staff === member.name,
+    })),
 };
 
 const appointmentSegment = (
@@ -184,6 +177,19 @@ const calendarSpec: AnyList = {
 
 /* ------------------------------------------------------------- Services */
 
+const createsLabels: Record<ServiceCreates, string> = {
+  none: "No order",
+  service_order: "Service order",
+  work_order: "Work order",
+};
+
+const serviceBillingLabels: Record<ServiceBilling, string> = {
+  time_material: "Time and materials",
+  fixed: "Fixed price",
+  per_session: "Per session",
+  none: "Not billed",
+};
+
 const servicesSpec: ListSpec<OperationsService> = {
   key: "services",
   title: "Services",
@@ -226,9 +232,7 @@ const servicesSpec: ListSpec<OperationsService> = {
       header: "Creates",
       format: "party",
       accessor: (row) => {
-        const name = capitalise(
-          row.creates === "none" ? "nothing" : row.creates,
-        );
+        const name = createsLabels[row.creates];
         return row.workCostCentre
           ? { name, subline: row.workCostCentre }
           : { name };
@@ -239,8 +243,7 @@ const servicesSpec: ListSpec<OperationsService> = {
       key: "billing",
       header: "Billing",
       format: "text",
-      accessor: (row) =>
-        row.billing === "none" ? "Not billed" : capitalise(row.billing),
+      accessor: (row) => serviceBillingLabels[row.billing],
       sortable: false,
     },
     { key: "active", header: "Active", format: "boolean", sortable: false },
@@ -566,14 +569,13 @@ const outageTypeLabel = (type: OperationsOutage["type"]) =>
 const outageSpec: ListSpec<OperationsOutage> = {
   key: "outages",
   title: (terms) => terms.outages,
-  description: (terms) =>
-    `Report and track ${terms.outages.toLowerCase()} and planned maintenance.`,
+  description: "Report and track outages and planned maintenance.",
   rows: (persona) => operationsData(persona).outages,
   total: (persona) => operationsData(persona).totals.outages,
   columns: [
     {
       key: "title",
-      header: (terms) => terms.outages,
+      header: "Outage",
       format: "party",
       accessor: (row) => ({ name: row.title, subline: row.number }),
       sortable: false,
@@ -639,10 +641,7 @@ const outageSpec: ListSpec<OperationsOutage> = {
     { label: "Manage areas", icon: MapIcon, variant: "outline" },
     { label: "Schedule maintenance", icon: CalendarPlus },
   ],
-  search: (row, query) =>
-    includes(row.title, query) ||
-    includes(row.number, query) ||
-    includes(row.area, query),
+  search: searchBy("title", "number", "area"),
   gaps: ["map"],
   empty: {
     title: (terms) => `No ${terms.outages.toLowerCase()} found`,
@@ -658,7 +657,7 @@ const dashboard = (persona: Persona) => {
   const today = data.appointments.filter(isToday).sort(byStart);
   const openOrders = data.workOrders.filter(
     (row) =>
-      row.status !== "completed" &&
+      row.kind === "internal" &&
       row.status !== "closed" &&
       row.status !== "cancelled",
   );
@@ -681,7 +680,7 @@ const dashboard = (persona: Persona) => {
       {
         label: "Work orders open",
         value: openOrders.length,
-        hint: "Not completed, closed or cancelled",
+        hint: "Internal orders not closed or cancelled",
       },
       {
         label: "Timesheets to approve",
