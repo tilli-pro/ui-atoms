@@ -228,6 +228,7 @@ const accessRequestsSegment: SegmentSpec<EnterpriseAccessRequest> = {
   key: "access-requests",
   label: "Access requests",
   rows: (persona) => enterpriseData(persona).accessRequests,
+  total: (persona) => enterpriseData(persona).totals.accessRequests,
   columns: [
     {
       key: "name",
@@ -737,6 +738,9 @@ const aiAgentsSpec: AnyList = {
 
 const HOUR = 3_600_000;
 
+/** Matches the Finance dashboard's open-invoice set. */
+const closedInvoice = new Set(["draft", "paid", "void", "written_off"]);
+
 const dashboard = (persona: Persona) => {
   const data = enterpriseData(persona);
   const now = ANCHOR.getTime();
@@ -747,6 +751,7 @@ const dashboard = (persona: Persona) => {
   );
   const due = financeData(persona).invoices.filter(
     (row) =>
+      !closedInvoice.has(row.status) &&
       row.balance > 0 &&
       row.dueDate.getTime() >= now &&
       row.dueDate.getTime() <= now + 7 * DAY,
