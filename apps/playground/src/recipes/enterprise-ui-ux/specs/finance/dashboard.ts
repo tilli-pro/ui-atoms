@@ -132,7 +132,10 @@ export const financeDashboard = (persona: Persona): DashboardSpec => {
           { key: "dueDate", header: "Due", format: "date" },
         ],
         rows: data.bills
-          .filter((row) => row.status === "pending_review")
+          .filter(
+            (row) =>
+              row.status === "pending_review" || row.status === "on_hold",
+          )
           .slice(0, 6),
       },
       {

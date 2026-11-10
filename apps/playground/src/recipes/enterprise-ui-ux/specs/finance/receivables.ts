@@ -161,13 +161,6 @@ export const settlementColumns: ColumnSpec<FinanceSettlement>[] = [
   { key: "period", header: "Period", format: "text", sortable: false },
   { key: "partner", header: "Partner", format: "party", sortable: false },
   {
-    key: "side",
-    header: "Side",
-    format: "badge",
-    accessor: (row) => capitalise(row.side),
-    sortable: false,
-  },
-  {
     key: "accrued",
     header: "Accrued",
     format: "money",
@@ -291,24 +284,6 @@ const settlementsSegment: SegmentSpec<FinanceSettlement> = {
       .length,
   columns: settlementColumns,
   chips: statusChips(settlementStatuses),
-  selects: [
-    {
-      key: "side",
-      label: "Side",
-      options: [
-        {
-          value: "receivable",
-          label: "Receivable",
-          predicate: (row) => row.side === "receivable",
-        },
-        {
-          value: "payable",
-          label: "Payable",
-          predicate: (row) => row.side === "payable",
-        },
-      ],
-    },
-  ],
   rowActions: [
     settlementActionLines,
     { label: "Open dispute", icon: TriangleAlert },

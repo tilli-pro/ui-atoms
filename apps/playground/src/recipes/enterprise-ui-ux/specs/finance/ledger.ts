@@ -16,6 +16,8 @@ import {
 } from "./common.js";
 import type { ChipSpec, ColumnSpec, SegmentSpec } from "../types.js";
 
+const NBSP = String.fromCharCode(160);
+
 const accountTypes = [
   "asset",
   "liability",
@@ -71,7 +73,7 @@ const accountColumns: ColumnSpec<FinanceAccount>[] = [
     key: "name",
     header: "Name",
     format: "text",
-    accessor: (row) => `${" ".repeat(row.depth * 2)}${row.name}`,
+    accessor: (row) => `${NBSP.repeat(row.depth * 4)}${row.name}`,
     sortable: false,
   },
   {

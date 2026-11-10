@@ -156,7 +156,10 @@ const productsSegment: SegmentSpec<FinanceProduct> = {
     { label: "Edit", icon: Pencil },
     { label: "Archive", icon: Archive },
   ],
-  empty: empty("No products found", adjust),
+  empty: {
+    title: (t) => `No ${t.products.toLowerCase()} found`,
+    description: adjust,
+  },
 };
 
 const subscriptionsSegment: SegmentSpec<FinanceSubscription> = {
