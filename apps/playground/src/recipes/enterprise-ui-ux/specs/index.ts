@@ -1,5 +1,6 @@
 import { itemSlug } from "../routing.js";
 import { engageSpecs } from "./engage.js";
+import { enterpriseSpecs } from "./enterprise.js";
 import { financeSpecs } from "./finance.js";
 import { networkSpecs } from "./network.js";
 import { operationsSpecs } from "./operations.js";
@@ -11,6 +12,7 @@ import type { ListSpec, ModuleSpecs } from "./types.js";
 /** Each module's mock specs; every module task adds its entry. */
 export const moduleSpecs: Partial<Record<ModuleKey, ModuleSpecs>> = {
   engage: engageSpecs,
+  enterprise: enterpriseSpecs,
   finance: financeSpecs,
   network: networkSpecs,
   operations: operationsSpecs,
