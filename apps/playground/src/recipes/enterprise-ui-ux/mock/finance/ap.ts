@@ -43,7 +43,7 @@ export type FinanceBillInboxMessage = Row & {
   subject: string;
   attachments: number;
   receivedAt: Date;
-  status: "received" | "processed" | "rejected";
+  status: "received" | "processed" | "error";
 };
 
 export const genBills = (persona: Persona): FinanceBill[] => {

@@ -1,6 +1,10 @@
 import { createRng, seedFor } from "../random.js";
-import { FINANCE_COUNTS, payShape } from "../shapes/finance.js";
-import { money, plusDays, round2, tenantOf, weights } from "./common.js";
+import {
+  FINANCE_COUNTS,
+  paymentTransactionsShape,
+  payShape,
+} from "../shapes/finance.js";
+import { money, paidAmount, plusDays, tenantOf, weights } from "./common.js";
 import type { Persona, Row } from "../../specs/types.js";
 import type { FinanceBill } from "./ap.js";
 import type { FinanceInvoice } from "./ar.js";
@@ -27,6 +31,9 @@ export type FinancePayment = Row & {
   /** `PAY-AR-NNNNNN` / `PAY-AP-NNNNNN`; blank for unreferenced internal approvals. */
   reference: string;
   source: PaymentSource;
+  /** "in" for invoice payments, "out" for bill payments. */
+  direction: "in" | "out";
+  documentKind: "invoice" | "bill";
 };
 
 type Doc = {
@@ -45,25 +52,25 @@ export const genPayments = (
   const rng = createRng(seedFor(persona, "finance.payments"));
   const tenant = tenantOf<"F1" | "G1">(payShape, persona.key);
   const enums = payShape.enums;
-  // Only documents that have taken a payment can be the target of one.
+  // Only paid and partially paid documents can be the target of a payment.
   const arDocs: Doc[] = invoices
-    .filter((i) => i.total - i.balance > 0)
     .map((i) => ({
       number: i.number,
       party: i.customer,
       date: i.issueDate,
-      paid: round2(i.total - i.balance),
-      kind: "ar",
-    }));
+      paid: paidAmount(i.status, i.total, i.balance),
+      kind: "ar" as const,
+    }))
+    .filter((d) => d.paid > 0);
   const apDocs: Doc[] = bills
-    .filter((b) => b.total - b.balance > 0)
     .map((b) => ({
       number: b.number,
       party: b.vendor,
       date: b.issueDate,
-      paid: round2(b.total - b.balance),
-      kind: "ap",
-    }));
+      paid: paidAmount(b.status, b.total, b.balance),
+      kind: "ap" as const,
+    }))
+    .filter((d) => d.paid > 0);
   const rows = Array.from({ length: FINANCE_COUNTS.payments }, (_, i) => {
     const wantAp =
       rng.weighted(weights<string>(enums, "document_type")) === "ap";
@@ -75,9 +82,13 @@ export const genPayments = (
     // payment_transactions has 4 terminal rows (financial): keep a few visible.
     const source: PaymentSource =
       tenant === "F1" && i < 3 ? "terminal" : drawnSource;
-    const status = rng.weighted(
-      weights<PaymentStatus>(enums, `status_${tenant}`),
-    );
+    // Terminal payments draw from payment_transactions (completed 3 : failed 1).
+    const status =
+      source === "terminal"
+        ? rng.weighted(
+            weights<PaymentStatus>(paymentTransactionsShape.enums, "status"),
+          )
+        : rng.weighted(weights<PaymentStatus>(enums, `status_${tenant}`));
     const drawn = money(
       rng,
       payShape,
@@ -96,6 +107,9 @@ export const genPayments = (
           : rng.weighted(weights<PaymentMethod>(enums, `method_${tenant}`)),
       status,
       source,
+      direction: doc.kind === "ap" ? ("out" as const) : ("in" as const),
+      documentKind:
+        doc.kind === "ap" ? ("bill" as const) : ("invoice" as const),
     };
   });
   rows.sort((a, b) => a.date.getTime() - b.date.getTime());

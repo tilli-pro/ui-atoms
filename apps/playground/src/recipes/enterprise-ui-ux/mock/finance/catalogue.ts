@@ -5,6 +5,7 @@ import {
   productsShape,
   rateCardsShape,
   subscriptionNextBillAheadDays,
+  subscriptionsCreatedWindow,
   subscriptionsShape,
 } from "../shapes/finance.js";
 import {
@@ -26,6 +27,10 @@ export type FinanceProduct = Row & {
   sku: string | null;
   defaultPrice: number;
   status: "active" | "archived";
+  /** Empty when the product has no description. */
+  description: string;
+  /** Units in stock; null for services and plans. */
+  stock: number | null;
 };
 
 export type SubscriptionStatus =
@@ -44,6 +49,8 @@ export type FinanceSubscription = Row & {
   plan: string;
   status: SubscriptionStatus;
   billing: "monthly" | "annual";
+  billingMode: "anniversary" | "calendar";
+  createdAt: Date;
   startDate: Date;
   /** After the anchor; null for canceled and draft subscriptions. */
   nextBill: Date | null;
@@ -53,8 +60,10 @@ export type FinanceSubscription = Row & {
 export type FinanceRateCard = Row & {
   name: string;
   currency: "USD";
-  /** Number of rate lines. */
-  rates: number;
+  /** Rate per unit, 20-120 with 4 decimals. */
+  rate: number;
+  kind: "bill" | "cost";
+  appliesTo: "Customer" | "Tenant default" | "Staff";
   effectiveFrom: Date;
   /** Null for open-ended cards. */
   effectiveTo: Date | null;
@@ -96,6 +105,14 @@ export const genProducts = (persona: Persona): FinanceProduct[] => {
       status: rng.weighted(
         weights<FinanceProduct["status"]>(enums, `status_${tenant}`),
       ),
+      description:
+        rng.weighted(weights<string>(enums, "has_description")) === "yes"
+          ? `${name}, billed per the standard rate schedule.`
+          : "",
+      stock:
+        type === "product"
+          ? Math.round(rng.range(numberRange(productsShape, "stock")))
+          : null,
     };
   });
 };
@@ -123,6 +140,13 @@ export const genSubscriptions = (
       plan: rng.pick(products).name,
       status,
       billing: rng.weighted(weights<"monthly" | "annual">(enums, "billing")),
+      billingMode: rng.weighted(
+        weights<"anniversary" | "calendar">(enums, "billing_mode"),
+      ),
+      createdAt: rng.daysAgo(
+        subscriptionsCreatedWindow.fromDaysAgo,
+        subscriptionsCreatedWindow.toDaysAgo,
+      ),
       startDate: rng.daysAgo(window.fromDaysAgo, window.toDaysAgo),
       nextBill:
         status === "canceled" || status === "draft"
@@ -164,6 +188,9 @@ export const genRateCards = (persona: Persona): FinanceRateCard[] => {
     const status = rng.weighted(
       weights<FinanceRateCard["status"]>(rateCardsShape.enums, "status"),
     );
+    const kind = rng.weighted(
+      weights<"bill" | "cost">(rateCardsShape.enums, "kind"),
+    );
     const effectiveFrom =
       status === "scheduled"
         ? rng.daysAhead(1, 60)
@@ -172,7 +199,17 @@ export const genRateCards = (persona: Persona): FinanceRateCard[] => {
       id: `rate-card-${i + 1}`,
       name: `${rng.pick(CARD_NAMES)} - ${rng.pick(orgs)}`,
       currency: persona.currency,
-      rates: Math.round(rng.range(numberRange(rateCardsShape, "rates"))),
+      rate: rng.range(numberRange(rateCardsShape, "rate"), 4),
+      kind,
+      appliesTo:
+        kind === "cost"
+          ? ("Staff" as const)
+          : rng.weighted(
+              weights<"Customer" | "Tenant default">(
+                rateCardsShape.enums,
+                "applies_bill",
+              ),
+            ),
       effectiveFrom,
       // Expired cards ended after they started and before the anchor.
       effectiveTo:

@@ -74,3 +74,15 @@ export const money = (
   shape: { numbers?: Record<string, NumRange> },
   name: string,
 ): number => moneyFrom(rng, numberRange(shape, name));
+
+/** Amount a document has taken in payments: only paid and partially paid documents have any. */
+export const paidAmount = (
+  status: string,
+  total: number,
+  balance: number,
+): number =>
+  status === "paid"
+    ? total
+    : status === "partially_paid"
+      ? round2(total - balance)
+      : 0;

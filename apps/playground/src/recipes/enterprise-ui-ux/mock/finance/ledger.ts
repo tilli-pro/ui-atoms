@@ -27,7 +27,7 @@ export type FinanceLedgerEntry = Row & {
   credit: number;
   /** Running balance of the account after this entry (posted entries only). */
   balance: number;
-  status: "posted" | "draft" | "voided";
+  status: "posted" | "pending" | "voided";
 };
 
 export type FinanceAccount = Row & {
@@ -40,6 +40,7 @@ export type FinanceAccount = Row & {
   parentCode: string | null;
   /** System accounts cannot be deleted. */
   system: boolean;
+  active: boolean;
 };
 
 export type FinanceTrialBalanceRow = Row & {
@@ -141,6 +142,13 @@ export const genChartOfAccounts = (persona: Persona): FinanceAccount[] => {
     if (children.length === 0) return balances.get(code) ?? 0;
     return round2(children.reduce((sum, c) => sum + rollup(c[0]), 0));
   };
+  const activeFlags = new Map(
+    ACCOUNTS.map(([code]) => [
+      code,
+      rng.weighted(weights<string>(chartOfAccountsShape.enums, "active")) ===
+        "yes",
+    ]),
+  );
   return ACCOUNTS.map(
     ([code, name, type, parentCode, system]): FinanceAccount => ({
       id: `account-${code}`,
@@ -151,6 +159,7 @@ export const genChartOfAccounts = (persona: Persona): FinanceAccount[] => {
       depth: depthOf(code),
       parentCode,
       system,
+      active: system || activeFlags.get(code) === true,
     }),
   );
 };

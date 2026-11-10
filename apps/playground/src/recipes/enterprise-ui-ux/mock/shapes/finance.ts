@@ -91,18 +91,23 @@ export const arIssueWindow: Record<"U2" | "F1" | "G1", DayWindow> = {
 
 export const recurringShape: TableShape = {
   table: "recurring_invoices",
-  totals: { utilities: 15, financial: 3, government_federal: 40 },
+  // Live: utilities 15, financial 3, government none.
+  totals: { utilities: 15, financial: 3, government_federal: 0 },
   source: {
-    // utilities has 15 cancelled, financial 3 active, gov none: the blended
-    // vocabulary is borrowed everywhere so a list shows both states.
-    utilities: { tenant: "any", borrowed: true },
-    financial: { tenant: "any", borrowed: true },
-    government_federal: { tenant: "any", borrowed: true },
+    utilities: { tenant: "U1", borrowed: false },
+    financial: { tenant: "F1", borrowed: false },
+    government_federal: { tenant: "F1", borrowed: true },
   },
   enums: {
-    status: [
+    // Utilities: all 15 cancelled, plus a small synthetic active share.
+    status_U1: [
       ["cancelled", 15],
       ["active", 3],
+    ],
+    // Financial: all 3 active, plus a small synthetic cancelled share.
+    status_F1: [
+      ["active", 17],
+      ["cancelled", 3],
     ],
     // monthly 17 (utilities 15, financial 2), annually 1.
     frequency: [
@@ -167,6 +172,13 @@ export const readyToInvoiceShape: TableShape = {
       ["yes", 3],
       ["no", 1],
     ],
+    // order status (confirmed 16, closed 4, submitted 2, draft 1 across orders).
+    status: [
+      ["confirmed", 16],
+      ["closed", 4],
+      ["submitted", 2],
+      ["draft", 1],
+    ],
   },
   numbers: {
     // Invented: orders total 0/80/519.48 is the nearest QA order scale.
@@ -215,8 +227,7 @@ export const settlementsShape: TableShape = {
     // Invoices finalized per accrual line (invented).
     quantity: { min: 2, median: 14, max: 60 },
   },
-  // accruals created_at 2026-10-18..2026-10-28; the generator spreads 12 monthly periods.
-  dates: { fromDaysAgo: 13, toDaysAgo: 23 },
+  // The generator spreads 12 closed monthly periods before the anchor month.
 };
 
 export const apShape: TableShape = {
@@ -270,10 +281,10 @@ export const billInboxShape: TableShape = {
     government_federal: { tenant: "F1", borrowed: true },
   },
   enums: {
-    // processed 180, error 3 (shown as rejected), received 2.
+    // processed 180, error 3, received 2.
     status: [
       ["processed", 180],
-      ["rejected", 3],
+      ["error", 3],
       ["received", 2],
     ],
     auto: [
@@ -367,9 +378,9 @@ export const paymentTransactionsShape: TableShape = {
     government_federal: { tenant: "F1", borrowed: true },
   },
   enums: {
-    // approved 3, error 1; card_not_present / visa / tillipay.
+    // approved 3 (completed), error 1 (failed); card_not_present / visa / tillipay.
     status: [
-      ["processing", 3],
+      ["completed", 3],
       ["failed", 1],
     ],
   },
@@ -386,22 +397,22 @@ export const ledgerShape: TableShape = {
     government_federal: { tenant: "G1", borrowed: false },
   },
   enums: {
-    // posted 61435 / pending 2493 (shown as draft) across the personas.
+    // posted 61435 / pending 2493 across the personas.
     // Utilities: 106 voided of 934, the draft share borrowed from the whole QA.
     status_U1: [
       ["posted", 796],
-      ["draft", 32],
+      ["pending", 32],
       ["voided", 106],
     ],
     // Financial has 1 voided entry; government none.
     status_F1: [
       ["posted", 48600],
-      ["draft", 2017],
+      ["pending", 2017],
       ["voided", 1],
     ],
     status_G1: [
       ["posted", 61435],
-      ["draft", 2493],
+      ["pending", 2493],
     ],
     // ledger_postings account; the appendix lists 2100 Tax Payable, which the
     // CoA here keeps as 2200 because 2100 is the system Wallet Liability.
@@ -448,6 +459,12 @@ export const chartOfAccountsShape: TableShape = {
       ["asset", 2],
       ["liability", 2],
       ["expense", 2],
+    ],
+    // All 10 gov rows are active; utilities has inactive leftovers: a small
+    // synthetic inactive share on non-system accounts.
+    active: [
+      ["yes", 85],
+      ["no", 15],
     ],
   },
   numbers: {
@@ -499,11 +516,18 @@ export const productsShape: TableShape = {
       ["yes", 106],
       ["no", 1039],
     ],
+    // Description set on 55 of 1145 rows.
+    has_description: [
+      ["yes", 55],
+      ["no", 1090],
+    ],
   },
   numbers: {
     // defaultPrice utilities -10/49.99/45000 (floor at 0 here); financial 0..10000.
     default_price_U1: { min: 0, median: 49.99, max: 45000 },
     default_price_F1: { min: 0, median: 199, max: 10000 },
+    // Units in stock for products (invented; QA has no stock profile).
+    stock: { min: 0, median: 25, max: 400 },
   },
 };
 
@@ -539,6 +563,11 @@ export const subscriptionsShape: TableShape = {
       ["contact", 1211],
       ["organization", 989],
     ],
+    // billing_mode anniversary 1478 / calendar 722.
+    billing_mode: [
+      ["anniversary", 1478],
+      ["calendar", 722],
+    ],
     // subscription_items billing_frequency.
     billing: [
       ["monthly", 3329],
@@ -552,6 +581,9 @@ export const subscriptionsShape: TableShape = {
   // start_date 2023-07-27..2026-06-11; next_billing_date up to 2026-12-09.
   dates: { fromDaysAgo: 152, toDaysAgo: 1203 },
 };
+
+/** created_at 2026-07-11 (migration date). */
+export const subscriptionsCreatedWindow = { fromDaysAgo: 120, toDaysAgo: 124 };
 
 /** next_billing_date up to 2026-12-09. */
 export const subscriptionNextBillAheadDays = 29;
@@ -576,10 +608,20 @@ export const rateCardsShape: TableShape = {
       ["scheduled", 10],
       ["expired", 20],
     ],
+    kind: [
+      ["bill", 80],
+      ["cost", 20],
+    ],
+    applies_bill: [
+      ["Customer", 80],
+      ["Tenant default", 20],
+    ],
   },
+  // rate_kind bill (2 rows); cost is a synthetic share.
+  // Scope customer (2 rows); Tenant default and Staff are synthetic.
   numbers: {
-    // rate 20..120 per rate line; rates per card is invented.
-    rates: { min: 3, median: 8, max: 24 },
+    // rate 20..120; the appendix median is a 0 placeholder, 55 is invented.
+    rate: { min: 20, median: 55, max: 120 },
   },
   // effective_from 2026-10-25..2026-10-26; spread wider here.
   dates: { fromDaysAgo: 0, toDaysAgo: 365 },

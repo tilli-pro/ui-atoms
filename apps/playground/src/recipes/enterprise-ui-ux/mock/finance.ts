@@ -124,6 +124,25 @@ export const financeData = (persona: Persona): FinanceData => {
     rateCards: genRateCards(persona),
     totals,
   };
+  // Never report a total below the rows on screen.
+  const counts: Partial<Record<FinanceRowSet, number>> = {
+    invoices: invoices.length,
+    recurring: data.recurring.length,
+    outbox: data.outbox.length,
+    readyToInvoice: data.readyToInvoice.length,
+    settlements: data.settlements.length,
+    bills: bills.length,
+    billInbox: data.billInbox.length,
+    payments: data.payments.length,
+    ledger: data.ledger.length,
+    chartOfAccounts: chartOfAccounts.length,
+    products: products.length,
+    subscriptions: data.subscriptions.length,
+    rateCards: data.rateCards.length,
+  };
+  for (const set of Object.keys(counts) as FinanceRowSet[]) {
+    totals[set] = Math.max(totals[set], counts[set] ?? 0);
+  }
   cache.set(persona.key, data);
   return data;
 };
