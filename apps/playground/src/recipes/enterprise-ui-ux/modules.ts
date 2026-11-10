@@ -40,20 +40,9 @@ import type { IconName } from "./icons.js";
 export type SectionItem = { label: string; icon: LucideIcon };
 
 /**
- * A module's default view: a dashboard scoped to that module, the way the
- * app's home dashboard is scoped to nobody in particular. Figures and panels
- * are sample copy; the layout is what the recipe is for.
- */
-export type ModuleHome = {
-  blurb: string;
-  stats: readonly { label: string; value: string; hint: string }[];
-  panels: readonly { title: string; description: string }[];
-};
-
-/**
  * The rail's sections, one per module. The first icon of each option list is
- * its default; `items` are the entries of the module's menu and `home` its
- * dashboard. The menus follow the beacon-enterprise duplication audit
+ * its default; `items` are the entries of the module's menu and `blurb` the
+ * line under its dashboard title. The menus follow the beacon-enterprise duplication audit
  * (docs/v2/recon/2026-11-10-authenticated-ui-duplication-recon.md): each table
  * has one home, and module intersections are explicit items.
  */
@@ -68,43 +57,8 @@ export const sections = [
       { label: "Directory", icon: Globe },
       { label: "Activity", icon: Activity },
     ],
-    home: {
-      blurb:
-        "Every party you deal with, and how connected they are on the network.",
-      stats: [
-        { label: "Organizations", value: "1,284", hint: "+12 this week" },
-        {
-          label: "Connected on Enterprise",
-          value: "86",
-          hint: "7% of organizations",
-        },
-        {
-          label: "Pending invites",
-          value: "9",
-          hint: "3 expire within 7 days",
-        },
-        {
-          label: "Exchanges awaiting review",
-          value: "3",
-          hint: "oldest 2 days",
-        },
-      ],
-      panels: [
-        {
-          title: "Connect requests",
-          description: "Partners asking to connect with you.",
-        },
-        {
-          title: "Recent exchanges",
-          description: "Documents sent and received over the network.",
-        },
-        {
-          title: "Directory matches",
-          description:
-            "Organizations in your book that are on Enterprise but not connected.",
-        },
-      ],
-    },
+    blurb:
+      "Every party you deal with, and how connected they are on the network.",
   },
   {
     key: "engage",
@@ -118,30 +72,7 @@ export const sections = [
       { label: "Social Hub", icon: Share2 },
       { label: "Applications", icon: ClipboardList },
     ],
-    home: {
-      blurb:
-        "Outbound reach: campaigns, messages and forms, and how they land.",
-      stats: [
-        { label: "Campaigns live", value: "4", hint: "2 end this week" },
-        { label: "Sent today", value: "2,310", hint: "email 71% · sms 29%" },
-        { label: "Reply rate", value: "6.2%", hint: "+0.8 pts vs last week" },
-        { label: "Audiences", value: "18", hint: "2 awaiting approval" },
-      ],
-      panels: [
-        {
-          title: "Campaign performance",
-          description: "Delivery, opens and replies per live campaign.",
-        },
-        {
-          title: "Recent sends",
-          description: "The latest outbound messages across channels.",
-        },
-        {
-          title: "Templates in review",
-          description: "Drafts waiting for approval.",
-        },
-      ],
-    },
+    blurb: "Outbound reach: campaigns, messages and forms, and how they land.",
   },
   {
     key: "sales",
@@ -153,29 +84,7 @@ export const sections = [
       { label: "Quotes", icon: FileText },
       { label: "Orders", icon: ShoppingCart },
     ],
-    home: {
-      blurb: "The pipeline from first contact to a confirmed order.",
-      stats: [
-        { label: "Open deals", value: "37", hint: "11 closing this month" },
-        { label: "Pipeline", value: "$1.2M", hint: "weighted $640k" },
-        { label: "Quotes awaiting", value: "11", hint: "4 expire this week" },
-        { label: "Orders this month", value: "24", hint: "+6 vs last month" },
-      ],
-      panels: [
-        {
-          title: "Pipeline by stage",
-          description: "Deal value at each stage.",
-        },
-        {
-          title: "Quotes expiring",
-          description: "Quotes the customer has not accepted yet.",
-        },
-        {
-          title: "Recent orders",
-          description: "Sales and purchase orders, newest first.",
-        },
-      ],
-    },
+    blurb: "The pipeline from first contact to a confirmed order.",
   },
   {
     key: "finance",
@@ -194,30 +103,7 @@ export const sections = [
       { label: "Ledger", icon: BookOpenText },
       { label: "Catalogue", icon: Package },
     ],
-    home: {
-      blurb: "What is owed to you, what you owe, and where the cash is.",
-      stats: [
-        { label: "Receivable", value: "$318k", hint: "14 overdue" },
-        { label: "Payable", value: "$92k", hint: "6 to approve" },
-        {
-          label: "Collected this month",
-          value: "$205k",
-          hint: "68% of invoiced",
-        },
-        { label: "Cash in 30 days", value: "$226k", hint: "projected" },
-      ],
-      panels: [
-        {
-          title: "Aging",
-          description: "Receivables and payables by days outstanding.",
-        },
-        {
-          title: "Bills to approve",
-          description: "Payables waiting on an approval.",
-        },
-        { title: "Recent payments", description: "In and out, newest first." },
-      ],
-    },
+    blurb: "What is owed to you, what you owe, and where the cash is.",
   },
   {
     key: "operations",
@@ -231,27 +117,8 @@ export const sections = [
       { label: "Timesheets", icon: Timer },
       { label: "Outages", icon: TriangleAlert },
     ],
-    home: {
-      blurb:
-        "Delivering what was sold: bookings, crews, work and the time it takes.",
-      stats: [
-        { label: "Appointments today", value: "19", hint: "3 unassigned" },
-        { label: "Work orders open", value: "42", hint: "8 over budget" },
-        { label: "Timesheets to approve", value: "8", hint: "31.5 hours" },
-        { label: "Active outages", value: "1", hint: "240 customers affected" },
-      ],
-      panels: [
-        {
-          title: "Today's calendar",
-          description: "Appointments per staff member.",
-        },
-        {
-          title: "Approval queue",
-          description: "Submitted time waiting for approval.",
-        },
-        { title: "Outage map", description: "Active outages by service area." },
-      ],
-    },
+    blurb:
+      "Delivering what was sold: bookings, crews, work and the time it takes.",
   },
   {
     key: "support",
@@ -262,34 +129,15 @@ export const sections = [
       { label: "Tickets", icon: Ticket },
       { label: "Agent desk", icon: Headset },
     ],
-    home: {
-      blurb:
-        "Inbound customer work: threads, escalations and tickets, and who is on them.",
-      stats: [
-        { label: "Inbox unread", value: "23", hint: "9 escalated by AI" },
-        { label: "Open tickets", value: "57", hint: "12 assigned to me" },
-        { label: "SLA at risk", value: "4", hint: "next breach in 40 min" },
-        { label: "Agents online", value: "6", hint: "2 on a call" },
-      ],
-      panels: [
-        {
-          title: "Triage queue",
-          description: "Unassigned threads and escalations.",
-        },
-        { title: "SLA watch", description: "Tickets closest to breaching." },
-        {
-          title: "Agent status",
-          description: "Presence and current load per agent.",
-        },
-      ],
-    },
+    blurb:
+      "Inbound customer work: threads, escalations and tickets, and who is on them.",
   },
 ] as const satisfies readonly {
   key: string;
   title: string;
   options: readonly IconName[];
   items: readonly SectionItem[];
-  home: ModuleHome;
+  blurb: string;
 }[];
 
 export type Section = (typeof sections)[number];
@@ -320,29 +168,8 @@ export const enterpriseItems: readonly SectionItem[] = [
   { label: "AI agents", icon: Bot },
 ];
 
-export const enterpriseHome: ModuleHome = {
-  blurb: "Everything that needs you today, across every module.",
-  stats: [
-    { label: "Inbox unread", value: "12", hint: "4 mention you" },
-    { label: "My open tickets", value: "7", hint: "1 SLA at risk" },
-    { label: "Due this week", value: "$42.3k", hint: "9 invoices" },
-    { label: "Workflows running", value: "5", hint: "1 failed overnight" },
-  ],
-  panels: [
-    {
-      title: "My inbox",
-      description: "Threads, escalations and approvals assigned to you.",
-    },
-    {
-      title: "Workflow runs",
-      description: "Automation across modules, latest first.",
-    },
-    {
-      title: "Analytics highlights",
-      description: "The figures that moved this week.",
-    },
-  ],
-};
+export const enterpriseBlurb =
+  "Everything that needs you today, across every module.";
 
 /**
  * A module is what the second sidebar shows: Enterprise (the default view, Command
@@ -373,10 +200,8 @@ export const overviewItemOf = (module: ModuleKey): SectionItem =>
     ? { label: "Home", icon: House }
     : { label: "Overview", icon: LayoutDashboard };
 
-/** Title and dashboard of a module. */
-export const homeOf = (
-  module: ModuleKey,
-): { title: string; home: ModuleHome } =>
+/** Title and blurb of a module's dashboard. */
+export const homeOf = (module: ModuleKey): { title: string; blurb: string } =>
   module === "enterprise"
-    ? { title: "Enterprise", home: enterpriseHome }
-    : { title: sectionByKey[module].title, home: sectionByKey[module].home };
+    ? { title: "Enterprise", blurb: enterpriseBlurb }
+    : { title: sectionByKey[module].title, blurb: sectionByKey[module].blurb };

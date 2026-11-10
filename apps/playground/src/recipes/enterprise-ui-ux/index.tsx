@@ -1,5 +1,11 @@
 import { useState } from "react";
 import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@tilli.dev/ui-atoms/card";
+import {
   Sidebar,
   SidebarProvider,
   SidebarRail,
@@ -23,15 +29,20 @@ import {
   sections,
 } from "./modules.js";
 import { ModulePanel } from "./panel.js";
+import { isPersonaKey, personaKeys, personas } from "./personas.js";
 import { Rail } from "./rail.js";
 import { hashFor, routeFromHash } from "./routing.js";
+import { moduleSpecs, specFor } from "./specs/index.js";
 import {
   defaultGradients,
   type Gradient,
   isCssColor,
   NESTED_SIDEBAR_WIDTH,
 } from "./theme.js";
-import { ContentView, ItemView, ModuleHomeView } from "./views.js";
+import { DashboardView } from "./views/dashboard-view.js";
+import { ListView } from "./views/list-view.js";
+import { ContentView } from "./views.js";
+import type { PersonaKey } from "./specs/types.js";
 
 /**
  * Enterprise UI/UX: the authenticated shell of Enterprise, redesigned. An
@@ -57,6 +68,7 @@ export default function EnterpriseUiUx() {
   const [colorful, setColorful] = useState(true);
   const [inset, setInset] = useState(false);
   const [overview, setOverview] = useState(true);
+  const [persona, setPersona] = useState<PersonaKey>("utilities");
   const [gradients, setGradients] =
     useState<Record<SectionKey, Gradient>>(defaultGradients);
 
@@ -90,6 +102,15 @@ export default function EnterpriseUiUx() {
         value: overview,
         persist: true,
         onChange: (value) => setOverview(value === true),
+      },
+      persona: {
+        value: persona,
+        options: [...personaKeys],
+        persist: true,
+        onChange: (value) => {
+          if (typeof value === "string" && isPersonaKey(value))
+            setPersona(value);
+        },
       },
       active: {
         value: active,
@@ -128,6 +149,45 @@ export default function EnterpriseUiUx() {
   }
   useControl(gradientControls, { group: "sidebar gradients", order: 1 });
 
+  const itemSpec = route.item ? specFor(active, route.item) : undefined;
+  const moduleSpec = moduleSpecs[active];
+  const { title, blurb } = homeOf(active);
+  const mainView = () => {
+    if (route.item && itemSpec) {
+      return (
+        <ListView
+          Icon={route.item.icon}
+          moduleTitle={title}
+          persona={personas[persona]}
+          spec={itemSpec}
+        />
+      );
+    }
+    if (!route.item && moduleSpec) {
+      return (
+        <DashboardView
+          blurb={blurb}
+          Icon={ActiveIcon}
+          persona={personas[persona]}
+          spec={moduleSpec.dashboard(personas[persona])}
+          title={title}
+        />
+      );
+    }
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Mock to come</CardTitle>
+          <CardDescription>
+            {route.item
+              ? `${title} / ${route.item.label}`
+              : `${title} dashboard`}
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  };
+
   return (
     <div className="flex h-full w-full flex-col">
       <SidebarProvider
@@ -164,13 +224,7 @@ export default function EnterpriseUiUx() {
           <SidebarRail />
         </Sidebar>
         <ContentView useInset={inset}>
-          <main className={cn("p-4 md:p-6")}>
-            {route.item ? (
-              <ItemView item={route.item} moduleTitle={homeOf(active).title} />
-            ) : (
-              <ModuleHomeView Icon={ActiveIcon} {...homeOf(active)} />
-            )}
-          </main>
+          <main className={cn("p-4 md:p-6")}>{mainView()}</main>
         </ContentView>
       </SidebarProvider>
     </div>
