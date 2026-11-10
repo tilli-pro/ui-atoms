@@ -73,7 +73,11 @@ export const createRng = (seed: number): Rng => {
       startOfAnchorDay +
       sign * dayOffset * DAY_MS +
       Math.floor(next() * DAY_MS);
-    return new Date(sign === -1 ? Math.min(time, ANCHOR.getTime()) : time);
+    return new Date(
+      sign === -1
+        ? Math.min(time, ANCHOR.getTime())
+        : Math.max(time, ANCHOR.getTime()),
+    );
   };
 
   const daysAgo = (min: number, max: number): Date =>

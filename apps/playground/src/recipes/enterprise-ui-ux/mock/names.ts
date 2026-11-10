@@ -260,7 +260,7 @@ export const organizationsByIndustry: Record<PersonaKey, readonly string[]> = {
 
 export const streets: readonly string[] = [
   "Alder Lane",
-  "Beacon Street",
+  "Bellows Street",
   "Cinder Road",
   "Dovetail Avenue",
   "Elmhurst Drive",
@@ -355,7 +355,7 @@ export const productsByIndustry: Record<PersonaKey, readonly string[]> = {
     "Money Market Account",
     "Youth Savings Account",
     "Merchant Processing Package",
-    "Treasury Management Suite",
+    "Cash Management Suite",
     "Overdraft Protection Plan",
     "Safe Deposit Box Rental",
   ],
