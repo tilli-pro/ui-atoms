@@ -25,7 +25,6 @@ import {
   aiUsageShape,
   dailyUsageShape,
   ENTERPRISE_COUNTS,
-  monthlyRevenueShape,
   myTicketsShape,
   notificationsShape,
   searchShape,
@@ -72,7 +71,10 @@ export type AiSurface =
   | "radar_dashboard"
   | "voice"
   | "command_console";
-export type AiUsageSurface = "chat" | "radar" | "voice";
+export type AiUsageSurface =
+  | "jareis_chat"
+  | "media_generation"
+  | "agent_command";
 export type AiPolicy = "soft" | "hard" | "none";
 
 export type EnterpriseNotification = Row & {
@@ -479,25 +481,25 @@ const monthStart = (monthsBack: number): Date =>
   );
 
 const genRevenue = (persona: Persona): EnterpriseRevenueMonth[] => {
-  const rng = createRng(seedFor(persona, "enterprise.analytics.revenue"));
-  const tenant = NOTIFICATION_TENANT[persona.key];
-  const range = numberRange(
-    monthlyRevenueShape,
-    `invoiced_${tenant === "U1" ? "U2" : tenant}`,
-  );
-  const rate = numberRange(monthlyRevenueShape, "collection_rate");
+  const invoices = financeData(persona).invoices;
+  const first = monthStart(ENTERPRISE_COUNTS.months - 1).getTime();
   return Array.from({ length: ENTERPRISE_COUNTS.months }, (_, i) => {
     const monthsBack = ENTERPRISE_COUNTS.months - 1 - i;
-    // The current month is partial: only the days elapsed so far.
-    const share = monthsBack === 0 ? ANCHOR.getUTCDate() / 30 : 1;
-    const invoiced = Math.round(rng.range(range, 0) * share);
-    const collectedShare = rng.range(rate, 3);
-    // Recent months are still being collected.
-    const age = Math.min(1, 0.55 + monthsBack * 0.2);
-    const collected = Math.round(invoiced * collectedShare * age);
+    const start = monthStart(monthsBack);
+    const end = monthStart(monthsBack - 1).getTime();
+    let invoiced = 0;
+    let collected = 0;
+    for (const inv of invoices) {
+      const t = inv.issueDate.getTime();
+      if (t < first || t < start.getTime() || t >= end) continue;
+      invoiced += inv.total;
+      collected += inv.total - inv.balance;
+    }
+    invoiced = round2(invoiced);
+    collected = round2(collected);
     return {
       id: `revenue-${i + 1}`,
-      month: monthStart(monthsBack),
+      month: start,
       invoiced,
       collected,
       collectionRate: invoiced
@@ -676,27 +678,25 @@ const genWorkflowRuns = (
     const drawn = rng.weighted(statusWeights);
     const status: WorkflowRunStatus =
       drawn === "running" && workflow.status !== "active" ? "succeeded" : drawn;
-    const earliest = workflow.createdAt.getTime();
-    let startedAt =
-      status === "running"
-        ? new Date(ANCHOR.getTime() - rng.int(5, 180) * 60_000)
-        : rng.daysAgo(window.fromDaysAgo, window.toDaysAgo);
-    if (startedAt.getTime() < earliest) {
-      startedAt = plusDays(workflow.createdAt, rng.next() * 2, true);
-    }
     const durationSeconds =
       status === "running"
-        ? Math.max(
-            1,
-            Math.floor((ANCHOR.getTime() - startedAt.getTime()) / 1000),
-          )
+        ? rng.int(30, 3 * 3600)
         : Math.round(rng.range(status === "failed" ? badRange : okRange, 0));
+    // Start inside [createdAt, anchor - duration], so a run never ends after the anchor.
+    const lo = workflow.createdAt.getTime();
+    const hi = ANCHOR.getTime() - durationSeconds * 1000;
+    let t =
+      status === "running"
+        ? hi
+        : rng.daysAgo(window.fromDaysAgo, window.toDaysAgo).getTime();
+    if (t > hi) t = hi;
+    if (t < lo) t = lo + rng.next() * Math.max(0, hi - lo);
     return {
       id: "",
       workflow: workflow.name,
       workflowId: workflow.id,
       status,
-      startedAt,
+      startedAt: new Date(t),
       durationSeconds,
       steps: Math.round(rng.range(stepsRange, 0)),
     } satisfies EnterpriseWorkflowRun;
@@ -704,6 +704,24 @@ const genWorkflowRuns = (
   return byDateAsc(rows, (r) => r.startedAt)
     .reverse()
     .map((r, i) => ({ ...r, id: `run-${i + 1}` }));
+};
+
+/** A workflow's last run is its newest run; workflows without a run row keep their drawn date. */
+const withLastRuns = (
+  workflows: EnterpriseWorkflow[],
+  runs: EnterpriseWorkflowRun[],
+): EnterpriseWorkflow[] => {
+  const newest = new Map<string, Date>();
+  for (const r of runs) {
+    const seen = newest.get(r.workflowId);
+    if (!seen || r.startedAt.getTime() > seen.getTime()) {
+      newest.set(r.workflowId, r.startedAt);
+    }
+  }
+  return workflows.map((w) => ({
+    ...w,
+    lastRun: newest.get(w.id) ?? w.lastRun,
+  }));
 };
 
 const SURFACE_MODELS: Record<AiSurface, string> = {
@@ -756,6 +774,27 @@ const AI_SCOPES: readonly { name: string; level: "team" | "workspace" }[] = [
 const roundTo = (n: number, step: number): number =>
   Math.round(n / step) * step;
 
+/** Give each row (largest spend first) the surface furthest below its QA cost share, so spend by surface follows QA. */
+const assignSurfaces = (
+  rows: EnterpriseAiUsage[],
+  cost: readonly (readonly [AiUsageSurface, number])[],
+): EnterpriseAiUsage[] => {
+  const costTotal = cost.reduce((n, [, c]) => n + c, 0);
+  const spentTotal = rows.reduce((n, r) => n + r.spent, 0);
+  const remaining = new Map(
+    cost.map(([surface, c]) => [surface, (c / costTotal) * spentTotal]),
+  );
+  const assigned = new Map<string, AiUsageSurface>();
+  for (const r of [...rows].sort((a, b) => b.spent - a.spent)) {
+    const [surface] = [...remaining.entries()].sort(
+      (a, b) => b[1] - a[1],
+    )[0] as [AiUsageSurface, number];
+    assigned.set(r.id, surface);
+    remaining.set(surface, (remaining.get(surface) ?? 0) - r.spent);
+  }
+  return rows.map((r) => ({ ...r, surface: assigned.get(r.id) ?? r.surface }));
+};
+
 const genAiUsage = (persona: Persona): EnterpriseAiUsage[] => {
   const rng = createRng(seedFor(persona, "enterprise.aiUsage"));
   const total = numberRange(aiUsageShape, `spend_${persona.key}`).median;
@@ -778,13 +817,14 @@ const genAiUsage = (persona: Persona): EnterpriseAiUsage[] => {
       budget:
         policy === "none" ? 0 : roundTo(spent * rng.range(multiple, 2), 5),
       policy,
-      surface: rng.weighted(
-        weights<AiUsageSurface>(aiUsageShape.enums, "surface"),
-      ),
+      surface: "jareis_chat" as AiUsageSurface,
       periodEnd,
     } satisfies EnterpriseAiUsage;
   });
-  return rows;
+  return assignSurfaces(
+    rows,
+    weights<AiUsageSurface>(aiUsageShape.enums, `surface_cost_${persona.key}`),
+  );
 };
 
 const buildAiSummary = (rows: EnterpriseAiUsage[]): EnterpriseAiSummary => {
@@ -805,46 +845,63 @@ const buildAiSummary = (rows: EnterpriseAiUsage[]): EnterpriseAiSummary => {
       roundTo(spent * 1.5, 50),
     ),
     projectedMonthEnd: round2((spent / daysElapsed) * daysInMonth),
-    topSurface: top ? top[0] : "chat",
+    topSurface: top ? top[0] : "jareis_chat",
   };
 };
 
 const genSpendLimits = (
   persona: Persona,
-  tenantSpend: number,
+  usage: EnterpriseAiUsage[],
+  summary: EnterpriseAiSummary,
 ): EnterpriseSpendLimit[] => {
   const rng = createRng(seedFor(persona, "enterprise.spendLimits"));
   const used = numberRange(aiBudgetsShape, "used_share");
   const staff = rng.shuffle(agentNames);
-  const scopes: { scope: string; limit: number }[] = [
-    { scope: "Tenant", limit: roundTo(tenantSpend * 3, 100) },
-    { scope: "Team: Customer Support", limit: roundTo(tenantSpend * 0.8, 50) },
-    { scope: "Team: Collections", limit: roundTo(tenantSpend * 0.6, 50) },
-    { scope: "Workspace: Operations", limit: roundTo(tenantSpend * 1.2, 50) },
-    { scope: `User: ${staff[0]}`, limit: roundTo(tenantSpend * 0.05, 5) },
-    { scope: `User: ${staff[1]}`, limit: roundTo(tenantSpend * 0.05, 5) },
+  const alert = () => rng.pick([70, 80, 90]);
+  // Tenant and team/workspace rows are the usage figures themselves, so both views agree.
+  const capped = usage.filter((u) => u.policy !== "none");
+  const sources = (capped.length >= 3 ? capped : usage).slice(0, 3);
+  const rows: EnterpriseSpendLimit[] = [
+    {
+      id: "spend-limit-1",
+      scope: "Tenant",
+      limit: summary.budget,
+      used: summary.spent,
+      period: "monthly",
+      policy: "soft",
+      alertAt: alert(),
+    },
+    ...sources.map((u, i) => ({
+      id: `spend-limit-${i + 2}`,
+      scope: `${u.level === "team" ? "Team" : "Workspace"}: ${u.team}`,
+      limit: u.budget,
+      used: u.spent,
+      period: "monthly" as const,
+      policy: u.policy,
+      alertAt: alert(),
+    })),
   ];
-  return scopes.slice(0, ENTERPRISE_COUNTS.spendLimits).map((s, i) => {
+  // User caps are small daily limits, independent of the usage rows.
+  for (const name of staff.slice(
+    0,
+    ENTERPRISE_COUNTS.spendLimits - rows.length,
+  )) {
+    const limit = roundTo(summary.spent * 0.05, 5);
     const policy = rng.weighted(
       weights<AiPolicy>(aiBudgetsShape.enums, "policy"),
     );
-    const period = s.scope.startsWith("User")
-      ? "daily"
-      : rng.weighted(
-          weights<"monthly" | "daily">(aiBudgetsShape.enums, "period"),
-        );
     const share = rng.range(used, 3);
-    return {
-      id: `spend-limit-${i + 1}`,
-      scope: s.scope,
-      limit: s.limit,
-      // A hard cap blocks at the limit, so it is never over.
-      used: round2(s.limit * (policy === "hard" ? Math.min(share, 1) : share)),
-      period,
+    rows.push({
+      id: `spend-limit-${rows.length + 1}`,
+      scope: `User: ${name}`,
+      limit,
+      used: round2(limit * (policy === "hard" ? Math.min(share, 1) : share)),
+      period: "daily",
       policy,
-      alertAt: rng.pick([70, 80, 90]),
-    };
-  });
+      alertAt: alert(),
+    });
+  }
+  return rows;
 };
 
 const cache = new Map<PersonaKey, EnterpriseData>();
@@ -862,14 +919,13 @@ export const enterpriseData = (persona: Persona): EnterpriseData => {
   );
   const accessRequests = genAccessRequests(persona);
   const searchResults = genSearchResults(persona);
-  const workflows = genWorkflows(persona);
-  const workflowRuns = genWorkflowRuns(persona, workflows);
+  const drawnWorkflows = genWorkflows(persona);
+  const workflowRuns = genWorkflowRuns(persona, drawnWorkflows);
+  const workflows = withLastRuns(drawnWorkflows, workflowRuns);
   const aiAgents = genAiAgents(persona);
   const aiUsage = genAiUsage(persona);
-  const spendLimits = genSpendLimits(
-    persona,
-    numberRange(aiUsageShape, `spend_${persona.key}`).median,
-  );
+  const aiSummary = buildAiSummary(aiUsage);
+  const spendLimits = genSpendLimits(persona, aiUsage, aiSummary);
   const key = persona.key;
   const live: Record<EnterpriseRowSet, number> = {
     notifications: notificationsShape.totals[key],
@@ -913,7 +969,7 @@ export const enterpriseData = (persona: Persona): EnterpriseData => {
     workflowRuns,
     aiAgents,
     aiUsage,
-    aiSummary: buildAiSummary(aiUsage),
+    aiSummary,
     spendLimits,
     viewer: support.viewer,
     totals,

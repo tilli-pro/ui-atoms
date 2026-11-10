@@ -173,7 +173,7 @@ export const monthlyRevenueShape: TableShape = {
   },
   enums: {},
   numbers: {
-    // Invoiced per month = invoices per month (ar rows / mv months: 128/5, 15747/22, 35626/78) x median total_amount (200 / 25048.81 / 52424.31).
+    // Reference only (the mock derives revenueByMonth from the Finance invoices): invoiced per month = invoices per month (ar rows / mv months: 128/5, 15747/22, 35626/78) x median total_amount (200 / 25048.81 / 52424.31).
     invoiced_U2: { min: 3900, median: 5200, max: 6700 },
     invoiced_F1: { min: 14_000_000, median: 17_900_000, max: 21_500_000 },
     invoiced_G1: { min: 17_500_000, median: 20_900_000, max: 24_500_000 },
@@ -367,11 +367,19 @@ export const aiUsageShape: TableShape = {
     government_federal: { tenant: "G1", borrowed: false },
   },
   enums: {
-    // surface counts (financial): jareis_chat 126, media_generation 7; the mock maps to chat / radar / voice.
-    surface: [
-      ["chat", 80],
-      ["radar", 12],
-      ["voice", 8],
+    // QA surfaces by cost (cents): utilities jareis_chat + agent_command (3 events); financial chat 323.09 + media_generation 1010.00;
+    // government chat 337.73 + media_generation 1200.00. Utilities' agent_command cost is invented as a small share.
+    surface_cost_utilities: [
+      ["jareis_chat", 684],
+      ["agent_command", 93],
+    ],
+    surface_cost_financial: [
+      ["jareis_chat", 323],
+      ["media_generation", 1010],
+    ],
+    surface_cost_government_federal: [
+      ["jareis_chat", 338],
+      ["media_generation", 1200],
     ],
     // ai_budgets is EMPTY in QA ("No cap" everywhere); the policy mix is invented.
     policy: [
