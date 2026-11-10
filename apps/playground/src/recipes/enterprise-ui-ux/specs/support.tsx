@@ -26,7 +26,14 @@ import {
   type ThreadStatus,
   type TicketStatus,
 } from "../mock/support.js";
-import { capitalise, DAY, includes, lead } from "./finance/common.js";
+import {
+  type AnyList,
+  capitalise,
+  DAY,
+  includes,
+  lead,
+  searchBy,
+} from "./finance/common.js";
 import type {
   ActionSpec,
   ChipSpec,
@@ -306,14 +313,14 @@ const callsSegment: SegmentSpec<SupportCall> = {
       key: "contact",
       header: "Contact",
       format: "text",
-      accessor: (row) => row.contact ?? "Unknown",
+      accessor: (row) => row.contact,
       sortable: false,
     },
     {
       key: "organization",
       header: "Organization",
       format: "text",
-      accessor: (row) => row.organization ?? "None",
+      accessor: (row) => row.organization,
       sortable: false,
     },
     { key: "phone", header: "Phone", format: "text", sortable: false },
@@ -321,7 +328,7 @@ const callsSegment: SegmentSpec<SupportCall> = {
       key: "durationMinutes",
       header: "Duration",
       format: "duration",
-      accessor: (row) => row.durationMinutes ?? "None",
+      accessor: (row) => row.durationMinutes,
       align: "end",
       sortable: false,
     },
@@ -344,18 +351,25 @@ const callsSegment: SegmentSpec<SupportCall> = {
   empty: emptyCopy("No calls found"),
 };
 
-const inboxSpec: ListSpec<SupportThread> = {
+const inboxSpec: AnyList = {
   key: "inbox",
   title: "Inbox",
   description: "Messages, AI escalations and call history in one place.",
   ...lead(threadsSegment),
-  segments: [threadsSegment, escalationsSegment, callsSegment] as never,
+  segments: [threadsSegment, escalationsSegment, callsSegment],
   pageActions: [
     { label: "Compose", icon: Pencil, gap: "rich-text" },
     exportAction,
   ],
-  search: (row, query) =>
-    includes(row.subject, query) || includes(row.from, query),
+  search: searchBy(
+    "subject",
+    "from",
+    "reference",
+    "contact",
+    "party",
+    "phone",
+    "organization",
+  ),
   empty: emptyCopy("No messages found"),
 };
 
@@ -558,12 +572,11 @@ const dashboard = (persona: Persona) => {
   const atRisk = open.filter(
     (row) => row.slaDueAt !== null && row.slaDueAt.getTime() - now <= 4 * HOUR,
   );
-  const watch = atRisk
-    .slice()
-    .sort(
-      (a, b) => (a.slaDueAt as Date).getTime() - (b.slaDueAt as Date).getTime(),
-    )
-    .slice(0, 6);
+  const watch = open
+    .flatMap((row) => (row.slaDueAt ? [{ row, due: row.slaDueAt }] : []))
+    .sort((a, b) => a.due.getTime() - b.due.getTime())
+    .slice(0, 6)
+    .map((entry) => entry.row);
   const hours = data.callStats.hourly.filter(
     (entry) => entry.hour >= 6 && entry.hour <= 20,
   );
