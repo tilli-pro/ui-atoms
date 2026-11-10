@@ -261,7 +261,8 @@ function ListViewInner<R extends Row>({
         <GapPlaceholder id={id} key={id} message={gaps[id].concept} />
       ))}
 
-      <div className="flex flex-wrap items-center gap-2">
+      {/* The outline group is visually joined, so it scrolls sideways rather than wrapping. */}
+      <div className="flex min-w-0 max-w-full items-center gap-2 overflow-x-auto">
         <ToggleGroup
           onValueChange={(value: string[]) => {
             if (value[0]) {

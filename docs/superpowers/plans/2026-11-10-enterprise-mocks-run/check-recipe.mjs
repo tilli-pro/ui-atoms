@@ -19,6 +19,7 @@ const summary = {
   consoleErrors: 0,
   pageErrors: 0,
   mockToCome: 0,
+  overflowX: 0,
   failures: [],
 };
 
@@ -79,6 +80,9 @@ for (const persona of personas) {
             h1: main.querySelector("h1")?.textContent.trim() ?? null,
             eyebrow: main.querySelector("header p")?.textContent.trim() ?? null,
             mockToCome: main.textContent.includes("Mock to come"),
+            overflowX:
+              document.documentElement.scrollWidth >
+              document.documentElement.clientWidth,
             rows: main.querySelectorAll("tbody tr").length,
             headers: text("thead th").slice(0, 14),
             chips: text("button[aria-pressed]").slice(0, 20),
@@ -89,7 +93,9 @@ for (const persona of personas) {
             footer:
               Array.from(main.querySelectorAll("*"))
                 .map((e) => e.childNodes.length === 1 && e.textContent)
-                .find((t) => t?.startsWith("Showing ")) ?? null,
+                .find(
+                  (t) => typeof t === "string" && t.startsWith("Showing "),
+                ) ?? null,
             needsReview: text("*").filter((t) => t === "Needs review").length,
             statCards: main.querySelectorAll("[aria-label='Key figures'] > *")
               .length,
@@ -199,6 +205,7 @@ for (const persona of personas) {
         e.startsWith("pageerror"),
       ).length;
       if (out.mockToCome) summary.mockToCome += 1;
+      if (out.overflowX) summary.overflowX += 1;
     } catch (e) {
       out.failure = String(e).slice(0, 300);
       summary.failures.push(`${persona} ${route}: ${out.failure}`);
