@@ -1,4 +1,4 @@
-import { numberRange, plusDays, tenantOf, weights } from "../finance/common.js";
+import { numberRange, plusDays, tenantOf, weights } from "../common.js";
 import { moneyFrom } from "../money.js";
 import { ANCHOR, createRng, seedFor } from "../random.js";
 import { postsShape } from "../shapes/engage.js";

@@ -89,6 +89,19 @@ export const arIssueWindow: Record<"U2" | "F1" | "G1", DayWindow> = {
   G1: { fromDaysAgo: 55, toDaysAgo: 2064 },
 };
 
+/**
+ * Recent band for the invoice generator, so the Enterprise home is not empty (the QA
+ * windows put the newest invoices weeks back, so nothing was due soon and no invoice
+ * fell in the latest month): about `share` of invoices issue in the last
+ * `withinDays`, and `dueSoonCount` open invoices fall due in the next `dueSoonDays`.
+ */
+export const arRecentBand = {
+  share: 0.3,
+  withinDays: 30,
+  dueSoonCount: 8,
+  dueSoonDays: 7,
+} as const;
+
 export const recurringShape: TableShape = {
   table: "recurring_invoices",
   // Live: utilities 15, financial 3, government none.

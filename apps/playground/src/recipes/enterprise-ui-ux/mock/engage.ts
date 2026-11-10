@@ -1,3 +1,4 @@
+import { sameDay } from "./common.js";
 import { genForms, genSubmissions } from "./engage/applications.js";
 import {
   genAudiences,
@@ -26,9 +27,6 @@ import type {
 export type * from "./engage/types.js";
 
 const cache = new Map<string, EngageData>();
-
-const sameDay = (a: Date, b: Date): boolean =>
-  a.toISOString().slice(0, 10) === b.toISOString().slice(0, 10);
 
 export const engageData = (persona: Persona): EngageData => {
   const cached = cache.get(persona.key);

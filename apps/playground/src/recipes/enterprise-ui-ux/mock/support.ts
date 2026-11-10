@@ -1,10 +1,11 @@
 import {
   byDateAsc,
   DAY_MS,
+  numberRange,
   plusDays,
   tenantOf,
   weights,
-} from "./finance/common.js";
+} from "./common.js";
 import {
   agentNames,
   emailFor,
@@ -649,7 +650,6 @@ const genEscalations = (persona: Persona): SupportEscalation[] => {
 const genCalls = (persona: Persona): SupportCall[] => {
   const rng = createRng(seedFor(persona, "support.calls"));
   const enums = callsShape.enums;
-  const nums = callsShape.numbers as NonNullable<typeof callsShape.numbers>;
   const window = callsShape.dates as NonNullable<typeof callsShape.dates>;
   const rows = Array.from({ length: COUNTS.calls }, (_, i): SupportCall => {
     const today = rng.bool(CALLS_TODAY_SHARE);
@@ -683,7 +683,7 @@ const genCalls = (persona: Persona): SupportCall[] => {
     };
     const answered = status === "completed";
     const seconds = answered
-      ? rng.range(nums.duration_seconds as never, 0)
+      ? rng.range(numberRange(callsShape, "duration_seconds"), 0)
       : null;
     return {
       id: `call-${i + 1}`,
@@ -701,7 +701,7 @@ const genCalls = (persona: Persona): SupportCall[] => {
           ? rng.pick(dispositions)
           : null,
       waitSeconds: answered
-        ? Math.round(rng.range(nums.wait_seconds as never, 0))
+        ? Math.round(rng.range(numberRange(callsShape, "wait_seconds"), 0))
         : null,
     };
   });

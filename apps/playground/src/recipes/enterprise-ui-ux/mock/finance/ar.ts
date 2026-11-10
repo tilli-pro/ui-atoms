@@ -4,9 +4,10 @@ import {
   personName,
   phone,
 } from "../names.js";
-import { ANCHOR, createRng, seedFor } from "../random.js";
+import { ANCHOR, createRng, type Rng, seedFor } from "../random.js";
 import {
   arIssueWindow,
+  arRecentBand,
   arShape,
   FINANCE_COUNTS,
   outboxShape,
@@ -143,24 +144,65 @@ const MONTHS = [
   "December",
 ] as const;
 
+const DUE_SOON_STATUSES: readonly InvoiceStatus[] = [
+  "open",
+  "sent",
+  "sent",
+  "viewed",
+  "partially_paid",
+];
+
+/** Due `dueSoonDays` ahead at most, issued one payment term earlier, created at issue. */
+const dueSoonDates = (
+  rng: Rng,
+  termsDays: number,
+): { issueDate: Date; dueDate: Date; createdAt: Date } => {
+  const dueDate = rng.daysAhead(1, arRecentBand.dueSoonDays);
+  const issueDate = plusDays(dueDate, -termsDays);
+  return {
+    issueDate,
+    dueDate,
+    createdAt: plusDays(issueDate, rng.next() * 2, true),
+  };
+};
+
 export const genInvoices = (persona: Persona): FinanceInvoice[] => {
   const rng = createRng(seedFor(persona, "finance.invoices"));
   const tenant = tenantOf<"U2" | "F1" | "G1">(arShape, persona.key);
   const enums = arShape.enums;
   const window = arIssueWindow[tenant];
-  const rows = Array.from({ length: FINANCE_COUNTS.invoices }, () => {
-    const status = rng.weighted(
+  const rows = Array.from({ length: FINANCE_COUNTS.invoices }, (_, index) => {
+    // The first few rows are open invoices falling due within the coming days; of the
+    // rest, `share` issue in the recent band (never overdue, which would be older).
+    const dueSoon = index < arRecentBand.dueSoonCount;
+    const recent = !dueSoon && rng.bool(arRecentBand.share);
+    const drawn = rng.weighted(
       weights<InvoiceStatus>(enums, `status_${tenant}`),
     );
+    const status: InvoiceStatus = dueSoon
+      ? rng.pick(DUE_SOON_STATUSES)
+      : recent && drawn === "overdue"
+        ? "sent"
+        : drawn;
     const terms = Number(rng.weighted(weights<string>(enums, "terms_days")));
     const total = money(rng, arShape, `total_${tenant}`);
+    const dates = dueSoon
+      ? dueSoonDates(rng, terms)
+      : documentDates(
+          rng,
+          status,
+          recent
+            ? { fromDaysAgo: 0, toDaysAgo: arRecentBand.withinDays }
+            : window,
+          terms,
+        );
     return {
       status,
       source: rng.weighted(
         weights<string>(enums, tenant === "F1" ? "source_F1" : "source_none"),
       ),
       customer: partyName(rng, persona),
-      ...documentDates(rng, status, window, terms),
+      ...dates,
       total,
       balance: balanceFor(rng, status, total),
     };

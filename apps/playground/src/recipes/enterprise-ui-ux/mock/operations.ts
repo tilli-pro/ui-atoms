@@ -5,7 +5,7 @@ import {
   plusDays,
   round2,
   weights,
-} from "./finance/common.js";
+} from "./common.js";
 import { moneyFrom } from "./money.js";
 import {
   emailFor,
@@ -27,6 +27,7 @@ import {
   timeEntriesShape,
 } from "./shapes/operations.js";
 import type { Persona, PersonaKey, Row } from "../specs/types.js";
+import type { TableShape } from "./shapes/types.js";
 
 export type AppointmentStatus =
   | "held"
@@ -232,11 +233,8 @@ const UTC_OFFSET: Record<string, number> = {
 };
 const INACTIVE_OUTAGE = new Set<OutageStatus>(["restored", "closed"]);
 
-const flag = (
-  rng: Rng,
-  shape: { enums: Record<string, never> | object },
-  name: string,
-) => rng.weighted(weights<string>(shape.enums as never, name)) === "true";
+const flag = (rng: Rng, shape: Pick<TableShape, "enums">, name: string) =>
+  rng.weighted(weights<string>(shape.enums, name)) === "true";
 
 const kebab = (value: string): string =>
   value

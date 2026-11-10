@@ -1,4 +1,4 @@
-import { numberRange, tenantOf, weights } from "../finance/common.js";
+import { numberRange, tenantOf, weights } from "../common.js";
 import { moneyFrom } from "../money.js";
 import {
   emailFor,
