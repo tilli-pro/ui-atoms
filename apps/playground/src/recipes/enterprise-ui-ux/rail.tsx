@@ -80,6 +80,7 @@ export type RailProps = {
   selected: Record<SectionKey, IconName>;
   onSelectModule: (module: ModuleKey) => void;
   onSelectItem: (module: SectionKey, item: SectionItem) => void;
+  useInset: boolean;
 };
 
 /**

@@ -54,6 +54,7 @@ export type ModulePanelProps = {
   route: Route;
   onSelectModule: (module: ModuleKey) => void;
   onSelectItem: (module: ModuleKey, item: SectionItem) => void;
+  useInset: boolean;
 };
 
 /** The second sidebar: the active module's name over its menu items; the overview is the header link or the first row. */
@@ -65,6 +66,7 @@ export function ModulePanel({
   route,
   onSelectModule,
   onSelectItem,
+  useInset,
 }: ModulePanelProps) {
   const active = route.module;
   const activeSection =
@@ -78,6 +80,7 @@ export function ModulePanel({
         className={classes(
           "border-b p-4",
           colorful && activeSection && colorfulPanelHeaderClassName,
+          colorful && activeSection && useInset && "rounded-r-md",
         )}
         style={
           colorful && activeSection

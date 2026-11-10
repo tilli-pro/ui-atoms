@@ -149,6 +149,7 @@ export default function EnterpriseUiUx() {
             onSelectModule={setActive}
             overviewItem={overview}
             selected={selected}
+            useInset={inset}
           />
           <ModulePanel
             ActiveIcon={ActiveIcon}
@@ -158,6 +159,7 @@ export default function EnterpriseUiUx() {
             onSelectModule={setActive}
             overviewItem={overview}
             route={route}
+            useInset={inset}
           />
           <SidebarRail />
         </Sidebar>
