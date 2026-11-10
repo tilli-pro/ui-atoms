@@ -336,16 +336,15 @@ export const outagesShape: TableShape = {
     government_federal: { tenant: "any", borrowed: true },
   },
   enums: {
-    // ALL status: closed 40, confirmed 6, crew_on_site 2, restored 2, reported 1, crew_assigned 1, crew_en_route 1 (53 rows); cancelled invented (planned maintenance only).
+    // ALL status: closed 40, confirmed 6, crew_on_site 2, restored 2, reported 1, crew_assigned 1, crew_en_route 1 (53 rows); QA has no cancelled, so planned cancellations fold into closed (43 = 40 + 3).
     status: [
-      ["closed", 40],
+      ["closed", 43],
       ["confirmed", 6],
       ["crew_on_site", 2],
       ["restored", 2],
       ["reported", 1],
       ["crew_assigned", 1],
       ["crew_en_route", 1],
-      ["cancelled", 3],
     ],
     // ALL type: unplanned 27, planned 21, emergency 4, partial 1.
     type: [

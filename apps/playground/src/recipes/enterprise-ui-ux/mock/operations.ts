@@ -59,8 +59,7 @@ export type OutageStatus =
   | "crew_en_route"
   | "crew_on_site"
   | "restored"
-  | "closed"
-  | "cancelled";
+  | "closed";
 
 /** staff_profiles. Money is a plain USD number; null when the profile has no rate. */
 export type OperationsStaff = Row & {
@@ -231,11 +230,7 @@ const UTC_OFFSET: Record<string, number> = {
   "America/Phoenix": -7,
   "America/Los_Angeles": -8,
 };
-const INACTIVE_OUTAGE = new Set<OutageStatus>([
-  "restored",
-  "closed",
-  "cancelled",
-]);
+const INACTIVE_OUTAGE = new Set<OutageStatus>(["restored", "closed"]);
 
 const flag = (
   rng: Rng,
@@ -510,7 +505,12 @@ const genAppointments = (
       service.creates === "service_order" &&
       serviceOrders.length > 0 &&
       rng.weighted(weights<string>(e, "order_link")) === "linked";
-    const order = linked ? rng.pick(serviceOrders) : null;
+    const candidates = serviceOrders.filter(
+      (o) =>
+        o.date.getTime() <= startsAt.getTime() &&
+        (status === "cancelled" || o.status !== "cancelled"),
+    );
+    const order = linked && candidates.length > 0 ? rng.pick(candidates) : null;
     const kind = rng.weighted(weights<string>(e, "customer_kind"));
     return {
       title: service.name,
@@ -555,13 +555,11 @@ const genTimesheets = (
 ): OperationsTimesheet[] => {
   const rng = createRng(seedFor(persona, "operations.timesheets"));
   const e = timeEntriesShape.enums;
-  const window = timeEntriesShape.dates as {
-    fromDaysAgo: number;
-    toDaysAgo: number;
-  };
-  const eligible = workOrders.filter(
-    (o) => o.status !== "draft" && o.status !== "cancelled",
+  const started = workOrders.filter((o) =>
+    ["scheduled", "in_progress", "completed", "closed"].includes(o.status),
   );
+  const eligible = started.length > 0 ? started : workOrders;
+  const rated = staff.filter((m) => m.costRate !== null);
   // Exact status counts (the shape weights sum to the row count), so the queue always has submitted rows.
   const statuses = rng.shuffle(
     (
@@ -572,7 +570,12 @@ const genTimesheets = (
     ).flatMap(([status, count]) => Array.from({ length: count }, () => status)),
   );
   const rows = Array.from({ length: COUNTS.timesheets }, (_, i) => {
-    const member = rng.pick(staff);
+    const status = statuses[i] as TimesheetStatus;
+    // Costed entries need a staff cost rate.
+    const member = rng.pick(
+      status === "costed" && rated.length > 0 ? rated : staff,
+    );
+    const order = rng.pick(eligible);
     const hours = Math.min(
       9,
       Math.max(
@@ -580,28 +583,25 @@ const genTimesheets = (
         Math.round(rng.range(numberRange(timeEntriesShape, "hours")) * 4) / 4,
       ),
     );
-    const day = rng.daysAgo(window.fromDaysAgo, window.toDaysAgo);
-    const midnight = Date.UTC(
-      day.getUTCFullYear(),
-      day.getUTCMonth(),
-      day.getUTCDate(),
-    );
-    const started =
-      midnight + rng.int(13, 20) * HOUR_MS + rng.int(0, 3) * 15 * MINUTE_MS;
-    return {
-      orderNumber: rng.pick(eligible.length > 0 ? eligible : workOrders).number,
-      staff: member.name,
-      startedAt: new Date(
-        started > ANCHOR.getTime()
-          ? ANCHOR.getTime() - rng.int(1, 4) * HOUR_MS
-          : started,
+    // Between the order date and the anchor, on a quarter hour.
+    const lo = order.date.getTime();
+    const raw = lo + rng.next() * (ANCHOR.getTime() - lo);
+    const startedAt = new Date(
+      Math.min(
+        ANCHOR.getTime(),
+        Math.max(lo, Math.round(raw / (15 * MINUTE_MS)) * 15 * MINUTE_MS),
       ),
+    );
+    return {
+      orderNumber: order.number,
+      staff: member.name,
+      startedAt,
       hours,
       notes: flag(rng, timeEntriesShape, "has_notes")
         ? rng.pick(TIMESHEET_NOTES)
         : null,
       cost: member.costRate === null ? null : round2(hours * member.costRate),
-      status: statuses[i] as TimesheetStatus,
+      status,
       billable: flag(rng, timeEntriesShape, "billable"),
     };
   });
@@ -678,9 +678,8 @@ const genOutages = (persona: Persona): OperationsOutage[] => {
     const type = rng.weighted(weights<OutageType>(e, "type"));
     const planned = type === "planned";
     let status = rng.weighted(weights<OutageStatus>(e, "status"));
-    // Only planned maintenance is scheduled or cancelled; unplanned rows are never cancelled.
+    // Only planned maintenance is scheduled.
     if (planned) status = PLANNED_REMAP[status] ?? status;
-    else if (status === "cancelled") status = "closed";
     const active = !INACTIVE_OUTAGE.has(status);
     const area = rng.pick(serviceAreaNames);
     const n = rng.int(2, 48);
@@ -719,7 +718,8 @@ const genOutages = (persona: Persona): OperationsOutage[] => {
     } else {
       reportedAt = rng.daysAgo(0, 3);
       if (rng.bool(0.7)) {
-        windowEnd = new Date(reportedAt.getTime() + rng.int(3, 14) * HOUR_MS);
+        // An active outage's ERT is still ahead.
+        windowEnd = new Date(ANCHOR.getTime() + rng.int(1, 12) * HOUR_MS);
       }
     }
     return {
