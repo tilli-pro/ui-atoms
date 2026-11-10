@@ -38,7 +38,8 @@ import {
   lead,
   searchBy,
   statusChips,
-} from "./finance/common.js";
+  sumFooter,
+} from "./common.js";
 import type {
   ActionSpec,
   ColumnSpec,
@@ -451,24 +452,38 @@ const internalOrderColumns: ColumnSpec<OperationsWorkOrder>[] = [
   },
 ];
 
-const serviceOrders = workOrderSegment(
-  "service",
-  "Service",
-  serviceStatuses,
-  serviceOrderColumns,
-  [
-    open(),
-    { label: "Schedule", icon: CalendarClock },
-    { label: "Complete", icon: CheckCircle2 },
-  ],
-);
-const internalOrders = workOrderSegment(
-  "internal",
-  "Internal",
-  internalStatuses,
-  internalOrderColumns,
-  [open(), { label: "Approve", icon: ThumbsUp }, { label: "Close", icon: Ban }],
-);
+const serviceOrders = {
+  ...workOrderSegment(
+    "service",
+    "Service",
+    serviceStatuses,
+    serviceOrderColumns,
+    [
+      open(),
+      { label: "Schedule", icon: CalendarClock },
+      { label: "Complete", icon: CheckCircle2 },
+    ],
+  ),
+  footer: sumFooter<OperationsWorkOrder>([
+    ["Total", (row) => row.total],
+    ["Invoiced", (row) => row.invoiced],
+    ["Uninvoiced", (row) => row.uninvoiced],
+  ]),
+};
+const internalOrders = {
+  ...workOrderSegment(
+    "internal",
+    "Internal",
+    internalStatuses,
+    internalOrderColumns,
+    [
+      open(),
+      { label: "Approve", icon: ThumbsUp },
+      { label: "Close", icon: Ban },
+    ],
+  ),
+  footer: sumFooter<OperationsWorkOrder>([["Total", (row) => row.total]]),
+};
 
 const workOrdersSpec: AnyList = {
   key: "work-orders",

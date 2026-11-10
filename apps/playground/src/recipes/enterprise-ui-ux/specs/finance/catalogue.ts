@@ -36,6 +36,7 @@ const productColumns: ColumnSpec<FinanceProduct>[] = [
     }),
     sortable: false,
   },
+  { key: "sku", header: "SKU", format: "text", sortable: false },
   {
     key: "type",
     header: "Type",

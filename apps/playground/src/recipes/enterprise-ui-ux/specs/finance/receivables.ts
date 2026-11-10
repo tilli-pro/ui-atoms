@@ -29,7 +29,12 @@ import {
   searchBy,
   statusChips,
 } from "./common.js";
-import type { ChipSpec, ColumnSpec, SegmentSpec } from "../types.js";
+import type {
+  ActionSpec,
+  ChipSpec,
+  ColumnSpec,
+  SegmentSpec,
+} from "../types.js";
 
 const date = (value: Date | null) =>
   value
@@ -197,6 +202,7 @@ const readyChips: ChipSpec<FinanceReadyToInvoice>[] = [
 
 const invoicesSegment: SegmentSpec<FinanceInvoice> = {
   key: "invoices",
+  selectable: true,
   label: (t) => t.invoices,
   rows: (persona) => financeData(persona).invoices,
   total: (persona) => financeData(persona).totals.invoices,
@@ -227,6 +233,7 @@ const invoicesSegment: SegmentSpec<FinanceInvoice> = {
 const recurringSegment: SegmentSpec<FinanceRecurring> = {
   key: "recurring",
   label: "Recurring",
+  selectable: false,
   rows: (persona) => financeData(persona).recurring,
   total: (persona) => financeData(persona).totals.recurring,
   columns: recurringColumns,
@@ -242,6 +249,7 @@ const recurringSegment: SegmentSpec<FinanceRecurring> = {
 const outboxSegment: SegmentSpec<FinanceOutboxMessage> = {
   key: "outbox",
   label: "Outbox",
+  selectable: false,
   rows: (persona) => financeData(persona).outbox,
   total: (persona) => financeData(persona).totals.outbox,
   columns: outboxColumns,
@@ -256,6 +264,7 @@ const outboxSegment: SegmentSpec<FinanceOutboxMessage> = {
 const readySegment: SegmentSpec<FinanceReadyToInvoice> = {
   key: "ready-to-invoice",
   label: "Ready to invoice",
+  selectable: false,
   rows: (persona) => financeData(persona).readyToInvoice,
   total: (persona) => financeData(persona).totals.readyToInvoice,
   columns: readyColumns,
@@ -267,16 +276,58 @@ const readySegment: SegmentSpec<FinanceReadyToInvoice> = {
   empty: empty("Nothing is ready to invoice", adjust),
 };
 
-export const settlementActionLines = {
+const settlementLineColumns: ColumnSpec[] = [
+  {
+    key: "description",
+    header: "Description",
+    format: "text",
+    sortable: false,
+  },
+  {
+    key: "quantity",
+    header: "Quantity",
+    format: "count",
+    align: "end",
+    sortable: false,
+  },
+  {
+    key: "rate",
+    header: "Rate",
+    format: "money",
+    align: "end",
+    sortable: false,
+  },
+  {
+    key: "amount",
+    header: "Amount",
+    format: "money",
+    align: "end",
+    sortable: false,
+  },
+  { key: "sourceRef", header: "Source", format: "text", sortable: false },
+  { key: "eventDate", header: "Event date", format: "date", sortable: false },
+];
+
+/** Opens the settlement's accrual lines in a Sheet (the nested-rows approximation). */
+export const settlementActionLines: ActionSpec<FinanceSettlement> = {
   label: "Lines",
   icon: Layers,
   variant: "ghost",
-  gap: "nested-rows",
-} as const;
+  panel: (row) => ({
+    title: row.number,
+    description: `${row.partner} - ${row.period}. ${row.lines.length} accrual lines.`,
+    columns: settlementLineColumns,
+    rows: row.lines.map((line, index) => ({
+      ...line,
+      id: `${row.id}-line-${index}`,
+    })),
+  }),
+};
 
 const settlementsSegment: SegmentSpec<FinanceSettlement> = {
   key: "settlements",
   label: "Partner settlements",
+  selectable: false,
   rows: (persona) =>
     financeData(persona).settlements.filter((row) => row.side === "receivable"),
   total: (persona) =>

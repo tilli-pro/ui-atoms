@@ -85,6 +85,7 @@ const inboxColumns: ColumnSpec<FinanceBillInboxMessage>[] = [
 
 const billsSegment: SegmentSpec<FinanceBill> = {
   key: "bills",
+  selectable: true,
   label: (t) => t.bills,
   rows: (persona) => financeData(persona).bills,
   total: (persona) => financeData(persona).totals.bills,
@@ -114,6 +115,7 @@ const billsSegment: SegmentSpec<FinanceBill> = {
 const inboxSegment: SegmentSpec<FinanceBillInboxMessage> = {
   key: "inbox",
   label: "Inbox",
+  selectable: false,
   rows: (persona) => financeData(persona).billInbox,
   total: (persona) => financeData(persona).totals.billInbox,
   columns: inboxColumns,
@@ -134,6 +136,7 @@ const payableSettlements = (persona: Parameters<SegmentSpec["rows"]>[0]) =>
 const settlementsSegment: SegmentSpec<FinanceSettlement> = {
   key: "settlements",
   label: "Partner settlements",
+  selectable: false,
   rows: payableSettlements,
   total: (persona) => payableSettlements(persona).length,
   columns: settlementColumns,

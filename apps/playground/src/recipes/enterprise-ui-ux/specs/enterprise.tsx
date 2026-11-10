@@ -44,7 +44,7 @@ import {
   lead,
   searchBy,
   statusChips,
-} from "./finance/common.js";
+} from "./common.js";
 import type { SupportTicket, TicketStatus } from "../mock/support.js";
 import type {
   ListSpec,
@@ -148,6 +148,7 @@ const ticketGroups: { key: string; label: string; statuses: TicketStatus[] }[] =
 
 const slaState = (row: SupportTicket) => {
   if (row.slaDueAt === null) return "None";
+  if (["resolved", "confirmed", "closed"].includes(row.status)) return "Met";
   return row.slaBreached ? "Breached" : "On track";
 };
 
@@ -245,6 +246,7 @@ const accessRequestsSegment: SegmentSpec<EnterpriseAccessRequest> = {
       sortable: false,
     },
   ],
+  pageActions: [],
   chips: [],
   selects: [],
   rowActions: [

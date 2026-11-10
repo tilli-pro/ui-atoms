@@ -34,6 +34,13 @@ import {
   pipelineStagesF1,
   quotesShape,
 } from "../mock/shapes/sales.js";
+import {
+  capitalise,
+  compactMoney,
+  DAY,
+  includes,
+  sumFooter,
+} from "./common.js";
 import type {
   ActionSpec,
   ChipSpec,
@@ -42,24 +49,8 @@ import type {
   Persona,
 } from "./types.js";
 
-const DAY = 86_400_000;
-
-const includes = (value: string, query: string) =>
-  value.toLowerCase().includes(query.trim().toLowerCase());
-
-const capitalise = (value: string) => {
-  const spaced = value.replace(/_/g, " ");
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
-};
-
 const count = <T,>(rows: T[], test: (row: T) => boolean) =>
   rows.filter(test).length;
-
-const compactMoney = (value: number) => {
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `$${Math.round(value / 1_000)}K`;
-  return `$${Math.round(value)}`;
-};
 
 const leadStatuses: LeadStatus[] = [
   "new",
@@ -250,6 +241,14 @@ const orderColumnsChooser: ActionSpec = {
   variant: "outline",
   gap: "data-grid",
 };
+/** Footer sums over the filtered rows, one value per money column. */
+const orderFooter = (invoiced: string, uninvoiced: string) =>
+  sumFooter<SalesOrder>([
+    ["Total", (row) => row.total],
+    [invoiced, (row) => row.invoiced],
+    [uninvoiced, (row) => row.uninvoiced],
+  ]);
+
 const orderEmpty = {
   title: "No orders match these filters",
   description: "Try adjusting your search criteria.",
@@ -366,6 +365,7 @@ export const salesSpecs: ModuleSpecs = {
         "closed",
         "cancelled",
       ]),
+      footer: orderFooter("Invoiced", "Uninvoiced"),
       selectable: true,
       gaps: ["data-grid"],
       rowActions: [{ label: "Open", icon: ExternalLink }],
@@ -383,6 +383,7 @@ export const salesSpecs: ModuleSpecs = {
           label: "Sales",
           rows: ordersOf("sales"),
           total: orderTotal,
+          footer: orderFooter("Invoiced", "Uninvoiced"),
           columns: orderColumns("Customer", "Invoiced", "Uninvoiced"),
           chips: orderChips([
             "draft",
@@ -398,7 +399,8 @@ export const salesSpecs: ModuleSpecs = {
           key: "purchase",
           label: "Purchase",
           rows: ordersOf("purchase"),
-          total: orderTotal,
+          total: (persona) => ordersOf("purchase")(persona).length,
+          footer: orderFooter("Billed", "Unbilled"),
           columns: orderColumns("Supplier", "Billed", "Unbilled"),
           chips: orderChips(["submitted", "confirmed", "closed"]),
           rowActions: [{ label: "Open", icon: ExternalLink }],
@@ -409,6 +411,8 @@ export const salesSpecs: ModuleSpecs = {
           label: "Received",
           rows: ordersOf("received"),
           total: (persona) => ordersOf("received")(persona).length,
+          footer: orderFooter("Invoiced", "Uninvoiced"),
+          pageActions: [orderExport, orderColumnsChooser],
           columns: orderColumns("Customer", "Invoiced", "Uninvoiced"),
           chips: orderChips(["received"]),
           rowActions: [

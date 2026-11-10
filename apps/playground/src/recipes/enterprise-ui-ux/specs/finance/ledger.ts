@@ -11,6 +11,7 @@ import {
   capitalise,
   empty,
   lead,
+  money,
   searchBy,
   statusChips,
 } from "./common.js";
@@ -143,6 +144,16 @@ const trialSegment: SegmentSpec<FinanceTrialBalanceRow> = {
   total: (persona) => financeData(persona).trialBalance.rows.length,
   columns: trialColumns,
   chips: [],
+  // Sums the filtered rows, so the totals follow the search.
+  footer: (rows, persona) => {
+    const format = money(persona);
+    const sum = (pick: (row: FinanceTrialBalanceRow) => number) =>
+      rows.reduce((acc, row) => acc + pick(row), 0);
+    return [
+      { label: "Total debit", value: format.format(sum((row) => row.debit)) },
+      { label: "Total credit", value: format.format(sum((row) => row.credit)) },
+    ];
+  },
   empty: empty("No balances found", adjust),
 };
 

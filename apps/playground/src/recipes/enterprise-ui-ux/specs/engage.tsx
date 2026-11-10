@@ -41,9 +41,10 @@ import {
   DAY,
   empty,
   lead,
+  sameDay,
   searchBy,
   statusChips,
-} from "./finance/common.js";
+} from "./common.js";
 import type {
   ColumnSpec,
   ListSpec,
@@ -95,9 +96,6 @@ const statusColumn = <R extends { status: string }>(
   accessor: (row) => capitalise(row.status),
   sortable: false,
 });
-
-const sameDay = (a: Date, b: Date) =>
-  a.toISOString().slice(0, 10) === b.toISOString().slice(0, 10);
 
 const truncate = (value: string, length: number) =>
   value.length > length ? `${value.slice(0, length - 1).trimEnd()}…` : value;
@@ -223,7 +221,9 @@ const audienceSegment = (
   label,
   rows: (persona) => engageData(persona).audiences.filter(filter),
   columns: audienceColumns(key === "approvals"),
-  chips: statusChips<EngageAudience>(audienceStatuses),
+  // Every approvals row is pending, so status chips would only ever show one value.
+  chips:
+    key === "approvals" ? [] : statusChips<EngageAudience>(audienceStatuses),
   rowActions: [
     { label: "Open", icon: ExternalLink },
     { label: "Approve", icon: Check },
@@ -246,15 +246,22 @@ const audiencesAll = {
   total: (persona: Persona) => engageData(persona).totals.audiences,
 };
 
-const audiencesApprovals = audienceSegment(
-  "approvals",
-  "Approvals",
-  (row) => row.status === "pending_approval",
-  empty(
-    "Nothing to approve",
-    "When someone submits an audience that your policy says needs review, it waits here.",
+const isPendingApproval = (row: EngageAudience) =>
+  row.status === "pending_approval";
+
+const audiencesApprovals: SegmentSpec<EngageAudience> = {
+  ...audienceSegment(
+    "approvals",
+    "Approvals",
+    isPendingApproval,
+    empty(
+      "Nothing to approve",
+      "When someone submits an audience that your policy says needs review, it waits here.",
+    ),
   ),
-);
+  total: (persona) =>
+    engageData(persona).audiences.filter(isPendingApproval).length,
+};
 
 const audiencesSpec: AnyList = {
   key: "audiences",
@@ -432,6 +439,17 @@ const postApproval = {
   sortable: false,
 };
 
+const platformSelect: SelectFilterSpec<EngagePost> = {
+  key: "platform",
+  label: "platforms",
+  options: (persona) =>
+    engageData(persona).platformStats.map((stat) => ({
+      value: stat.platform,
+      label: platformLabel(stat.platform),
+      predicate: (row: EngagePost) => row.platforms.includes(stat.platform),
+    })),
+};
+
 const postsSegment: SegmentSpec<EngagePost> = {
   key: "posts",
   label: "Posts",
@@ -489,18 +507,7 @@ const postsSegment: SegmentSpec<EngagePost> = {
     },
   ],
   chips: statusChips<EngagePost>(postStatuses),
-  selects: [
-    {
-      key: "platform",
-      label: "platforms",
-      options: (persona) =>
-        engageData(persona).platformStats.map((stat) => ({
-          value: stat.platform,
-          label: platformLabel(stat.platform),
-          predicate: (row: EngagePost) => row.platforms.includes(stat.platform),
-        })),
-    },
-  ],
+  selects: [platformSelect],
   rowActions: [
     { label: "Open", icon: ExternalLink },
     { label: "Approve", icon: Check },
@@ -513,16 +520,18 @@ const postsSegment: SegmentSpec<EngagePost> = {
   ),
 };
 
+const scheduledPosts = (persona: Persona) =>
+  engageData(persona)
+    .posts.filter((row) => row.status === "scheduled" && row.scheduledAt)
+    .sort(
+      (a, b) =>
+        (a.scheduledAt?.getTime() ?? 0) - (b.scheduledAt?.getTime() ?? 0),
+    );
+
 const scheduleSegment: SegmentSpec<EngagePost> = {
   key: "schedule",
   label: "Schedule",
-  rows: (persona) =>
-    engageData(persona)
-      .posts.filter((row) => row.status === "scheduled" && row.scheduledAt)
-      .sort(
-        (a, b) =>
-          (a.scheduledAt?.getTime() ?? 0) - (b.scheduledAt?.getTime() ?? 0),
-      ),
+  rows: scheduledPosts,
   columns: [
     {
       key: "scheduledAt",
@@ -552,6 +561,8 @@ const scheduleSegment: SegmentSpec<EngagePost> = {
     { label: "Reschedule", icon: CalendarClock },
   ],
   chips: [],
+  selects: [platformSelect],
+  total: (persona) => scheduledPosts(persona).length,
   gaps: ["drag-calendar"],
   empty: empty("No upcoming posts", adjustFilter),
 };
@@ -560,6 +571,8 @@ const analyticsSegment: SegmentSpec<EngagePlatformStat> = {
   key: "analytics",
   label: "Analytics",
   rows: (persona) => engageData(persona).platformStats,
+  total: (persona) => engageData(persona).platformStats.length,
+  search: searchBy("platform"),
   columns: [
     {
       key: "platform",

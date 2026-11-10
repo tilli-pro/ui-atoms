@@ -30,6 +30,7 @@ import {
   networkData,
 } from "../mock/network.js";
 import { contactsShape, organizationsShape } from "../mock/shapes/network.js";
+import { capitalise, includes } from "./common.js";
 import type {
   ActionSpec,
   ChipSpec,
@@ -37,14 +38,6 @@ import type {
   ModuleSpecs,
   Persona,
 } from "./types.js";
-
-const includes = (value: string, query: string) =>
-  value.toLowerCase().includes(query.trim().toLowerCase());
-
-const capitalise = (value: string) => {
-  const spaced = value.replace(/_/g, " ");
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
-};
 
 const networkStatusLabel: Record<NetworkStatus, string> = {
   connected: "Connected",
@@ -391,6 +384,7 @@ export const networkSpecs: ModuleSpecs = {
         { label: "Link or merge", icon: GitMerge },
         { label: "Delete", icon: Trash2, variant: "destructive" },
         { label: "Invite", icon: UserPlus },
+        { label: "Connect", icon: Handshake },
         { label: "Re-invite", icon: RotateCw },
         { label: "Manage", icon: Handshake },
       ],

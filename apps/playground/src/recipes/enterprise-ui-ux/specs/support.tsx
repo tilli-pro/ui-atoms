@@ -33,10 +33,10 @@ import {
   includes,
   lead,
   searchBy,
-} from "./finance/common.js";
+  statusChips,
+} from "./common.js";
 import type {
   ActionSpec,
-  ChipSpec,
   ListSpec,
   ModuleSpecs,
   Persona,
@@ -60,15 +60,6 @@ const emptyCopy = (
 const closedLike = new Set<TicketStatus>(["resolved", "confirmed", "closed"]);
 const isOpenTicket = (row: SupportTicket) => !closedLike.has(row.status);
 
-const statusChips = <R extends { status: string }>(
-  statuses: string[],
-): ChipSpec<R & { id: string }>[] =>
-  statuses.map((status) => ({
-    key: status,
-    label: capitalise(status),
-    predicate: (row) => row.status === status,
-  }));
-
 const age = (from: Date) => {
   const hours = Math.max(
     0,
@@ -83,9 +74,10 @@ const exportAction: ActionSpec = {
   variant: "outline",
 };
 
-const sla = (due: Date | null, open: boolean) => {
+const sla = (due: Date | null, status: TicketStatus) => {
   if (due === null) return "None";
-  if (open && due.getTime() < ANCHOR.getTime()) return "Breached";
+  if (closedLike.has(status)) return "Met";
+  if (due.getTime() < ANCHOR.getTime()) return "Breached";
   return "On track";
 };
 
@@ -232,11 +224,11 @@ const escalationsSegment: SegmentSpec<SupportEscalation> = {
       header: "SLA",
       format: "status",
       accessor: (row) =>
-        row.slaDueAt.getTime() < ANCHOR.getTime() &&
-        row.status !== "resolved" &&
-        row.status !== "closed"
-          ? "Breached"
-          : "On track",
+        row.status === "resolved" || row.status === "closed"
+          ? "Met"
+          : row.slaDueAt.getTime() < ANCHOR.getTime()
+            ? "Breached"
+            : "On track",
       sortable: false,
     },
   ],
@@ -440,7 +432,7 @@ const ticketsSpec: ListSpec<SupportTicket> = {
       key: "sla",
       header: "SLA",
       format: "status",
-      accessor: (row) => sla(row.slaDueAt, isOpenTicket(row)),
+      accessor: (row) => sla(row.slaDueAt, row.status),
       sortable: false,
     },
     {
