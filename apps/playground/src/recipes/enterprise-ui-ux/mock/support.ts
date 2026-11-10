@@ -86,7 +86,10 @@ export type SupportEscalation = Row & {
 export type SupportCall = Row & {
   type: CallType;
   direction: CallDirection;
+  /** Display name: the contact, else the organization. */
   party: string;
+  contact: string | null;
+  organization: string | null;
   phone: string;
   /** Minutes with one decimal; null when missed. */
   durationMinutes: number | null;
@@ -584,7 +587,20 @@ const genEscalations = (persona: Persona): SupportEscalation[] => {
     );
     const status = rng.weighted(weights<EscalationStatus>(enums, "status"));
     const rawCategory = rng.weighted(weights(enums, "category"));
-    const createdAt = rng.daysAgo(0, 14);
+    const open = status !== "resolved" && status !== "closed";
+    const slaHours = SLA_HOURS[priority] ?? 24;
+    // Recency override of the QA window (22-32 days back, only 2 open rows past SLA):
+    // open rows are placed within the last 3 days, about 30% already past SLA, so the
+    // list is not all red; resolved/closed rows keep the shape window.
+    const ageHours = rng.bool(0.3)
+      ? slaHours * (1.1 + rng.next() * 0.9)
+      : slaHours * rng.next() * 0.9;
+    const createdAt = open
+      ? new Date(ANCHOR.getTime() - Math.min(ageHours, 72) * HOUR_MS)
+      : rng.daysAgo(
+          (escalationsShape.dates as { fromDaysAgo: number }).fromDaysAgo,
+          (escalationsShape.dates as { toDaysAgo: number }).toDaysAgo,
+        );
     return {
       subject: rng.pick(
         escalationSubjects[rawCategory] ??
@@ -644,11 +660,27 @@ const genCalls = (persona: Persona): SupportCall[] => {
           rng,
         )
       : hourDate(
-          rng.daysAgo(window.fromDaysAgo, window.toDaysAgo),
+          // A third of the older calls land in the last 30 days (QA has none) so the
+          // Yesterday / Last 7 / Last 30 day presets show rows; the rest keep the QA window.
+          rng.bool(1 / 3)
+            ? rng.daysAgo(1, 30)
+            : rng.daysAgo(window.fromDaysAgo, window.toDaysAgo),
           Number(rng.weighted(weights(enums, "hour"))),
           rng,
         );
     const status = rng.weighted(weights<CallStatus>(enums, "status"));
+    // QA links a contact or an organization about a third of the time each.
+    const roll = rng.next();
+    const contact = roll < 1 / 3 ? personName(rng) : null;
+    const organization =
+      roll >= 1 / 3 && roll < 2 / 3
+        ? rng.pick(organizationsByIndustry[persona.key])
+        : null;
+    const link = {
+      party: contact ?? organization ?? personName(rng),
+      contact,
+      organization,
+    };
     const answered = status === "completed";
     const seconds = answered
       ? rng.range(nums.duration_seconds as never, 0)
@@ -657,7 +689,7 @@ const genCalls = (persona: Persona): SupportCall[] => {
       id: `call-${i + 1}`,
       type: rng.weighted(weights<CallType>(enums, "type")),
       direction: rng.weighted(weights<CallDirection>(enums, "direction")),
-      party: personName(rng),
+      ...link,
       phone: phone(rng),
       durationMinutes: seconds === null ? null : Math.round(seconds / 6) / 10,
       agent: agentFor(rng),
