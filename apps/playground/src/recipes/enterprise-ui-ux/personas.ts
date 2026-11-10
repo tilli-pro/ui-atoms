@@ -1,0 +1,118 @@
+import type { Persona, PersonaKey, Terms } from "./specs/types.js";
+
+const utilitiesTerms: Terms = {
+  contacts: "Contacts",
+  organizations: "Organizations",
+  invoices: "Invoices",
+  bills: "Bills",
+  payments: "Payments",
+  tickets: "Tickets",
+  leads: "Leads",
+  opportunities: "Opportunities",
+  products: "Products",
+  outages: "Outages",
+  contact: "Contact",
+  organization: "Organization",
+  invoice: "Invoice",
+  lead: "Lead",
+  opportunity: "Opportunity",
+  personCustomer: "Customers",
+  personVendor: "Vendors",
+  personEmployee: "Employees",
+  orgCustomer: "Commercial",
+  orgVendor: "Vendors",
+  orgEmployee: "Internal",
+  createContact: "Add Contact",
+  createOrganization: "Add Organization",
+  createLead: "Add Lead",
+  createOpportunity: "Add Opportunity",
+};
+
+const financialTerms: Terms = {
+  contacts: "Contacts",
+  organizations: "Organizations",
+  invoices: "Invoices",
+  bills: "Bills",
+  payments: "Payments",
+  tickets: "Service Requests",
+  leads: "Prospects",
+  opportunities: "Deals",
+  products: "Accounts & Services",
+  outages: "System Outages",
+  contact: "Contact",
+  organization: "Organization",
+  invoice: "Invoice",
+  lead: "Prospect",
+  opportunity: "Deal",
+  personCustomer: "Retail Clients",
+  personVendor: "Vendors",
+  personEmployee: "Employees",
+  orgCustomer: "Corporate Clients",
+  orgVendor: "Vendors",
+  orgEmployee: "Internal",
+  createContact: "Add Contact",
+  createOrganization: "Add Organization",
+  createLead: "Add Prospect",
+  createOpportunity: "Add Deal",
+};
+
+const governmentTerms: Terms = {
+  contacts: "Constituents",
+  organizations: "Businesses",
+  invoices: "Statements",
+  bills: "Bills",
+  payments: "Payments",
+  tickets: "Service Requests",
+  leads: "Applicants",
+  opportunities: "Grants/Projects",
+  products: "Government Services",
+  outages: "Disaster/Weather",
+  contact: "Constituent",
+  organization: "Business",
+  invoice: "Statement",
+  lead: "Applicant",
+  opportunity: "Grant/Project",
+  personCustomer: "Residents",
+  personVendor: "Contractors",
+  personEmployee: "Staff",
+  orgCustomer: "Commercial",
+  orgVendor: "Suppliers",
+  orgEmployee: "Agencies",
+  createContact: "Register Constituent",
+  createOrganization: "Register Business",
+  createLead: "Add Applicant",
+  createOpportunity: "Add Grant/Project",
+};
+
+/** The three industry personas the mocks can be switched between. */
+export const personas: Record<PersonaKey, Persona> = {
+  utilities: {
+    key: "utilities",
+    label: "Utilities",
+    tenantName: "Harbor Light Utilities",
+    seed: 11,
+    currency: "USD",
+    terms: utilitiesTerms,
+  },
+  financial: {
+    key: "financial",
+    label: "Financial",
+    tenantName: "Meridian Trust Bank",
+    seed: 23,
+    currency: "USD",
+    terms: financialTerms,
+  },
+  government_federal: {
+    key: "government_federal",
+    label: "Federal government",
+    tenantName: "Bureau of Civic Services",
+    seed: 37,
+    currency: "USD",
+    terms: governmentTerms,
+  },
+};
+
+export const personaKeys = Object.keys(personas) as readonly PersonaKey[];
+
+export const isPersonaKey = (value: string): value is PersonaKey =>
+  (personaKeys as readonly string[]).includes(value);
