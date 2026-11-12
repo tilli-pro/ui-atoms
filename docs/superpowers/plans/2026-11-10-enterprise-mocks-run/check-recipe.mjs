@@ -231,6 +231,12 @@ for (const persona of personas) {
           .locator("main tbody tr:first-child button:not([role='checkbox'])")
           .first()
           .click();
+        await page.waitForFunction(
+          () => /^#\/network\/[^/]+\/.+/.test(window.location.hash),
+          null,
+          { timeout: 10000 },
+        );
+        await page.waitForSelector("main [role='tab']", { timeout: 10000 });
         await page.waitForSelector("main h1", { timeout: 10000 });
         await page.waitForTimeout(300);
         const hash = await page.evaluate(() => window.location.hash);
@@ -258,6 +264,9 @@ for (const persona of personas) {
               document.documentElement.clientWidth,
           );
         Object.assign(out, await readDetail());
+        if (!out.route.includes("/") || out.tabs.length === 0) {
+          summary.failures.push(`${persona} ${out.route}: profile not reached`);
+        }
         const tabLocator = page.locator("main [role='tab']");
         const tabCount = await tabLocator.count();
         out.tabErrors = [];
