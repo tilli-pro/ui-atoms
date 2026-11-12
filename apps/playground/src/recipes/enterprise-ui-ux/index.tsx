@@ -34,6 +34,7 @@ import {
   NESTED_SIDEBAR_WIDTH,
 } from "./theme.js";
 import { DashboardView } from "./views/dashboard-view.js";
+import { DetailView } from "./views/detail-view.js";
 import { ListView } from "./views/list-view.js";
 import { ContentView } from "./views.js";
 import type { PersonaKey } from "./specs/types.js";
@@ -144,14 +145,37 @@ export default function EnterpriseUiUx() {
   useControl(gradientControls, { group: "sidebar gradients", order: 1 });
 
   const itemSpec = route.item ? specFor(active, route.item) : undefined;
+  const detailRow =
+    route.id && itemSpec?.detail
+      ? itemSpec.rows(personas[persona]).find((row) => row.id === route.id)
+      : undefined;
   const moduleSpec = moduleSpecs[active];
   const { title, blurb } = homeOf(active);
   const mainView = () => {
+    if (route.item && itemSpec?.detail && detailRow) {
+      return (
+        <DetailView
+          backHash={hashFor(active, route.item)}
+          Icon={route.item.icon}
+          itemLabel={route.item.label}
+          moduleTitle={title}
+          onNavigate={go}
+          persona={personas[persona]}
+          row={detailRow}
+          spec={itemSpec.detail}
+        />
+      );
+    }
     if (route.item && itemSpec) {
       return (
         <ListView
           Icon={route.item.icon}
           moduleTitle={title}
+          onOpenRow={
+            itemSpec.detail
+              ? (row) => go(hashFor(active, route.item, row.id))
+              : undefined
+          }
           persona={personas[persona]}
           spec={itemSpec}
         />

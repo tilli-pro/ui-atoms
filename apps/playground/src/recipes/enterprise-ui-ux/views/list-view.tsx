@@ -66,6 +66,7 @@ type ListViewProps<R extends Row> = {
   persona: Persona;
   moduleTitle: string;
   Icon: LucideIcon;
+  onOpenRow?: ((row: R) => void) | undefined;
 };
 
 export function ListView<R extends Row>(props: ListViewProps<R>) {
@@ -82,6 +83,7 @@ function ListViewInner<R extends Row>({
   persona,
   moduleTitle,
   Icon,
+  onOpenRow,
 }: ListViewProps<R>) {
   const t = (label: Parameters<typeof resolveLabel>[0]) =>
     resolveLabel(label, persona.terms);
@@ -99,6 +101,9 @@ function ListViewInner<R extends Row>({
 
   const segment = spec.segments?.find((s) => s.key === segmentKey);
   const columns = segment?.columns ?? spec.columns;
+  const linkKey = onOpenRow
+    ? columns.find((c) => c.format === "link")?.key
+    : undefined;
   // A segmented list resolves everything from the active segment: a segment that
   // declares no chips, selects, row actions or total has none (never the list's).
   const chips = segment ? (segment.chips ?? []) : spec.chips;
@@ -396,11 +401,22 @@ function ListViewInner<R extends Row>({
                       className={cn(column.align === "end" && "text-end")}
                       key={column.key}
                     >
-                      <Cell
-                        currency={persona.currency}
-                        format={column.format}
-                        value={readValue(column, row)}
-                      />
+                      {column.key === linkKey ? (
+                        <Button
+                          className="h-auto p-0"
+                          onClick={() => onOpenRow?.(row)}
+                          size="sm"
+                          variant="link"
+                        >
+                          {String(readValue(column, row))}
+                        </Button>
+                      ) : (
+                        <Cell
+                          currency={persona.currency}
+                          format={column.format}
+                          value={readValue(column, row)}
+                        />
+                      )}
                     </TableCell>
                   ))}
                   {rowActions.length > 0 ? (
