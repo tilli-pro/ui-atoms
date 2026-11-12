@@ -26,6 +26,8 @@ const utilitiesTerms: Terms = {
   createOrganization: "Add Organization",
   createLead: "Add Lead",
   createOpportunity: "Add Opportunity",
+  billingTab: "Bills & Usage",
+  addressCell: "Service address",
 };
 
 const financialTerms: Terms = {
@@ -54,6 +56,8 @@ const financialTerms: Terms = {
   createOrganization: "Add Organization",
   createLead: "Add Prospect",
   createOpportunity: "Add Deal",
+  billingTab: "Statements",
+  addressCell: "Service address",
 };
 
 const governmentTerms: Terms = {
@@ -82,6 +86,8 @@ const governmentTerms: Terms = {
   createOrganization: "Register Business",
   createLead: "Add Applicant",
   createOpportunity: "Add Grant/Project",
+  billingTab: "Statements",
+  addressCell: "Address",
 };
 
 /** The three industry personas the mocks can be switched between. */

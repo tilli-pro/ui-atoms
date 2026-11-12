@@ -18,7 +18,9 @@ export type GapId =
   | "nonlinear-stepper"
   | "time-inputs"
   | "pdf-preview"
-  | "code-block";
+  | "code-block"
+  | "ai-insights"
+  | "mailbox";
 
 export type GapEntry = {
   concept: string;
@@ -115,5 +117,17 @@ export const gaps: Record<GapId, GapEntry> = {
     concept: "Embed snippet and system prompt with copy",
     reason: "no code-block part",
     rendering: "approximation",
+  },
+  "ai-insights": {
+    concept:
+      'JAREIS guidance card (recommended actions with confidence, Execute / Useful / False positive / Dismiss) and "Why they\'re calling" chips',
+    reason: "no AI card, confidence meter or feedback pattern",
+    rendering: "badge",
+  },
+  mailbox: {
+    concept:
+      "Communications tab: message list with channel and status pills beside a details / compose pane",
+    reason: "chat and composer parts exist, no split-pane mailbox composition",
+    rendering: "badge",
   },
 };

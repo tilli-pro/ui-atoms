@@ -30,6 +30,8 @@ export type Terms = {
   createOrganization: string;
   createLead: string;
   createOpportunity: string;
+  billingTab: string;
+  addressCell: string;
 };
 
 export type Persona = {
@@ -118,6 +120,104 @@ export type FooterFn<R extends Row = Row> = (
 
 export type EmptyCopy = { title: Label; description: Label };
 
+export type BadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
+export type BadgeSpec = { label: Label; tone?: BadgeTone };
+
+/** One key/value on a profile; `format` reuses the table cell renderer. */
+export type Field = {
+  label: Label;
+  value: unknown;
+  format: Format;
+  hint?: Label;
+  gap?: GapId;
+};
+
+export type HeaderSpec = {
+  title: string;
+  subtitle?: string;
+  initials: string;
+  badges: BadgeSpec[];
+};
+
+export type ListItem = {
+  label: string;
+  value: string;
+  hint?: string;
+  badge?: BadgeSpec;
+};
+
+export type CardContent =
+  | { kind: "fields"; fields: Field[] }
+  | { kind: "list"; items: ListItem[] }
+  | { kind: "placeholder"; gap: GapId; message: string };
+
+export type CardSpec<D> = {
+  key: string;
+  title: Label;
+  description?: Label;
+  column: "main" | "side";
+  gap?: GapId;
+  content: (d: D) => CardContent;
+};
+
+export type TimelineEvent = {
+  id: string;
+  at: Date;
+  title: string;
+  description?: string;
+  /** "Invoices", "Payments", "Tickets", "Interactions", "System", ... */
+  module: string;
+  status?: string;
+  amount?: number;
+};
+
+export type TabContent<D> =
+  | {
+      kind: "table";
+      columns: ColumnSpec[];
+      rows: (d: D) => Row[];
+      empty: EmptyCopy;
+      rowActions?: ActionSpec[];
+    }
+  | { kind: "timeline"; events: (d: D) => TimelineEvent[]; empty: EmptyCopy }
+  | { kind: "placeholder"; gap: GapId; message: string };
+
+export type TabSegment<D> = {
+  key: string;
+  label: Label;
+  content: TabContent<D>;
+};
+
+export type TabSpec<D> = {
+  key: string;
+  label: Label;
+  gap?: GapId;
+  /** More than one segment renders a SegmentedControl inside the tab. */
+  segments: TabSegment<D>[];
+};
+
+export type AlertSpec = {
+  tone: BadgeTone;
+  title: string;
+  description: string;
+  actions: ActionSpec[];
+};
+
+export type DetailSpec<R extends Row, D> = {
+  key: string;
+  load: (row: R, persona: Persona) => D;
+  header: (d: D, persona: Persona) => HeaderSpec;
+  /** Visible header buttons. */
+  actions: ActionSpec[];
+  /** The Actions ▾ dropdown per persona; `null` is a separator. */
+  menu: (persona: Persona) => (ActionSpec | null)[];
+  alert?: (d: D, persona: Persona) => AlertSpec | null;
+  summary: (d: D, persona: Persona) => Field[];
+  cards: CardSpec<D>[];
+  tabs: TabSpec<D>[];
+  gaps?: GapId[];
+};
+
 export type SegmentSpec<R extends Row = Row> = {
   key: string;
   label: Label;
@@ -154,6 +254,9 @@ export type ListSpec<R extends Row = Row> = {
   empty: EmptyCopy;
   selectable?: boolean;
   gaps?: GapId[];
+  /** When set, the first `link` column opens the row's profile. */
+  // biome-ignore lint/suspicious/noExplicitAny: profiles are heterogeneous in their payload type
+  detail?: DetailSpec<R, any>;
 };
 
 export type StatSpec = {
