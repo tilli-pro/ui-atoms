@@ -267,6 +267,15 @@ for (const persona of personas) {
         if (!out.route.includes("/") || out.tabs.length === 0) {
           summary.failures.push(`${persona} ${out.route}: profile not reached`);
         }
+        if (
+          out.crumbs.length !== 3 ||
+          out.summaryCells !== 6 ||
+          out.tabs.length !== 6
+        ) {
+          summary.failures.push(
+            `${persona} ${out.route}: profile shape (crumbs ${out.crumbs.length}, cells ${out.summaryCells}, tabs ${out.tabs.length})`,
+          );
+        }
         const tabLocator = page.locator("main [role='tab']");
         const tabCount = await tabLocator.count();
         out.tabErrors = [];
@@ -319,6 +328,15 @@ for (const persona of personas) {
             document.documentElement.clientWidth,
         );
         await insetContext.close();
+        await page.locator("main nav a").nth(1).click();
+        await page.waitForTimeout(300);
+        const backHash = await page.evaluate(() => window.location.hash);
+        out.breadcrumbBack = backHash;
+        if (backHash !== list) {
+          summary.failures.push(
+            `${persona} ${out.route}: breadcrumb did not return to the list`,
+          );
+        }
         errors.push(...insetErrors);
         out.errors = errors.slice(0, 5);
         summary.pages += 1;

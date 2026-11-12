@@ -69,7 +69,8 @@ create invoice or add note.
 - `ListSpec.detail?: DetailSpec<R, unknown>`. When set, the list's **first** column with `format: "link"` navigates to
   `hashFor(module, item, row.id)` on click. Other link columns (account number) and all row actions stay inert.
 - An `id` that no row of `spec.rows(persona)` carries renders the list, not an error page (same fallback family as an
-  unknown item). This is also what happens after a persona switch, since ids are derived from the persona seed.
+  unknown item). A persona switch on an open profile keeps the `id` (ids are index-based and identical across
+  personas) and re-renders the profile for the new persona's row; the list fallback applies only to an unknown `id`.
 - The detail header's breadcrumb (ui-atoms `breadcrumb`) is `Module › Item › Record name`; Item links back to the list.
   `ModulePanel` keeps the item highlighted while `route.id` is set (`isActive={route.item === item}` already does).
 - Navigation keeps the recipe's replace-style hash update; no push history in this version.
@@ -373,7 +374,7 @@ duplicate alert), Create new account.
   breadcrumb's second crumb returns to the list, each of the six tabs renders without console errors, and
   `document.documentElement.scrollWidth === innerWidth` at 1280 and 1024 wide with the inset control off and on; repeat
   for `#/network/organizations`. `routes.txt` is unchanged (detail routes are per-row).
-- Manual: switch persona on an open profile and confirm the fallback to the list.
+- Manual: switch persona on an open profile and confirm it stays on the same id and re-renders for the new persona.
 
 ## 11. Out of scope
 
