@@ -8,7 +8,7 @@ import {
 } from "@tilli.dev/ui-atoms/tooltip";
 import { cn } from "@tilli.dev/ui-atoms/utils";
 import { type GapId, gaps } from "../gaps.js";
-import type { Format } from "../specs/types.js";
+import type { BadgeTone, Format } from "../specs/types.js";
 
 type Tone = "success" | "error" | "warning" | "info" | "secondary";
 
@@ -19,7 +19,7 @@ const toneWords: Record<Exclude<Tone, "secondary">, ReadonlySet<string>> = {
     ),
   ),
   error: new Set(
-    "overdue failed rejected breached lost void disputed dead_letter cancelled offline".split(
+    "overdue failed rejected breached lost void disputed dead_letter cancelled offline past_due".split(
       " ",
     ),
   ),
@@ -33,6 +33,28 @@ const toneWords: Record<Exclude<Tone, "secondary">, ReadonlySet<string>> = {
       " ",
     ),
   ),
+};
+
+export const badgeVariantOf: Record<
+  BadgeTone,
+  "secondary" | "success" | "warning" | "error" | "info"
+> = {
+  neutral: "secondary",
+  success: "success",
+  warning: "warning",
+  danger: "error",
+  info: "info",
+};
+
+export const alertVariantOf: Record<
+  BadgeTone,
+  "default" | "success" | "warning" | "error" | "info"
+> = {
+  neutral: "default",
+  success: "success",
+  warning: "warning",
+  danger: "error",
+  info: "info",
 };
 
 export const statusTone = (value: string): Tone => {
