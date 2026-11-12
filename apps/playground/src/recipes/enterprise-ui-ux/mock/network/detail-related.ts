@@ -7,6 +7,7 @@ import {
   weights,
 } from "../common.js";
 import { agentNames } from "../names.js";
+import { ANCHOR, type Rng } from "../random.js";
 import { arIssueWindow, arShape, payShape } from "../shapes/finance.js";
 import { RELATED_COUNTS } from "../shapes/party-detail.js";
 import {
@@ -15,7 +16,6 @@ import {
   ticketsShape,
 } from "../shapes/support.js";
 import type { Persona, TimelineEvent } from "../../specs/types.js";
-import type { Rng } from "../random.js";
 import type {
   PartyDetail,
   ProfileInteraction,
@@ -138,6 +138,8 @@ export const genInteractions = (
   );
 };
 
+const earlier = (a: Date, b: Date): Date => (a.getTime() < b.getTime() ? a : b);
+
 type TimelineInput = Pick<
   PartyDetail,
   | "invoices"
@@ -163,8 +165,10 @@ export const buildTimeline = (
       amount: inv.total,
     });
     if (inv.status === "paid") {
+      // One settlement, one date: the linked payment's, never past the anchor.
+      const settled = d.payments.find((pay) => pay.document === inv.number);
       events.push({
-        at: inv.dueDate,
+        at: settled ? settled.date : earlier(inv.dueDate, ANCHOR),
         title: `Invoice ${inv.number} paid`,
         module: "Invoices",
         status: inv.status,

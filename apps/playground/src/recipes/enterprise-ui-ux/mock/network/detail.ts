@@ -314,16 +314,21 @@ export const partyDetail = (
     : null;
   const status = pastDue > 0 ? "Past due" : balance > 0 ? "Active" : "Current";
 
-  const invoices = genInvoices(rng, persona);
-  const payments = genPayments(rng, persona, invoices);
+  // No account: nothing billed, so no invoices or payments.
+  const invoices = hasAccount ? genInvoices(rng, persona) : [];
+  const payments = hasAccount ? genPayments(rng, persona, invoices) : [];
   const tickets = genTickets(rng, persona);
   const interactions = genInteractions(rng, row.phone);
 
+  const latest = payments.reduce<ProfilePayment | undefined>(
+    (best, pay) => (!best || pay.date > best.date ? pay : best),
+    undefined,
+  );
   const lastPayment =
     (balance > 0 || invoices.some((i) => i.status === "paid")) && rng.bool(0.7)
       ? {
-          amount: payments[0]?.amount ?? round2(Math.max(balance, 1) * 0.5),
-          at: payments[0]?.date ?? rng.daysAgo(1, 90),
+          amount: latest?.amount ?? round2(Math.max(balance, 1) * 0.5),
+          at: latest?.date ?? rng.daysAgo(1, 90),
         }
       : null;
   const averageMonthlyBill = hasAccount
