@@ -190,3 +190,9 @@ Fix wave re-review (opus high): all four Important findings and the triage items
 Parked — Ruling: Orders › Sales segment total uses the all-directions orders count ("of 24" over 18 rows on financial, "of 48" over 34 on government); real, not load-bearing, one line (`total: (p) => ordersOf("sales")(p).length`) — left for the owner because the process allows one fix wave — cost if wrong: a misleading footer on one segment.
 Fix wave: minor (deferred): `rawSelects = segment.selects ?? []` defeats the memo chain; footerFn unmemoised; GapBadge tab stop inside MenuItem rows; Received footer shows $0 invoiced; Sales Total ≠ Invoiced + Uninvoiced on some rows; receivables.ts date formatter still local time; large live totals vs sample rows (by design).
 Run complete on 6b8113e: 21 tasks + 1 fix wave, 42 commits over 956a541..6b8113e.
+
+## 1.3.0 profiles
+
+- Overflow hardening (controller ruling, `views/detail-view.tsx`): a long email text node in the Contact methods list card made `document.documentElement.scrollWidth` exceed the viewport at 1024 wide while no element box did. The `list` card row now has `break-all` on the label and value text, `min-w-0` on the value column and `shrink-0` on the badge; the header left column and text column have `min-w-0`, and the h1 and subtitle have `break-words`.
+- Headless walkthrough with `--interact --details` over `routes.txt`, 3 personas: `SUMMARY {"pages":126,"consoleErrors":0,"pageErrors":0,"mockToCome":0,"overflowX":0,"failures":[]}`. The six profile lines (contact-1 and organization-1 per persona) each show three crumbs, six summary cells, nine cards, six tabs, empty `tabErrors`, and no overflow at 1440, at 1024 or with the inset sidebar.
+- Registry: `enterprise-ui-ux` 1.3.0 (adds `alert`, `breadcrumb`, `tabs`, `timeline`); gap ids `ai-insights` and `mailbox` added to spec §8.

@@ -30,7 +30,7 @@ describe("recipe list (/)", () => {
     const link = await screen.findByRole("link", { name: /Enterprise UI\/UX/ });
     expect(link).toHaveAttribute("href", "/recipes/enterprise-ui-ux");
     expect(link).toHaveAttribute("data-slot", "card");
-    expect(within(link).getByText("v1.2.0")).toHaveAttribute(
+    expect(within(link).getByText("v1.3.0")).toHaveAttribute(
       "data-slot",
       "badge",
     );

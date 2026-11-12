@@ -1,5 +1,5 @@
 // Headless walkthrough of the enterprise-ui-ux recipe. Usage:
-//   node check-recipe.mjs <baseUrl> <personas,comma> <routes,comma> [--interact]
+//   node check-recipe.mjs <baseUrl> <personas,comma> <routes,comma> [--interact] [--details]
 // Prints one JSON line per persona×route and a final summary line.
 import { createRequire } from "node:module";
 
@@ -12,6 +12,9 @@ const [baseUrl, personasArg, routesArg, ...flags] = process.argv.slice(2);
 const personas = (personasArg ?? "utilities").split(",");
 const routes = (routesArg ?? "").split(",").filter(Boolean);
 const interact = flags.includes("--interact");
+const details = flags.includes("--details");
+const detailLists = ["#/network/contacts", "#/network/organizations"];
+const LIST_HASH = /^#\/network\//;
 
 const browser = await chromium.launch();
 const summary = {
@@ -211,6 +214,124 @@ for (const persona of personas) {
       summary.failures.push(`${persona} ${route}: ${out.failure}`);
     }
     console.log(JSON.stringify(out));
+  }
+  if (details) {
+    for (const list of detailLists) {
+      errors.length = 0;
+      const out = { persona, route: list };
+      try {
+        await page.setViewportSize({ width: 1440, height: 900 });
+        await page.goto(`${baseUrl}/recipes/enterprise-ui-ux${list}`, {
+          waitUntil: "networkidle",
+        });
+        await page.waitForSelector("main tbody tr:first-child", {
+          timeout: 10000,
+        });
+        await page
+          .locator("main tbody tr:first-child button:not([role='checkbox'])")
+          .first()
+          .click();
+        await page.waitForSelector("main h1", { timeout: 10000 });
+        await page.waitForTimeout(300);
+        const hash = await page.evaluate(() => window.location.hash);
+        out.route = hash.replace(LIST_HASH, "");
+        const readDetail = () =>
+          page.evaluate(() => {
+            const main = document.querySelector("main");
+            const text = (sel) =>
+              Array.from(main.querySelectorAll(sel)).map((e) =>
+                e.textContent.trim(),
+              );
+            return {
+              h1: main.querySelector("h1")?.textContent.trim() ?? null,
+              crumbs: text("nav li").filter(Boolean),
+              badges: main.querySelectorAll("h1 [data-slot='badge']").length,
+              summaryCells: main.querySelector("dl")?.children.length ?? 0,
+              cards: main.querySelectorAll("[data-slot='card']").length,
+              tabs: text("[role='tab']"),
+            };
+          });
+        const overflow = () =>
+          page.evaluate(
+            () =>
+              document.documentElement.scrollWidth >
+              document.documentElement.clientWidth,
+          );
+        Object.assign(out, await readDetail());
+        const tabLocator = page.locator("main [role='tab']");
+        const tabCount = await tabLocator.count();
+        out.tabErrors = [];
+        for (let i = 0; i < tabCount; i += 1) {
+          const before = errors.length;
+          await tabLocator.nth(i).click();
+          await page.waitForTimeout(200);
+          out.tabErrors.push(errors.slice(before).map((e) => e.slice(0, 120)));
+        }
+        if (tabCount > 0) {
+          await tabLocator.nth(0).click();
+          await page.waitForTimeout(200);
+        }
+        out.overflowX = await overflow();
+        await page.setViewportSize({ width: 1024, height: 800 });
+        await page.waitForTimeout(200);
+        out.overflowAt1024 = await overflow();
+        await page.setViewportSize({ width: 1440, height: 900 });
+        // Same profile on a fresh context with the inset sidebar preset.
+        const insetContext = await browser.newContext({
+          viewport: { width: 1024, height: 800 },
+        });
+        await insetContext.addInitScript((p) => {
+          window.localStorage.setItem(
+            "control:persona",
+            JSON.stringify({ type: "select", value: p }),
+          );
+          window.localStorage.setItem(
+            "control:inset",
+            JSON.stringify({ type: "switch", value: true }),
+          );
+        }, persona);
+        const insetPage = await insetContext.newPage();
+        const insetErrors = [];
+        insetPage.on("console", (m) => {
+          if (m.type() === "error")
+            insetErrors.push(`console: ${m.text().slice(0, 200)}`);
+        });
+        insetPage.on("pageerror", (e) =>
+          insetErrors.push(`pageerror: ${String(e).slice(0, 200)}`),
+        );
+        await insetPage.goto(`${baseUrl}/recipes/enterprise-ui-ux${hash}`, {
+          waitUntil: "networkidle",
+        });
+        await insetPage.waitForSelector("main h1", { timeout: 10000 });
+        await insetPage.waitForTimeout(300);
+        out.overflowInset = await insetPage.evaluate(
+          () =>
+            document.documentElement.scrollWidth >
+            document.documentElement.clientWidth,
+        );
+        await insetContext.close();
+        errors.push(...insetErrors);
+        out.errors = errors.slice(0, 5);
+        summary.pages += 1;
+        summary.consoleErrors += errors.filter((e) =>
+          e.startsWith("console"),
+        ).length;
+        summary.pageErrors += errors.filter((e) =>
+          e.startsWith("pageerror"),
+        ).length;
+        for (const flag of [
+          out.overflowX,
+          out.overflowAt1024,
+          out.overflowInset,
+        ]) {
+          if (flag) summary.overflowX += 1;
+        }
+      } catch (e) {
+        out.failure = String(e).slice(0, 300);
+        summary.failures.push(`${persona} ${list} details: ${out.failure}`);
+      }
+      console.log(JSON.stringify(out));
+    }
   }
   await context.close();
 }

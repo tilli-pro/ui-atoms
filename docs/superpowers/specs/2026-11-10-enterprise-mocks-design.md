@@ -265,6 +265,8 @@ badge; "placeholder" means an Empty block with the badge.
 | time-inputs | Time zone select, duration input, weekly hours editor | Operations › Services, Staff | no timezone, duration or time part | approximation: Combobox / NumberField |
 | pdf-preview | Attachment and PDF viewer | Payables › Inbox | no viewer part | badge on the Preview action |
 | code-block | Embed snippet and system prompt with copy | Enterprise › AI agents | no code-block part | approximation: monospace Textarea |
+| ai-insights | JAREIS guidance card (recommended actions with confidence, Execute / Useful / False positive / Dismiss) and "Why they're calling" chips | Network › Contacts and Organizations profiles (gap badges under the header) | no AI card, confidence meter or feedback pattern | badge on the profile |
+| mailbox | Communications tab: message list with channel and status pills beside a details / compose pane | Network › Contacts and Organizations profiles (Communications tab) | chat and composer parts exist, no split-pane mailbox composition | placeholder in the Communications tab, badge on the tab |
 
 ## 9. Surfaces left out, with where they are today
 

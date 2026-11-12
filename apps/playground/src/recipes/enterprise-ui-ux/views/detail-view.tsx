@@ -126,12 +126,12 @@ function DetailViewInner<R extends Row, D>({
       </Breadcrumb>
 
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <Avatar className="size-12">
             <AvatarFallback>{header.initials}</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col">
-            <h1 className="flex flex-wrap items-center gap-2 font-semibold text-2xl">
+          <div className="flex min-w-0 flex-col">
+            <h1 className="flex flex-wrap items-center gap-2 break-words font-semibold text-2xl">
               {header.title}
               {header.badges.map((b) => (
                 <Badge
@@ -143,7 +143,9 @@ function DetailViewInner<R extends Row, D>({
               ))}
             </h1>
             {header.subtitle ? (
-              <p className="text-muted-foreground text-sm">{header.subtitle}</p>
+              <p className="break-words text-muted-foreground text-sm">
+                {header.subtitle}
+              </p>
             ) : null}
           </div>
         </div>
@@ -372,17 +374,22 @@ function CardBody({
               key={`${item.label}:${item.value}`}
             >
               <div className="flex min-w-0 flex-col">
-                <span className="font-medium text-sm">{item.label}</span>
+                <span className="break-all font-medium text-sm">
+                  {item.label}
+                </span>
                 {item.hint ? (
                   <span className="text-muted-foreground text-xs">
                     {item.hint}
                   </span>
                 ) : null}
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                {item.value}
+              <div className="flex min-w-0 items-center gap-2 text-sm">
+                <span className="break-all">{item.value}</span>
                 {item.badge ? (
-                  <Badge variant={badgeVariantOf[item.badge.tone ?? "neutral"]}>
+                  <Badge
+                    className="shrink-0"
+                    variant={badgeVariantOf[item.badge.tone ?? "neutral"]}
+                  >
                     {resolveLabel(item.badge.label, persona.terms)}
                   </Badge>
                 ) : null}
