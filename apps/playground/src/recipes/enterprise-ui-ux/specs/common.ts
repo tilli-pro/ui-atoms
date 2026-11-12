@@ -9,6 +9,10 @@ import type {
 
 export const DAY = 86_400_000;
 
+const WHITESPACE = /\s+/;
+const UNDERSCORES = /_/g;
+const CAMEL_BOUNDARY = /([a-z0-9])([A-Z])/g;
+
 export const includes = (value: string, query: string) =>
   value.toLowerCase().includes(query.trim().toLowerCase());
 
@@ -77,3 +81,31 @@ export const sumFooter =
       label: `${label} ${persona.currency}`,
       value: compactMoney(rows.reduce((acc, row) => acc + pick(row), 0)),
     }));
+
+/** "Ada Lovelace" → "AL"; a single word gives its first two letters. */
+export const initialsOf = (name: string): string => {
+  const words = name.trim().split(WHITESPACE).filter(Boolean);
+  const letters =
+    words.length > 1
+      ? `${words[0]?.charAt(0) ?? ""}${words[1]?.charAt(0) ?? ""}`
+      : (words[0] ?? "").slice(0, 2);
+  return letters.toUpperCase();
+};
+
+const HUMAN_KEYS: Record<string, string> = {
+  sap_s4hanaId: "SAP S/4HANA id",
+  oracle_ccnbId: "Oracle CC&B id",
+  quickbooksId: "QuickBooks id",
+  qaGovPayerKey: "Payer key",
+};
+
+/** "follow_up_status" → "Follow up status"; camelCase splits on capitals. */
+export const humanise = (key: string): string => {
+  const mapped = HUMAN_KEYS[key];
+  if (mapped) return mapped;
+  const spaced = key
+    .replace(UNDERSCORES, " ")
+    .replace(CAMEL_BOUNDARY, "$1 $2")
+    .toLowerCase();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+};

@@ -26,11 +26,12 @@ import {
   type NetworkExchange,
   type NetworkInvite,
   type NetworkOrganization,
-  type NetworkStatus,
   networkData,
 } from "../mock/network.js";
 import { contactsShape, organizationsShape } from "../mock/shapes/network.js";
 import { capitalise, includes } from "./common.js";
+import { partyDetailSpec } from "./network/detail.js";
+import { networkStatusLabel } from "./network/labels.js";
 import type {
   ActionSpec,
   ChipSpec,
@@ -38,12 +39,6 @@ import type {
   ModuleSpecs,
   Persona,
 } from "./types.js";
-
-const networkStatusLabel: Record<NetworkStatus, string> = {
-  connected: "Connected",
-  invited: "Invited",
-  not_invited: "Not invited",
-};
 
 const exchangeStatusLabel: Record<ExchangeStatus, string> = {
   transport_delivered: "Awaiting review",
@@ -331,6 +326,7 @@ export const networkSpecs: ModuleSpecs = {
   items: {
     contacts: {
       key: "contacts",
+      detail: partyDetailSpec("contact"),
       title: (t) => t.contacts,
       description: "Every person you deal with.",
       rows: (persona) => networkData(persona).contacts,
@@ -357,6 +353,7 @@ export const networkSpecs: ModuleSpecs = {
     },
     organizations: {
       key: "organizations",
+      detail: partyDetailSpec("organization"),
       title: (t) => t.organizations,
       description: "Every organization you deal with, and how connected it is.",
       rows: (persona) => networkData(persona).organizations,
