@@ -38,6 +38,7 @@ const eventDate = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   hour: "numeric",
   minute: "2-digit",
+  timeZone: "UTC",
 });
 
 const dayHeading = new Intl.DateTimeFormat("en-US", {

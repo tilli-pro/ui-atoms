@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, buttonVariants } from "@tilli.dev/ui-atoms/button";
+import { Button } from "@tilli.dev/ui-atoms/button";
 import {
   Empty,
   EmptyDescription,
@@ -12,14 +12,6 @@ import {
   MenuPopup,
   MenuTrigger,
 } from "@tilli.dev/ui-atoms/menu";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@tilli.dev/ui-atoms/pagination";
 import { SegmentedControl } from "@tilli.dev/ui-atoms/segmented-control";
 import {
   Table,
@@ -31,7 +23,7 @@ import {
 } from "@tilli.dev/ui-atoms/table";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@tilli.dev/ui-atoms/tabs";
 import { cn } from "@tilli.dev/ui-atoms/utils";
-import { ArrowUpDown, Ellipsis } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import {
   type Persona,
   resolveLabel,
@@ -43,11 +35,11 @@ import { TabTimeline } from "./detail-timeline.js";
 import { GapPlaceholder } from "./gap-placeholder.js";
 import {
   PAGE_SIZE,
-  pageWindow,
   readValue,
   type SortState,
   sortRows,
 } from "./list-state.js";
+import { ListPagination, SortableHead } from "./table-parts.js";
 
 type Translate = (label: Parameters<typeof resolveLabel>[0]) => string;
 
@@ -190,23 +182,12 @@ function TabTable<D>({
         <TableHeader>
           <TableRow>
             {columns.map((column) => (
-              <TableHead
-                className={cn(column.align === "end" && "text-end")}
+              <SortableHead
+                column={column}
                 key={column.key}
-              >
-                {column.sortable === false ? (
-                  t(column.header)
-                ) : (
-                  <Button
-                    onClick={() => cycleSort(column.key)}
-                    size="xs"
-                    variant="ghost"
-                  >
-                    {t(column.header)}
-                    <ArrowUpDown />
-                  </Button>
-                )}
-              </TableHead>
+                label={t(column.header)}
+                onSort={cycleSort}
+              />
             ))}
             {hasActions ? (
               <TableHead className="w-10">
@@ -265,67 +246,11 @@ function TabTable<D>({
           {`Showing ${start + 1}–${start + pageRows.length} of ${sorted.length}`}
         </p>
         {pageCount > 1 ? (
-          <Pagination className="mx-0 w-auto">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  aria-disabled={current === 1}
-                  className={cn(
-                    current === 1 && "pointer-events-none opacity-50",
-                  )}
-                  onClick={() => setPage(Math.max(current - 1, 1))}
-                  render={
-                    <button
-                      className={buttonVariants({
-                        size: "default",
-                        variant: "ghost",
-                      })}
-                      disabled={current === 1}
-                      type="button"
-                    />
-                  }
-                />
-              </PaginationItem>
-              {pageWindow(current, pageCount).map((n) => (
-                <PaginationItem key={n}>
-                  <PaginationLink
-                    isActive={n === current}
-                    onClick={() => setPage(n)}
-                    render={
-                      <button
-                        className={buttonVariants({
-                          size: "icon",
-                          variant: n === current ? "outline" : "ghost",
-                        })}
-                        type="button"
-                      />
-                    }
-                  >
-                    {n}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  aria-disabled={current === pageCount}
-                  className={cn(
-                    current === pageCount && "pointer-events-none opacity-50",
-                  )}
-                  onClick={() => setPage(Math.min(current + 1, pageCount))}
-                  render={
-                    <button
-                      className={buttonVariants({
-                        size: "default",
-                        variant: "ghost",
-                      })}
-                      disabled={current === pageCount}
-                      type="button"
-                    />
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <ListPagination
+            onPage={setPage}
+            page={current}
+            pageCount={pageCount}
+          />
         ) : null}
       </div>
     </div>
