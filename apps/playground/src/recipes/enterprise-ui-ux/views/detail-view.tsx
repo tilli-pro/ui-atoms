@@ -131,7 +131,7 @@ function DetailViewInner<R extends Row, D>({
             <AvatarFallback>{header.initials}</AvatarFallback>
           </Avatar>
           <div className="flex min-w-0 flex-col">
-            <h1 className="flex flex-wrap items-center gap-2 break-words font-semibold text-2xl">
+            <h1 className="flex flex-wrap items-center gap-2 [overflow-wrap:anywhere] font-semibold text-2xl">
               {header.title}
               {header.badges.map((b) => (
                 <Badge
@@ -223,7 +223,7 @@ function DetailViewInner<R extends Row, D>({
                 <Button
                   onClick={() => openPanel(action as ActionSpec<R>)}
                   size="sm"
-                  variant="outline"
+                  variant={action.variant ?? "outline"}
                 >
                   {action.icon ? <action.icon /> : null}
                   {t(action.label)}
@@ -374,7 +374,7 @@ function CardBody({
               key={`${item.label}:${item.value}`}
             >
               <div className="flex min-w-0 flex-col">
-                <span className="break-all font-medium text-sm">
+                <span className="font-medium text-sm [overflow-wrap:anywhere]">
                   {item.label}
                 </span>
                 {item.hint ? (
@@ -384,7 +384,7 @@ function CardBody({
                 ) : null}
               </div>
               <div className="flex min-w-0 items-center gap-2 text-sm">
-                <span className="break-all">{item.value}</span>
+                <span className="[overflow-wrap:anywhere]">{item.value}</span>
                 {item.badge ? (
                   <Badge
                     className="shrink-0"

@@ -175,7 +175,7 @@ export type TabContent<D> =
   | {
       kind: "table";
       columns: ColumnSpec[];
-      rows: (d: D) => Row[];
+      rows: (d: D, t: (label: Label) => string) => Row[];
       empty: EmptyCopy;
       rowActions?: ActionSpec[];
     }

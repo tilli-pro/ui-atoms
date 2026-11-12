@@ -148,7 +148,7 @@ function TabTable<D>({
   const [page, setPage] = useState(1);
   const { columns, rowActions, empty } = content;
 
-  const rows = content.rows(d);
+  const rows = content.rows(d, t);
   const sortColumn = columns.find((c) => c.key === sort?.key);
   const sorted = sortRows(rows, sortColumn, sort?.dir ?? "asc");
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));

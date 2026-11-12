@@ -466,12 +466,7 @@ const organizationColumns: ColumnSpec[] = [
     format: "status",
     accessor: (row) => capitalise(String(row.networkStatus)),
   },
-  {
-    key: "facet",
-    header: "Facet",
-    format: "badge",
-    accessor: (row) => capitalise(String(row.facet)),
-  },
+  { key: "facet", header: "Facet", format: "badge" },
 ];
 
 const contactColumns: ColumnSpec[] = [
@@ -582,7 +577,11 @@ const tabsFor = (kind: Kind): TabSpec<PartyDetail>[] => [
               content: {
                 kind: "table",
                 columns: organizationColumns,
-                rows: (d) => d.organizations,
+                rows: (d, t) =>
+                  d.organizations.map((o) => ({
+                    ...o,
+                    facet: t(orgFacetTerm(o.facet)),
+                  })),
                 empty: empty(
                   "No organization",
                   "This record is not linked to an organization.",
