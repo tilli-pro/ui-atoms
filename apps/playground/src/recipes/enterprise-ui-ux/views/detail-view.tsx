@@ -131,7 +131,7 @@ function DetailViewInner<R extends Row, D>({
             <AvatarFallback>{header.initials}</AvatarFallback>
           </Avatar>
           <div className="flex min-w-0 flex-col">
-            <h1 className="flex flex-wrap items-center gap-2 [overflow-wrap:anywhere] font-semibold text-2xl">
+            <h1 className="flex flex-wrap items-center gap-2 font-semibold text-2xl [overflow-wrap:anywhere]">
               {header.title}
               {header.badges.map((b) => (
                 <Badge

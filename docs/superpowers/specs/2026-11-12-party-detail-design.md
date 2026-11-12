@@ -203,7 +203,7 @@ after Send payment link. `menu` takes the persona so government hides Start/Stop
 records` (entity term from persona), description `Matched on {signals} · {confidence}% confidence` followed by the
 candidates' `name · email`, actions `Merge` (`gap: "merge-review"`) and `They're different`.
 
-**Summary strip** (six `Field`s): Accounts (`text`: account numbers joined, or "Not linked"); Service address
+**Summary strip** (six `Field`s): Accounts (`text`: account numbers joined; "Not linked" is only a guard); Service address
 (`text`; government label "Address"); Mailing address (`text`, or "Same as service"); Account status (`status`);
 Delinquency (`status`: `"$X past due"` danger when `pastDue > 0`, else `"Current"`); Verification (`status`:
 Verified / Not verified from any verified contact method). Government personas replace the sixth cell with "Risk flags"
@@ -298,7 +298,7 @@ Transcribed from the dump on 2026-11-11, live rows across all tenants; the file 
 | Fact | Value | Use |
 |---|---|---|
 | Contacts with `title` / `department` / `mobile` | 13% / 41% / 9% | presence of the fields |
-| Contacts with a linked organization / account / owner | 19% / 80% / 35% | Relationships: contact gets an organization for commercial facet or 19% otherwise; one account for 80%, else "Not linked" |
+| Contacts with a linked organization / account / owner | 19% / 80% / 35% | Relationships: contact gets an organization for commercial facet or 19% otherwise; every party keeps the list row's account number (1% chance of a second one); "Not linked" is only a guard |
 | Contact `custom_fields` keys | `sap_s4hanaId` 60%, `description` 34%, `oracle_ccnbId` 5%, `quickbooksId`, `qaGovPayerKey`, `preferredLanguage` | Additional details; the ERP key present decides `source` (SAP, Oracle, else Beacon) |
 | Organizations with `website` / `address` / `biller_email` | 89% / 96% / 1.4% | website presence |
 | Organization `custom_fields` keys | `preferredLanguage`, `description`, `oracle_ccnbId`, `annualRevenue`, `sap_s4hanaId`, `employee_count`, `organizationType`, `primaryContactEmail` | Additional details |

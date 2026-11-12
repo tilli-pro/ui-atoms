@@ -408,7 +408,7 @@ export const partyDetail = (
         const name = org
           ? rng.pick(organizationsByIndustry[key])
           : signals === "name + address"
-            ? `${rng.pick(firstNames)} ${row.name.split(" ").slice(1).join(" ")}`
+            ? `${rng.pick(firstNames.filter((n) => n !== row.name.split(" ")[0]))} ${row.name.split(" ").slice(1).join(" ")}`
             : personName(rng);
         return {
           name,
