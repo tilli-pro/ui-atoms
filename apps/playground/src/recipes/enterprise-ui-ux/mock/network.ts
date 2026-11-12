@@ -103,7 +103,7 @@ const COUNTS = {
 
 const SYNTHETIC_AWAITING_REVIEW = 6;
 
-const ACCOUNT_PREFIX: Record<PersonaKey, string> = {
+export const ACCOUNT_PREFIX: Record<PersonaKey, string> = {
   utilities: "UTL",
   financial: "CON",
   government_federal: "GOV",
