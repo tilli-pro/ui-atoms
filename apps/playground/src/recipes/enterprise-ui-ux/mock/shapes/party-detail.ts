@@ -92,8 +92,6 @@ export const DEPARTMENT_RATE = 0.41;
 export const MOBILE_RATE = 0.09;
 /** Share of contacts linked to an organization (19% in QA). */
 export const CONTACT_HAS_ORG_RATE = 0.19;
-/** Share of contacts with an account (80% in QA). */
-export const CONTACT_HAS_ACCOUNT_RATE = 0.8;
 /** Share of organizations with a website (89% in QA). */
 export const ORG_HAS_WEBSITE_RATE = 0.89;
 /** Share of parties with a mailing address (85% in QA). */

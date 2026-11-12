@@ -2,6 +2,7 @@ import { money, round2, weights } from "../common.js";
 import {
   address,
   emailFor,
+  firstNames,
   organizationsByIndustry,
   personName,
   phone,
@@ -15,7 +16,6 @@ import { createRng, seedFor } from "../random.js";
 import { accountsShape, organizationsShape } from "../shapes/network.js";
 import {
   BILLING_RATE,
-  CONTACT_HAS_ACCOUNT_RATE,
   CONTACT_HAS_ORG_RATE,
   DEPARTMENT_RATE,
   DUPLICATE_RATE,
@@ -297,26 +297,23 @@ export const partyDetail = (
     language: rng.weighted(weights(enums, "language")),
   };
 
-  const hasAccount = org ? true : rng.bool(CONTACT_HAS_ACCOUNT_RATE);
-  const numbers = hasAccount ? [row.accountNumber] : [];
-  if (hasAccount && rng.bool(TWO_ACCOUNTS_RATE)) {
+  const numbers = [row.accountNumber];
+  if (rng.bool(TWO_ACCOUNTS_RATE)) {
     numbers.push(`${ACCOUNT_PREFIX[key]}-${rng.int(10_000, 99_999)}`);
   }
-  const balance = hasAccount ? row.balance : 0;
+  const balance = row.balance;
   // Utilities has no pastDue range: its past due stays 0.
   const hasPastDueRange = (accountsShape.numbers ?? {})[`pastDue_${key}`];
   const pastDue =
-    hasAccount && row.pastDueDate && hasPastDueRange
+    row.pastDueDate && hasPastDueRange
       ? Math.min(money(rng, accountsShape, `pastDue_${key}`), balance)
       : 0;
-  const dueDate = hasAccount
-    ? (row.pastDueDate ?? (balance > 0 ? rng.daysAhead(3, 28) : null))
-    : null;
+  const dueDate =
+    row.pastDueDate ?? (balance > 0 ? rng.daysAhead(3, 28) : null);
   const status = pastDue > 0 ? "Past due" : balance > 0 ? "Active" : "Current";
 
-  // No account: nothing billed, so no invoices or payments.
-  const invoices = hasAccount ? genInvoices(rng, persona) : [];
-  const payments = hasAccount ? genPayments(rng, persona, invoices) : [];
+  const invoices = genInvoices(rng, persona);
+  const payments = genPayments(rng, persona, invoices);
   const tickets = genTickets(rng, persona);
   const interactions = genInteractions(rng, row.phone);
 
@@ -324,16 +321,14 @@ export const partyDetail = (
     (best, pay) => (!best || pay.date > best.date ? pay : best),
     undefined,
   );
-  const lastPayment =
-    (balance > 0 || invoices.some((i) => i.status === "paid")) && rng.bool(0.7)
-      ? {
-          amount: latest?.amount ?? round2(Math.max(balance, 1) * 0.5),
-          at: latest?.date ?? rng.daysAgo(1, 90),
-        }
-      : null;
-  const averageMonthlyBill = hasAccount
-    ? money(rng, partyDetailShape, "average_monthly_bill")
-    : 0;
+  const lastPayment = latest
+    ? { amount: latest.amount, at: latest.date }
+    : null;
+  const averageMonthlyBill = money(
+    rng,
+    partyDetailShape,
+    "average_monthly_bill",
+  );
   const programs: PartyDetail["account"]["programs"] =
     key === "government_federal"
       ? {
@@ -408,13 +403,18 @@ export const partyDetail = (
   };
   const duplicates = rng.bool(DUPLICATE_RATE)
     ? Array.from({ length: rng.int(1, 2) }, () => {
+        const signals = rng.weighted(weights(enums, "duplicate_signal"));
+        // Evidence agrees with the signal: same email, or a near-variant name.
         const name = org
           ? rng.pick(organizationsByIndustry[key])
-          : personName(rng);
+          : signals === "name + address"
+            ? `${rng.pick(firstNames)} ${row.name.split(" ").slice(1).join(" ")}`
+            : personName(rng);
         return {
           name,
-          email: emailFor(personName(rng), name),
-          signals: rng.weighted(weights(enums, "duplicate_signal")),
+          email:
+            signals === "email" ? row.email : emailFor(personName(rng), name),
+          signals,
           confidence: Math.round(money(rng, partyDetailShape, "confidence")),
         };
       })

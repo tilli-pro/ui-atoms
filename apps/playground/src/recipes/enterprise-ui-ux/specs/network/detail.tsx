@@ -722,7 +722,11 @@ export const partyDetailSpec = (
     const signals = [...new Set(d.duplicates.map((x) => x.signals))].join(", ");
     const confidence = Math.max(...d.duplicates.map((x) => x.confidence));
     const candidates = d.duplicates
-      .map((x) => `${x.name} · ${x.email}`)
+      .map((x) =>
+        x.signals === "phone"
+          ? `${x.name} · ${x.email} · shares ${d.row.phone}`
+          : `${x.name} · ${x.email}`,
+      )
       .join("; ");
     return {
       tone: "warning",

@@ -69,12 +69,13 @@ export const genPayments = (
   invoices: ProfileInvoice[],
 ): ProfilePayment[] => {
   const tenant = tenantOf<"G1" | "F1">(payShape, persona.key);
+  const arTenant = tenantOf<"U2" | "F1" | "G1">(arShape, persona.key);
   const paid = invoices.filter((inv) => inv.status === "paid");
   return Array.from(
     { length: countIn(rng, RELATED_COUNTS.payments) },
     (_, i) => {
       const invoice = paid[i];
-      const raw = money(rng, payShape, "amount");
+      const raw = money(rng, arShape, `total_${arTenant}`);
       return {
         id: `payment-${i}`,
         date: invoice
