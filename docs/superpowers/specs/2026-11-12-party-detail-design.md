@@ -64,8 +64,8 @@ create invoice or add note.
 ### 5.1 Routing and navigation
 
 - The hash gains an optional third segment: `#/<module>/<item>/<id>`. `Route` becomes `{ module; item?; id? }`.
-  `routeFromHash` keeps `id` only when the item's list spec has a `detail`; otherwise it drops the segment and the
-  route is the item's list. `hashFor(module, item?, id?)` mirrors it.
+  `routeFromHash` parses `id` for any known item; `index.tsx` resolves it to a row only when the item's list spec has
+  a `detail` (routing cannot import the specs without a cycle). `hashFor(module, item?, id?)` mirrors it.
 - `ListSpec.detail?: DetailSpec<R, unknown>`. When set, the list's **first** column with `format: "link"` navigates to
   `hashFor(module, item, row.id)` on click. Other link columns (account number) and all row actions stay inert.
 - An `id` that no row of `spec.rows(persona)` carries renders the list, not an error page (same fallback family as an
@@ -139,7 +139,7 @@ export type DetailSpec<R extends Row, D> = {
   load: (row: R, persona: Persona) => D;
   header: (d: D, persona: Persona) => HeaderSpec;
   actions: ActionSpec[];        // visible header buttons
-  menu: (ActionSpec | null)[]; // the Actions ▾ dropdown (ui-atoms menu); null is a separator
+  menu: (persona: Persona) => (ActionSpec | null)[]; // the Actions ▾ dropdown; null is a separator
   alert?: (d: D, persona: Persona) => AlertSpec | null;
   summary: (d: D, persona: Persona) => Field[];
   cards: CardSpec<D>[];
@@ -195,7 +195,8 @@ from `d.lastSyncedAt`. **Menu**, in today's order with separators: Send payment 
 payment arrangement, Enroll AutoPay, Enroll eBill, Enroll in PayOut, Generate
 enrollment link; ─ Start/Stop/Transfer (`gap: "flow-builder"`), Schedule appointment (`gap: "drag-calendar"`), Create
 service order; ─ Send bill copy (`gap: "pdf-preview"`), Waive fee; ─ Send application. Organizations add Take payment
-after Send payment link. Government personas hide Start/Stop/Transfer and Create service order (today's rule).
+after Send payment link. `menu` takes the persona so government hides Start/Stop/Transfer and Create service order
+(today's rule).
 
 **Alert.** When `d.duplicates.length > 0`: tone warning, title `This {contact|organization} might be the same as N other
 records` (entity term from persona), description `Matched on {signals} · {confidence}% confidence` followed by the
