@@ -1,3 +1,4 @@
+import { fr } from "@daypicker/react/locale";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Calendar } from "@tilli.dev/ui-atoms/calendar";
 import { expect, screen, userEvent, waitFor, within } from "storybook/test";
@@ -26,6 +27,28 @@ function dayButton(canvas: HTMLElement, iso: string): HTMLButtonElement {
   if (!button) throw new Error(`no day button for ${iso}`);
   return button;
 }
+
+export const WithLocalizedDropdowns: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`captionLayout="dropdown"` replaces the caption with month and year selects. The month names come from the active date library, so they follow `locale` rather than the browser.',
+      },
+    },
+  },
+  render: () => (
+    <Calendar
+      captionLayout="dropdown"
+      defaultMonth={JANUARY}
+      endMonth={new Date(2027, 11)}
+      locale={fr}
+      mode="single"
+      selected={JANUARY}
+      startMonth={new Date(2025, 0)}
+    />
+  ),
+};
 
 export const WithTime: Story = {
   parameters: {

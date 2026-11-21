@@ -2,7 +2,7 @@ import type * as React from "react";
 import { cva, type VariantProps } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/empty.tsx` @8163481. No divergence id and no tilli lead
+// coss base `.coss-base/empty.tsx` @b2336c4. No divergence id and no tilli lead
 // touches this component, and `empty` is not one of the fourteen the size-ramp
 // hold-back names, so every class string is the base's verbatim.
 
@@ -28,7 +28,7 @@ const emptyMediaVariants = cva({
 });
 
 const emptyTitleVariants = cva({
-  base: "font-heading font-semibold text-xl",
+  base: "font-bold font-heading text-xl",
 });
 
 const emptyDescriptionVariants = cva({

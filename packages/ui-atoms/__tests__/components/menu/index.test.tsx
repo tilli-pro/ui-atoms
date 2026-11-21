@@ -66,4 +66,22 @@ describe("Menu (coss base — MNU-2, MNU-3, MNU-6)", () => {
     expectSlot(popup, "menu-popup");
     expect(popup.className).toContain("w-64");
   });
+  it("MNU-7: the popup animates open and closed on Base UI's starting/ending style attributes", async () => {
+    render(
+      <Menu open={true}>
+        <MenuTrigger>open</MenuTrigger>
+        <MenuPopup>x</MenuPopup>
+      </Menu>,
+    );
+    // Base UI sets data-starting-style / data-ending-style on the Popup element,
+    // so the transition has to live on that same element. Coss dropped it with
+    // the wrapper span (MNU-2); without it the menu snaps open and unmounts at
+    // once on close.
+    const popup = await screen.findByRole("menu");
+    expect(popup.className).toContain("transition-[scale,opacity]");
+    expect(popup.className).toContain("data-starting-style:scale-98");
+    expect(popup.className).toContain("data-starting-style:opacity-0");
+    expect(popup.className).toContain("data-ending-style:scale-98");
+    expect(popup.className).toContain("data-ending-style:opacity-0");
+  });
 });

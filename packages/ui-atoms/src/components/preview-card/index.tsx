@@ -2,7 +2,7 @@ import { PreviewCard as BaseUIPreviewCard } from "@base-ui/react/preview-card";
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/preview-card.tsx` @8163481, taken wholesale.
+// coss base `.coss-base/preview-card.tsx` @b2336c4, taken wholesale.
 
 const previewCardPopupVariants = cva({
   base: "relative flex w-64 origin-(--transform-origin) text-balance rounded-lg border bg-popover not-dark:bg-clip-padding p-4 text-popover-foreground text-sm shadow-lg/5 transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] data-ending-style:scale-98 data-starting-style:scale-98 data-ending-style:opacity-0 data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",

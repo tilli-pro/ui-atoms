@@ -12,7 +12,7 @@ import {
 import { cn } from "../../utils.js";
 import { type ButtonProps, buttonVariants } from "../button/index.js";
 
-// coss base `.coss-base/pagination.tsx` @8163481. PAG-1 dissolves with the
+// coss base `.coss-base/pagination.tsx` @b2336c4. PAG-1 dissolves with the
 // base: the fork imported a `baseButtonVariants` module that did not resolve;
 // the base imports `buttonVariants` from the button component, which exists.
 

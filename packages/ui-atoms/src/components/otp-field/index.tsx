@@ -4,7 +4,7 @@ import { cn } from "../../utils.js";
 import { Separator, type SeparatorProps } from "../separator/index.js";
 
 // OTP-1, swap 1 of 4: `input-otp` → `@base-ui/react/otp-field`. coss base
-// `.coss-base/otp-field.tsx` @8163481. `otp-field` is not one of the fourteen
+// `.coss-base/otp-field.tsx` @b2336c4. `otp-field` is not one of the fourteen
 // the size-ramp hold-back names, so its `sm:` pairs are the base's verbatim.
 //
 // Breaking surface for consumers migrating from the earlier component: the directory and subpath become

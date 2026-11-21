@@ -3,12 +3,12 @@ import { AlertDialog as BaseUIAlertDialog } from "@base-ui/react/alert-dialog";
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/alert-dialog.tsx` @8163481, taken wholesale and split
+// coss base `.coss-base/alert-dialog.tsx` @b2336c4, taken wholesale and split
 // into styled/primitive/variants triples. The token remap is a no-op: coss and this package share
 // the token names the base's colour utilities reference.
 
 const alertDialogBackdropVariants = cva({
-  base: "fixed inset-0 z-50 bg-black/32 backdrop-blur-sm transition-all duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0",
+  base: "fixed inset-0 z-50 bg-black/32 backdrop-blur-sm transition-all duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-[-webkit-touch-callout:none]:absolute",
 });
 
 const alertDialogViewportVariants = cva({
@@ -49,7 +49,7 @@ const alertDialogFooterVariants = cva({
 });
 
 const alertDialogTitleVariants = cva({
-  base: "font-heading font-semibold text-xl leading-none",
+  base: "font-bold font-heading text-xl leading-none",
 });
 
 const alertDialogDescriptionVariants = cva({

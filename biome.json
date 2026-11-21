@@ -4,17 +4,12 @@
   "overrides": [
     {
       "includes": [
-        "**/dist/**",
-        "**/coverage/**",
-        "**/storybook-static/**",
-        "**/.cache/**"
+        "packages/ui-atoms/src/**/*.tsx",
+        "**/vite.config.ts",
+        "apps/storybook/**/*.stories.tsx",
+        "apps/storybook/.storybook/main.ts",
+        "scripts/**/*.ts"
       ],
-      "linter": { "enabled": false },
-      "assist": { "enabled": false },
-      "formatter": { "enabled": false }
-    },
-    {
-      "includes": ["packages/ui-atoms/src/**/*.tsx"],
       "linter": {
         "rules": {
           "suspicious": { "noExplicitAny": "off" },
@@ -27,7 +22,18 @@
       "linter": { "rules": { "suspicious": { "noExplicitAny": "off" } } }
     },
     {
-      "includes": [".coss-base/**"],
+      "includes": [
+        "**/dist/**",
+        "**/coverage/**",
+        "**/storybook-static/**",
+        "**/.cache/**"
+      ],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false },
+      "formatter": { "enabled": false }
+    },
+    {
+      "includes": [".coss-base/**", ".shadcn-base/**"],
       "linter": { "enabled": false },
       "assist": { "enabled": false },
       "formatter": { "enabled": false }

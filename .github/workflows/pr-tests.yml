@@ -16,20 +16,23 @@ jobs:
     name: pr-tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "22"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Tests related to the files changed vs the base branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          BASE_SHA=$(git merge-base "origin/${{ github.base_ref }}" HEAD)
+          BASE_SHA=$(git merge-base "origin/${BASE_REF}" HEAD)
           echo "merge-base: $BASE_SHA"
           # turbo: packages changed since the merge-base plus their dependents;
           # vitest: only the tests related to the changed files inside those packages.

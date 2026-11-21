@@ -80,8 +80,29 @@ describe("styles.css — canonical token sheet", () => {
     expect(css).not.toMatch(/@source/);
     expect(css).toMatch(/^@import "tailwindcss";/m);
     expect(css).toMatch(/^@import "tw-animate-css";/m);
+  });
+  it("defines `dark:` for the themed element and its descendants", () => {
+    // `&:is([data-theme="dark"])` matched only the element carrying the attribute, so
+    // with it on <html> every `dark:` utility inside a component was dead.
+    const variant = css
+      .slice(css.indexOf("@custom-variant dark"), css.indexOf("@theme inline"))
+      .replace(/\s+/g, "");
+    expect(variant).toBe(
+      '@custom-variantdark(&:where([data-theme="dark"],[data-theme="dark"]*,[data-theme="system-dark"],[data-theme="system-dark"]*));',
+    );
+  });
+  it("gives system-dark the dark tokens, not just the dark: variant", () => {
+    // A theme script writes `system-dark` when the OS is dark and nothing is stored. With
+    // the variant matching it but the token block not, every colour stayed light.
     expect(css).toMatch(
-      /@custom-variant dark \(&:is\(\[data-theme="dark"\]\)\);/,
+      /\n\[data-theme="dark"\],\n\[data-theme="system-dark"\] \{\n {2}--background:/,
+    );
+  });
+  it("applies the light tokens to :root and to an explicit light scope", () => {
+    // Naming `light` and `system-light` beside `:root` lets a light subtree sit inside a
+    // dark one: without them the subtree would inherit the dark tokens.
+    expect(css).toMatch(
+      /\n:root,\n\[data-theme="light"\],\n\[data-theme="system-light"\] \{\n {2}--background:/,
     );
   });
   it("maps exactly the v2 @theme inline keys", () => {
@@ -97,17 +118,18 @@ describe("styles.css — canonical token sheet", () => {
     expect(css).toMatch(/@keyframes toast-error-even/);
   });
   it("carries the 40 tilli values as :root defaults and 38 dark overrides, with NO tenant selectors", () => {
-    const root = block(":root {");
+    const root = block('[data-theme="system-light"] {');
     expect([...root.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(40);
     expect(root).toContain("--primary: oklch(0.205 0 0);");
     expect(root).toContain("--radius: 0.625rem;");
-    const dark = block('[data-theme="dark"] {');
+    const dark = block('[data-theme="system-dark"] {');
     expect([...dark.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(38);
     expect(dark).toContain("--background: oklch(0.145 0 0);");
+    expect(dark).toContain("--foreground: oklch(0.985 0 0);");
     expect(css).not.toMatch(/data-tenant/);
   });
   it("a11y: light-theme --muted-foreground and --destructive-foreground are darkened off the v2-pinned values — both failed axe color-contrast at 0.556/0.577 against the near-white surfaces (bg-muted, badge/alert tints) they render text on; dark theme is untouched (not exercised by the failing-axe suite)", () => {
-    const root = block(":root {");
+    const root = block('[data-theme="system-light"] {');
     expect(root).not.toContain("--muted-foreground: oklch(0.556 0 0);");
     expect(root).toContain("--muted-foreground: oklch(0.5 0 0);");
     expect(root).not.toContain(
@@ -120,7 +142,7 @@ describe("styles.css — canonical token sheet", () => {
     // background in the components this token reaches, never as text axe
     // checks for contrast.
     expect(root).toContain("--destructive: oklch(0.577 0.245 27.325);");
-    const dark = block('[data-theme="dark"] {');
+    const dark = block('[data-theme="system-dark"] {');
     expect(dark).toContain("--muted-foreground: oklch(0.708 0 0);");
     expect(dark).toContain(
       "--destructive-foreground: oklch(0.637 0.237 25.331);",

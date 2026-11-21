@@ -26,7 +26,7 @@ const pendingChangesets = readdirSync(
   .filter((file) => file.endsWith(".md") && file !== "README.md")
   .map((file) => ({ file, text: read(`.changeset/${file}`) }));
 const FRONT_MATTER = /^---\n"([^"]+)": (\w+)\n---\n/;
-const CHANGESETS_COMMAND = /^ +(?:publish|version): pnpm (\S+)$/gm;
+const CHANGESETS_COMMAND = /^ +(?:publish|version)-script: pnpm (\S+)$/gm;
 
 describe("pending changesets", () => {
   it("survives a release that has consumed them all", () => {
@@ -64,8 +64,10 @@ describe("the public release workflow (publish.yml)", () => {
     for (const command of commands) expect(scripts).toHaveProperty(command);
   });
   it("can request the OIDC token provenance needs", () => {
+    // Granted to the release job only; the workflow itself defaults to no permissions.
+    expect(workflow).toMatch(/^permissions: \{\}$/m);
     expect(workflow).toMatch(
-      /^permissions:\n(?: {2}.+\n)* {2}id-token: write$/m,
+      /^ {4}permissions:\n(?: {6}.+\n)* {6}id-token: write( #.*)?$/m,
     );
   });
   it("asks npm for public access and provenance in both manifests", () => {

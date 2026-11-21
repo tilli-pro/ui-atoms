@@ -12,7 +12,7 @@ Optional peers, one per subpath — install only what you import:
 |---|---|
 | `./carousel` | `embla-carousel-react` |
 | `./calendar` | `@daypicker/react` |
-| `./number-ticker`, `./spinning-text` | `motion` |
+| `./chat`, `./number-ticker`, `./spinning-text` | `motion` |
 | `./resizable` | `react-resizable-panels` |
 | `./tree` | `@headless-tree/core` |
 

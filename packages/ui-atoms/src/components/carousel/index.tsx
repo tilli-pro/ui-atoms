@@ -8,6 +8,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "../../utils.js";
 import { Button } from "../button/index.js";
 
+// shadcn/ui's carousel (base `.shadcn-base/carousel.tsx`, digest-pinned in
+// scripts/shadcn/shadcn-lock.json), kept ours (CAR-1): lucide arrows and
+// `size-8` buttons where the base generates icon placeholders and `icon-sm`.
+
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];

@@ -3,16 +3,21 @@
 `@tilli.dev/ui-atoms` is MIT (see LICENSE). It contains code derived from, and depends on,
 the works below. Notices are preserved as their licenses require.
 
-## coss ui (component registry, `apps/ui/` of github.com/cosscom/coss) — MIT
+## coss ui (component registry, `apps/ui/` of github.com/cosscom/ui, formerly cosscom/coss) — MIT
 
-Components in `src/components/`, and the vendored lib in `src/lib/`, are **re-based on** the coss ui registry (MIT) at a single
-pinned revision: commit `816348154874bbc0be230277c584cc38019b48b1` of
-`apps/ui/registry/default/ui`, dated 2026-09-16, fetched 2026-09-20 from
+Components in `src/components/`, and the vendored libs and hooks in `src/lib/` and `src/hooks/`, are **re-based on** the coss ui registry (MIT) at a single
+pinned revision: commit `b2336c45f2b7355c42678ce786b6f14d62b819be` of
+`apps/ui/registry/default/`, dated 2026-11-17, fetched 2026-11-21 from
 `https://coss.com/ui/r/<name>.json`. The exact bytes each component was derived from are
 committed in this repository under `.coss-base/`, and `scripts/coss/coss-lock.json` records
-a SHA-256 per file, so the derivation is reproducible rather than asserted. The coss monorepo
-root is AGPL-3.0; only `apps/ui/` and `apps/origin/` are MIT per the repository's README and
-LICENSING.md, and nothing outside `apps/ui/` is used here.
+a SHA-256 per file, so the derivation is reproducible rather than asserted: every one of the
+86 locked files is byte-identical to the same path at that commit. The repository was
+`cosscom/coss` when the first pin (`816348154874bbc0be230277c584cc38019b48b1`, 2026-09-16)
+was taken; it has since been renamed to `cosscom/ui` with its history intact. At the first
+pin the monorepo root was AGPL-3.0 with `apps/ui/` and `apps/origin/` carved out as MIT; at
+the current pin the whole repository is MIT (see below). Upstream now authors the components
+under `packages/ui/src/` and commits the registry build under `apps/ui/registry/`, which is
+the only tree read here.
 
 The calendar's optional time field takes its time parsing, typing format and list filtering
 from the registry particle `p-calendar-25` (`apps/ui/registry/default/particles/p-calendar-25.tsx`,
@@ -20,60 +25,83 @@ also served as `https://coss.com/ui/r/p-calendar-25.json`) at the same pinned re
 `a64bbc30017583fbddaf6af961ead774de2f38ab0ade779dacfda649e3c5b50e`. Particles are not committed
 under `.coss-base/`; this one is covered by this same MIT notice.
 
-Eleven components have no coss counterpart and are not derived from it — `aspect-ratio`,
-`carousel`, `currency-input`, `form-root-error`, `number-ticker`, `resizable`,
-`segmented-control`, `spinning-text`, `stepper`, `timeline`, `tree` — and four more
-(`number-field`, `sheet`, `sidebar`, `toolbar`) are not derived from it yet.
+Eight components have no upstream counterpart in either registry and are not derived from
+coss — `aspect-ratio`, `currency-input`, `form-root-error`, `number-ticker`,
+`spinning-text`, `stepper`, `timeline`, `tree`. Two are derived from shadcn/ui
+(`carousel`, `resizable`; see that section). Three more have a coss counterpart they are not
+derived from yet: `number-field`, `toolbar` and `segmented-control`; the coss
+file of each is committed under `.coss-base/` for reference only.
 
-The `segmented-control` *component* is tilli's own. The unrelated coss registry item of the
-same name is a cva lib, not a component; it is vendored separately as
-`src/lib/segmented-control.ts`, derived from `registry/default/lib/segmented-control.ts` at
-the same pinned revision, committed under `.coss-base/lib/` and digest-pinned in
-`coss-lock.json` under the key `lib/segmented-control`.
+`composer` with its libs and hook (`src/lib/composer-*.ts`,
+`src/hooks/use-composer-editor.ts`) and the `chat` kit (`src/components/chat/`, one registry
+item of 23 files) joined the coss registry after the first pin. At the current pin they are
+part of the tree and verified against it like every other file; `chat` is locked one entry
+per served file under `.coss-base/chat/`.
+
+The `segmented-control` *component* is tilli's own. coss's item of the same name was a cva
+lib at the first pin and is a component at the current one
+(`registry/default/ui/segmented-control.tsx`, committed as `.coss-base/segmented-control.tsx`).
+`src/lib/segmented-control.ts` holds the four strings and records `tabs` takes from that
+file, and nothing else is derived from it.
 
 The agent skill in `.agents/skills/coss/` is coss documentation too: authored by cosscom,
 `license: MIT` in its own frontmatter, vendored verbatim from `apps/ui/skills/coss/` at the
 same pinned revision. It is covered by this same MIT notice.
 
-At commit `816348154874bbc0be230277c584cc38019b48b1` the coss repository ships **no `LICENSE`
-file inside `apps/ui/`** and states no copyright line for the MIT-licensed directories. The
-MIT designation is made by the repository's root `README.md` and `LICENSING.md`, both quoted
-verbatim below as the source of the carve-out, followed by the text of the MIT License they
-designate.
-
-Upstream `README.md`, section "Licensing" (verbatim, fetched at commit
-`816348154874bbc0be230277c584cc38019b48b1`):
-
-> ## Licensing
->
-> This repository uses a mixed licensing approach. The default license for this project is [AGPLv3.0](LICENSE).
->
-> - **MIT**: The `apps/origin/` and `apps/ui/` directories are licensed under their original MIT license
-> - **AGPLv3**: All other directories are licensed under the GNU Affero General Public License v3.0
->
-> For detailed information, see our [Licensing documentation](LICENSING.md).
-
-Upstream `LICENSING.md` (verbatim, fetched at commit
-`816348154874bbc0be230277c584cc38019b48b1`):
-
-> # Licensing
->
-> This repository uses a mixed licensing approach. The default license for this project is [AGPLv3.0](LICENSE).
->
-> ## MIT
->
-> The following directory and their subdirectories are licensed under their original
->
-> ```
-> apps/origin/
-> apps/ui/
-> ```
-
-The MIT License so designated, in its standard text:
+At commit `b2336c45f2b7355c42678ce786b6f14d62b819be` the coss repository is MIT as a whole: its root `README.md` states
+"This entire repository is licensed under the [MIT License](LICENSE)", and the root
+`LICENSE` is reproduced verbatim below. (At the first pin there was no `LICENSE` inside
+`apps/ui/`; the MIT designation was made by the root `README.md` and a `LICENSING.md`
+that carved `apps/origin/` and `apps/ui/` out of an AGPL-3.0 default. Both designations
+cover everything taken here.)
 
 MIT License
 
-Copyright (c) coss.com contributors (github.com/cosscom/coss, `apps/ui/`)
+Copyright (c) 2025 coss.com and Origin UI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## shadcn/ui (component registry, `apps/v4/registry/` of github.com/shadcn-ui/ui) — MIT
+
+Two components are derived from shadcn/ui: `carousel` (on `embla-carousel-react`) and
+`resizable` (on `react-resizable-panels` 4.x). Both
+were carried over from the pre-1.0 package and recorded as tilli's own until the 2026-11
+refresh compared them with the registry. The registry bytes they are compared against are
+committed under `.shadcn-base/` and digest-pinned in `scripts/shadcn/shadcn-lock.json`
+(style `base-nova`, served from `https://ui.shadcn.com/r/styles/base-nova/<name>.json`,
+fetched 2026-11-21):
+
+- `carousel` — SHA-256 `64df310fc76336a5b1307bb736d5457fa3767393d4c5ff884851ccee568c8b6c`, generated from `apps/v4/registry/bases/base/ui/carousel.tsx`
+  (last commit `c257f688cf4de7ec10cc1be84cad29cd4631182c`, 2026-09-04)
+- `resizable` — SHA-256 `c45c4e1a32aefb83d60406366e2368b9d8a6e772406f8b964154e7202d6304f7`, generated from `apps/v4/registry/bases/base/ui/resizable.tsx`
+  (last commit `c257f688cf4de7ec10cc1be84cad29cd4631182c`, 2026-09-04)
+
+The shadcn registry serves generated files that exist at no commit verbatim, so the template's
+last commit is provenance, not proof; the digest is the pin. `carousel` predates that base
+and differs from it (lucide arrows and button sizing), so the base records lineage and is the
+diff a later refresh starts from. `resizable` is ported from the pinned bytes and differs in
+styling only: a grip handle with a lucide icon, and the focus ring and state colours of the
+coss-based components.
+
+MIT License
+
+Copyright (c) 2023 shadcn
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,0 +1,27 @@
+import { itemSlug } from "../routing.js";
+import { engageSpecs } from "./engage.js";
+import { enterpriseSpecs } from "./enterprise.js";
+import { financeSpecs } from "./finance.js";
+import { networkSpecs } from "./network.js";
+import { operationsSpecs } from "./operations.js";
+import { salesSpecs } from "./sales.js";
+import { supportSpecs } from "./support.js";
+import type { ModuleKey, SectionItem } from "../modules.js";
+import type { ListSpec, ModuleSpecs } from "./types.js";
+
+/** Each module's mock specs; every module task adds its entry. */
+export const moduleSpecs: Record<ModuleKey, ModuleSpecs> = {
+  engage: engageSpecs,
+  enterprise: enterpriseSpecs,
+  finance: financeSpecs,
+  network: networkSpecs,
+  operations: operationsSpecs,
+  sales: salesSpecs,
+  support: supportSpecs,
+};
+
+export const specFor = (
+  module: ModuleKey,
+  item?: SectionItem,
+): ListSpec | undefined =>
+  item ? moduleSpecs[module].items[itemSlug(item)] : undefined;

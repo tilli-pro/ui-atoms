@@ -2,7 +2,7 @@ import { Switch as BaseUISwitch } from "@base-ui/react/switch";
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/switch.tsx` @8163481, with the size ramp collapsed to
+// coss base `.coss-base/switch.tsx` @b2336c4, with the size ramp collapsed to
 // its `sm:` member: `[--thumb-size:--spacing(5)] … sm:[--thumb-size:--spacing(4)]`
 // → `[--thumb-size:--spacing(4)]`.
 
@@ -12,7 +12,7 @@ const switchVariants = cva({
 
 /** Exported on its own so a downstream fork can restyle the knob alone. */
 const switchThumbVariants = cva({
-  base: "pointer-events-none block aspect-square h-full origin-left in-[[role=switch]:active,[data-slot=label]:active,[data-slot=field-label]:active]:not-data-disabled:scale-x-110 in-[[role=switch]:active,[data-slot=label]:active,[data-slot=field-label]:active]:rounded-[var(--thumb-size)/calc(var(--thumb-size)*1.1)] rounded-(--thumb-size) bg-background shadow-sm/5 will-change-transform [transition:translate_.15s,border-radius_.15s,scale_.1s_.1s,transform-origin_.15s] data-checked:origin-[var(--thumb-size)_50%] data-checked:translate-x-[calc(var(--thumb-size)-4px)]",
+  base: "pointer-events-none block aspect-square h-full origin-left in-[[role=switch]:active,[data-slot=label]:active,[data-slot=field-label]:active]:not-data-disabled:scale-x-110 in-[[role=switch]:active,[data-slot=label]:active,[data-slot=field-label]:active]:rounded-[var(--thumb-size)/calc(var(--thumb-size)*1.1)] rounded-(--thumb-size) bg-background shadow-sm/5 will-change-transform [transition:translate_.15s,border-radius_.15s,scale_.1s_.1s,transform-origin_.15s] data-checked:origin-[var(--thumb-size)_50%] data-checked:translate-x-[calc(var(--thumb-size)-4px)] rtl:origin-right rtl:data-checked:origin-left rtl:data-checked:-translate-x-[calc(var(--thumb-size)-4px)]",
 });
 
 export type SwitchPrimitiveProps = BaseUISwitch.Root.Props;

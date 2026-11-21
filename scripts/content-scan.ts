@@ -143,7 +143,7 @@ export function loadTerms(
 }
 
 export function scanFiles(
-  files: readonly { path: string; text?: string }[],
+  files: readonly { path: string; text?: string | undefined }[],
   extra: readonly Term[] = [],
 ): Finding[] {
   const out: Finding[] = [];
@@ -195,7 +195,9 @@ function trackedFiles(root: string): string[] {
  * text extensions under 2 MB; everything else is path-scanned only. Exported so the CLI's
  * behaviour is testable against a scratch repository instead of only by planting files here.
  */
-export function collectFiles(root: string): { path: string; text?: string }[] {
+export function collectFiles(
+  root: string,
+): { path: string; text?: string | undefined }[] {
   return trackedFiles(root).map((path) => {
     const abs = join(root, path);
     const text =

@@ -4,7 +4,8 @@ React 19 + Tailwind CSS v4 components on `@base-ui/react`, following the coss ui
 conventions: flat per-part named exports, `render` prop composition, `data-slot`
 selectors, styled parts plus `*Primitive` parts and exported cva variants.
 
-- Documentation and live examples: https://tilli-pro.github.io/ui-atoms/
+- Documentation and live examples: https://tilli-pro.github.io/ui-atoms/storybook/
+- Recipes playground: https://tilli-pro.github.io/ui-atoms/playground/
 - Package: `packages/ui-atoms` (`@tilli.dev/ui-atoms`, MIT).
 - Install: `pnpm add @tilli.dev/ui-atoms @base-ui/react react react-dom tailwindcss`.
 - Styles: import `@tilli.dev/ui-atoms/styles.css` once and add the `@source` lines from

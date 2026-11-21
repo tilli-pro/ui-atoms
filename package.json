@@ -3,16 +3,21 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.19.0",
-  "engines": { "node": ">=22", "pnpm": ">=10" },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "scripts": {
+    "dev": "turbo run dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint && biome check .",
+    "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "test": "turbo run test && pnpm test:scripts",
     "test:scripts": "vitest run --config vitest.config.ts",
     "content-scan": "tsx scripts/content-scan.ts",
     "fetch-coss": "tsx scripts/coss/fetch-coss.ts",
+    "fetch-shadcn": "tsx scripts/shadcn/fetch-shadcn.ts",
     "gen-exports": "tsx scripts/gen-exports.ts",
     "check-provisional": "tsx scripts/check-provisional.ts",
     "changeset": "changeset",

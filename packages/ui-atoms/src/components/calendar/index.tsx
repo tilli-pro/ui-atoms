@@ -2,7 +2,14 @@
 
 import type * as React from "react";
 import { useRef, useState } from "react";
-import { DayPicker, type PropsBase, TZDate } from "@daypicker/react";
+import {
+  DateLib,
+  type DateLibOptions,
+  DayPicker,
+  type Modifiers,
+  type PropsBase,
+  TZDate,
+} from "@daypicker/react";
 import { cva } from "cva";
 import {
   ChevronLeftIcon,
@@ -26,7 +33,7 @@ import {
 
 // CAL-1, swap 4 of 4: react-aria-components + @internationalized/date →
 // `@daypicker/react` 10.0.1 (MIT). coss base `.coss-base/calendar.tsx`
-// @8163481, with the size ramp collapsed to its `sm:` member. `months`'
+// @b2336c4, with the size ramp collapsed to its `sm:` member. `months`'
 // `flex-col sm:flex-row` is layout stacking, not half of a size pair, so it is
 // copied as-is.
 //
@@ -180,10 +187,64 @@ function filterTime(item: string, query: string) {
 
 type DayPickerProps = React.ComponentProps<typeof DayPicker>;
 
+const WORD_CHARACTER = /[\p{L}\p{N}]/u;
+
+/** Where `word` occurs in `text` with no letter or digit touching it, or -1. */
+function indexOfWord(text: string, word: string): number {
+  if (word === "") return -1;
+  let at = text.indexOf(word);
+  while (at !== -1) {
+    const before = text[at - 1];
+    const after = text[at + word.length];
+    const standsAlone = !(
+      (before && WORD_CHARACTER.test(before)) ||
+      (after && WORD_CHARACTER.test(after))
+    );
+    if (standsAlone) return at;
+    at = text.indexOf(word, at + 1);
+  }
+  return -1;
+}
+
+/**
+ * a11y (WCAG 2.5.3, Label in Name): a day button shows the day number, so its
+ * accessible name has to contain that number as a word of its own — speech
+ * input users say what they see. The day picker names a day with the locale's
+ * long date (`PPPP`), which in English carries an ordinal ("November 1st"),
+ * and "1st" does not contain the word "1". Where the long date holds the
+ * ordinal instead of the plain number, the ordinal is swapped for the number
+ * the button shows; a locale whose long date already has it ("1. November",
+ * "1 novembre") is returned untouched.
+ *
+ * Everything goes through `dateLib`, so `locale`, `timeZone` and `numerals`
+ * are honoured exactly as they are for the visible grid. The "Today, …" and
+ * "…, selected" wording is the day picker's own.
+ */
+function calendarDayButtonLabel(
+  date: Date,
+  modifiers: Modifiers,
+  options?: DateLibOptions,
+  dateLib?: DateLib,
+): string {
+  const lib = dateLib ?? new DateLib(options);
+  const shown = lib.format(date, "d");
+  let label = lib.format(date, "PPPP");
+  if (indexOfWord(label, shown) === -1) {
+    const ordinal = lib.format(date, "do");
+    const at = ordinal === shown ? -1 : indexOfWord(label, ordinal);
+    if (at !== -1)
+      label = label.slice(0, at) + shown + label.slice(at + ordinal.length);
+  }
+  if (modifiers.today) label = `Today, ${label}`;
+  if (modifiers.selected) label = `${label}, selected`;
+  return label;
+}
+
 function CalendarDayPicker({
   className,
   classNames,
   components: userComponents,
+  labels: userLabels,
   mode = "single",
   showOutsideDays = true,
   ...props
@@ -292,9 +353,11 @@ function CalendarDayPicker({
     components: { ...defaultComponents, ...userComponents },
     "data-slot": "calendar",
     formatters: {
-      formatMonthDropdown: (date: Date) =>
-        date.toLocaleString("default", { month: "short" }),
+      formatMonthDropdown: (month: Date, dateLib: DateLib) =>
+        dateLib.format(month, "LLL"),
     } as DayPickerProps["formatters"],
+    // A consumer's own `labelDayButton` (a translation, say) still wins.
+    labels: { labelDayButton: calendarDayButtonLabel, ...userLabels },
     mode,
     showOutsideDays,
     ...props,

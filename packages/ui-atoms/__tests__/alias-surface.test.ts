@@ -20,7 +20,10 @@ import { describe, expect, it } from "vitest";
  * before 0.1.0 rather than after it.
  */
 const SRC = resolve(import.meta.dirname, "..", "src");
-const BASE = resolve(import.meta.dirname, "..", "..", "..", ".coss-base");
+/** Upstream bases, in lookup order: the coss pin, then the shadcn pin. */
+const BASES = [".coss-base", ".shadcn-base"].map((dir) =>
+  resolve(import.meta.dirname, "..", "..", "..", dir),
+);
 
 /** Names that must not appear anywhere in the published surface. */
 const RETIRED = [
@@ -90,9 +93,11 @@ describe("published aliases", () => {
   it("never invents a name upstream does not ship", () => {
     const invented: string[] = [];
     for (const [name, names] of aliases) {
-      const base = join(BASE, `${name}.tsx`);
-      // A component with no coss counterpart has no upstream surface to match.
-      if (!existsSync(base)) continue;
+      const base = BASES.map((dir) => join(dir, `${name}.tsx`)).find((p) =>
+        existsSync(p),
+      );
+      // A component with no upstream counterpart has no upstream surface to match.
+      if (base === undefined) continue;
       const text = readFileSync(base, "utf8");
       for (const alias of names) {
         // `*Primitive` is our spelling of an upstream part, not a new name.

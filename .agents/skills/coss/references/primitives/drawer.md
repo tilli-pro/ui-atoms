@@ -2,13 +2,13 @@
 
 ## When to use
 
-- Mobile-first overlay panels and bottom sheets.
+- Edge panels on desktop and mobile, including side panels and bottom drawers.
+- Replacement for Sheet; do not introduce Sheet usage.
 - Form-heavy or multi-step overlays where popover is too constrained.
 
 ## When NOT to use
 
 - If the overlay should be a centered modal -> use Dialog instead.
-- If the overlay should be a persistent side panel on desktop -> use Sheet instead.
 - If you need a simple confirmation -> use AlertDialog instead.
 
 ## Install
@@ -28,7 +28,6 @@ npm install @base-ui/react
 ```tsx
 import {
   Drawer,
-  DrawerCreateHandle,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -74,13 +73,12 @@ import {
 
 ### Key patterns
 
-Drawer with handle:
+Drawer with a visible drag handle:
 
 ```tsx
 <Drawer>
   <DrawerTrigger render={<Button variant="outline" />}>Open Drawer</DrawerTrigger>
-  <DrawerPopup>
-    <DrawerCreateHandle />
+  <DrawerPopup showBar>
     <DrawerHeader>
       <DrawerTitle>Edit Profile</DrawerTitle>
       <DrawerDescription>Make changes to your profile here.</DrawerDescription>
@@ -89,12 +87,14 @@ Drawer with handle:
       {/* Form content */}
     </DrawerPanel>
     <DrawerFooter>
-      <Button>Save</Button>
       <DrawerClose render={<Button variant="ghost" />}>Cancel</DrawerClose>
+      <Button>Save</Button>
     </DrawerFooter>
   </DrawerPopup>
 </Drawer>
 ```
+
+**Footer action order**: write Cancel first and the primary action last. `DrawerFooter` is `flex-col-reverse` on mobile and `sm:flex-row sm:justify-end` from `sm` up, so source order puts the primary action on the right on desktop and on top when stacked. The same applies to `DialogFooter` and `AlertDialogFooter`.
 
 Responsive drawer + dialog (drawer on mobile, dialog on desktop): see `p-drawer-12`.
 
@@ -104,8 +104,9 @@ See `p-drawer-1` through `p-drawer-13` for inset, straight, scrollable, nested, 
 
 ## Common pitfalls
 
-- Using drawer for desktop modal flows where dialog/sheet is clearer.
+- Choosing Sheet for desktop side panels; use Drawer. Use Dialog for centered modal flows.
 - Forgetting responsive switch logic when drawer is mobile-only variant.
+- Putting the primary action before Cancel in `DrawerFooter`; the reversed mobile stack then puts Cancel on top and the primary on the left on desktop.
 - Breaking section layout by putting the whole dialog in a block-level `<form>`; prefer **header outside**, **`Form className="contents"`** around **panel + footer** (see dialog/form skills).
 
 ## Useful particle references

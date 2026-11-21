@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="/favicon.ico" rel="icon" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Sora:wght@400..800&display=swap"
+      rel="stylesheet"
+    />
+    <title>ui-atoms - a tilli design system</title>
+    <script>
+    (() => {
+      try {
+        const v = localStorage.theme;
+        let theme;
+        if (v === "light" || v === "dark") {
+          theme = v;
+        } else {
+          theme = matchMedia("(prefers-color-scheme: dark)").matches
+            ? "system-dark"
+            : "system-light";
+        }
+        document.documentElement.dataset.theme = theme;
+
+        const c = localStorage.contrast;
+        let contrast;
+        if (c === "normal" || c === "high") {
+          contrast = c;
+        } else {
+          contrast = matchMedia("(prefers-contrast: more)").matches
+            ? "system-high"
+            : "system-normal";
+        }
+        document.documentElement.dataset.contrast = contrast;
+        document.documentElement.dataset.themeSet = "1";
+      } catch (e) {
+        console.error("Error during theme bootstrap:", e);
+      }
+    })();
+    </script>
+  </head>
+  <body>
+    <main id="root"></main>
+    <script src="/src/main.tsx" type="module"></script>
+  </body>
+</html>

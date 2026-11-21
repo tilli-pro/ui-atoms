@@ -2,7 +2,7 @@ import { Toggle as BaseUIToggle } from "@base-ui/react/toggle";
 import { cva, type VariantProps } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/toggle.tsx` @8163481, with the size ramp collapsed to its
+// coss base `.coss-base/toggle.tsx` @b2336c4, with the size ramp collapsed to its
 // `sm:` member throughout. Re-ported before `toggle-group`, whose root selectors
 // key off this file's `data-slot=toggle`.
 

@@ -17,3 +17,8 @@ packages/ui-atoms/LICENSE
 packages/ui-atoms/THIRD-PARTY-NOTICES.md
 # local pre-port baseline import; never committed
 apps/storybook/visual/preport/
+
+# superpowers plan workspaces (scratch)
+.superpowers/
+# agent worktrees (git worktree add .claude/worktrees/<name>)
+.claude/worktrees/

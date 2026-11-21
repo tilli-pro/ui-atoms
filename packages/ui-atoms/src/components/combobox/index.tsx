@@ -8,7 +8,7 @@ import { cn } from "../../utils.js";
 import { Input } from "../input/index.js";
 import { ScrollArea } from "../scroll-area/index.js";
 
-// coss base `.coss-base/combobox.tsx` @8163481, with the size ramp collapsed to
+// coss base `.coss-base/combobox.tsx` @b2336c4, with the size ramp collapsed to
 // its `sm:` member throughout. CBX-7/SCR-1: the base's `ComboboxList` drives
 // the scroll region through ScrollArea's `scrollFade` / `scrollbarGutter` /
 // `overscrollContain` props, which is what our `className="flex-1"` call site
@@ -52,8 +52,9 @@ const comboboxAffordanceVariants = cva({
   variants: { size: { default: "end-0.5", sm: "end-0" } },
 });
 
+// CBX-8: the open/close transition, as ACP-2 on the autocomplete frame.
 const comboboxPopupFrameVariants = cva({
-  base: "relative flex max-h-full min-w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+  base: "relative flex max-h-full min-w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] has-data-ending-style:scale-98 has-data-starting-style:scale-98 has-data-ending-style:opacity-0 has-data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
 });
 
 const comboboxItemVariants = cva({
@@ -571,6 +572,8 @@ export type ComboboxChipRemoveProps = BaseUICombobox.ChipRemove.Props;
 function ComboboxChipRemove({ className, ...props }: ComboboxChipRemoveProps) {
   return (
     <BaseUICombobox.ChipRemove
+      // a11y lead: the base dropped this default at b2336c4, but Base UI 1.8.0
+      // gives the icon-only button no name of its own. Overridable via props.
       aria-label="Remove"
       className={cn(comboboxChipRemoveVariants(), className)}
       data-slot="combobox-chip-remove"

@@ -10,7 +10,9 @@ const THEMES = ["light", "dark"] as const;
  *  - Calendar/Default renders today's date;
  *  - Calendar/WithTimeKeyboard types into the time field from a play function, so the frame
  *    depends on how far the play has run;
- *  - Avatar/WithImage loads a remote image, so it depends on network timing.
+ *  - Avatar/WithImage loads a remote image, so it depends on network timing;
+ *  - the five SpinningText stories rotate forever on a motion/react loop, so no two frames
+ *    match.
  */
 const EXCLUDED = new Set([
   "components-numberticker--default",
@@ -21,6 +23,11 @@ const EXCLUDED = new Set([
   "components-calendar--default",
   "components-calendar--with-time-keyboard",
   "components-avatar--with-image",
+  "components-spinningtext--default",
+  "components-spinningtext--reverse",
+  "components-spinningtext--slow",
+  "components-spinningtext--large-radius",
+  "components-spinningtext--styled",
 ]);
 // Read at load time so one test is generated per story × theme: workers apply, the per-test
 // timeout is per story, and every drifted story is reported (not just the first).

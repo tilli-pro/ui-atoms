@@ -2,7 +2,7 @@ import type * as React from "react";
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/frame.tsx` @8163481, merged selectively. The base wins
+// coss base `.coss-base/frame.tsx` @b2336c4, merged selectively. The base wins
 // everywhere except the one tilli lead we must not lose: `FramePanel`'s
 // `not-has-[table]:` variants, which let a panel wrap a bare `<table>` without
 // double-framing it. coss has no table-aware panel, so a wholesale take would

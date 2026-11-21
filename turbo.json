@@ -11,9 +11,22 @@
       ],
       "outputs": ["dist/**", "LICENSE", "THIRD-PARTY-NOTICES.md"]
     },
+    "dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] },
+    "dev:types": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "playground#dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"],
+      "with": ["@tilli.dev/ui-atoms#dev", "@tilli.dev/ui-atoms#dev:types"]
+    },
     "typecheck": { "dependsOn": ["^build"] },
     "lint": {},
     "test": { "dependsOn": ["^build"] },
     "clean": { "cache": false }
-  }
+  },
+  "cacheMaxSize": "2GB"
 }

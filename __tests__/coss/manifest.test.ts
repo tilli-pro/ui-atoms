@@ -15,28 +15,39 @@ describe("COSS pin", () => {
 });
 
 describe("COMPONENTS", () => {
-  it("covers 65 components, each named once", () => {
+  it("covers 67 components, each named once", () => {
     const names = COMPONENTS.map((c) => c.name);
     expect(new Set(names).size).toBe(names.length);
-    expect(names).toHaveLength(65);
+    expect(names).toHaveLength(67);
     expect([...names].sort()).toEqual(names);
   });
-  it("splits 50 coss-based from 15 v2-based, and fetches a reference base for 4 of the 15", () => {
-    expect(COMPONENTS.filter((c) => c.source === "coss")).toHaveLength(50);
-    expect(COMPONENTS.filter((c) => c.source === "v2")).toHaveLength(15);
+  it("splits 54 coss-based from 11 v2-based and 2 shadcn-based, and fetches a reference base for 3 of the 11", () => {
+    expect(COMPONENTS.filter((c) => c.source === "coss")).toHaveLength(54);
+    expect(COMPONENTS.filter((c) => c.source === "v2")).toHaveLength(11);
+    expect(
+      COMPONENTS.filter((c) => c.source === "shadcn").map((c) => c.name),
+    ).toEqual(["carousel", "resizable"]);
+    // A shadcn-sourced component is pinned by scripts/shadcn/, never fetched from coss.
+    for (const c of COMPONENTS.filter((c) => c.source === "shadcn"))
+      expect(c.registry, c.name).toBeUndefined();
     expect(
       COMPONENTS.filter((c) => c.source === "v2" && c.registry).map(
         (c) => c.name,
       ),
-    ).toEqual(["number-field", "sheet", "sidebar", "toolbar"]);
+    ).toEqual(["number-field", "segmented-control", "toolbar"]);
     for (const c of COMPONENTS.filter((c) => c.source === "v2" && c.registry)) {
       expect(c.disposition, c.name).toBe("measure-first");
     }
   });
-  it("keeps exactly the three tilli-only divergences that were approved as deliberate", () => {
-    const keeps = COMPONENTS.filter(
-      (c) => c.disposition === "tilli-only" && c.approvedKeep,
-    );
+  it("keeps exactly the three divergences from coss that were approved as deliberate", () => {
+    // carousel and resizable turned out to be shadcn/ui's and are sourced there;
+    // number-ticker has no upstream in either registry.
+    const keeps = COMPONENTS.filter((c) => c.approvedKeep);
+    expect(keeps.map((c) => [c.name, c.source, c.disposition])).toEqual([
+      ["carousel", "shadcn", "keep-ours"],
+      ["number-ticker", "v2", "tilli-only"],
+      ["resizable", "shadcn", "merge-selectively"],
+    ]);
     expect(keeps.map((c) => c.name)).toEqual([
       "carousel",
       "number-ticker",
@@ -72,6 +83,7 @@ describe("COMPONENTS", () => {
       "accordion",
       "breadcrumb",
       "collapsible",
+      "combobox",
       "frame",
       "spinner",
     ]);
@@ -86,22 +98,44 @@ describe("COMPONENTS", () => {
 });
 
 describe("COSS_LIBS", () => {
-  it("vendors exactly the one non-component registry item, outside components/", () => {
-    expect(COSS_LIBS.map((l) => l.registry)).toEqual(["segmented-control"]);
+  it("vendors the non-component registry items (libs and hooks), outside components/", () => {
+    expect(COSS_LIBS.map((l) => l.registry)).toEqual([
+      "use-media-query",
+      "use-copy-to-clipboard",
+      "composer-editor",
+      "composer-document",
+      "composer-query",
+      "composer-clipboard",
+      "use-composer-editor",
+    ]);
     for (const l of COSS_LIBS) {
-      expect(l.base.startsWith("lib/"), l.registry).toBe(true);
-      expect(l.dest.startsWith("lib/"), l.registry).toBe(true);
+      expect(l.base, l.registry).toMatch(/^(lib|hooks)\//);
+      expect(l.dest, l.registry).toBe(l.base);
     }
-    // must NOT also be a COMPONENTS registry name: that would write .coss-base/segmented-control.tsx
+  });
+  it("carries no post-pin item: composer, its libs and chat are inside the tree at this pin", () => {
+    expect([
+      ...COMPONENTS.filter((c) => c.postPin),
+      ...COSS_LIBS.filter((l) => l.postPin),
+    ]).toEqual([]);
+    // Only a kit locks more than one file.
+    expect(COMPONENTS.filter((c) => c.multiFile).map((c) => c.name)).toEqual([
+      "chat",
+    ]);
+  });
+  it("fetches coss's segmented-control as a component base, not as a lib", () => {
+    // Upstream turned the cva lib into a registry:ui component; a COSS_LIBS entry of the
+    // same name would lock a path that no longer exists.
     expect(
       COMPONENTS.find((c) => c.name === "segmented-control")?.registry,
-    ).toBeUndefined();
+    ).toBe("segmented-control");
+    expect(COSS_LIBS.map((l) => l.registry)).not.toContain("segmented-control");
   });
 });
 
 describe("LIVE_IDS", () => {
-  it("is exactly the 33 ids that stay live, each with a resolution", () => {
-    expect(Object.keys(LIVE_IDS)).toHaveLength(33);
+  it("is exactly the 40 ids that stay live, each with a resolution", () => {
+    expect(Object.keys(LIVE_IDS)).toHaveLength(40);
     for (const [id, r] of Object.entries(LIVE_IDS)) {
       expect(id, id).toMatch(/^[A-Z]{2,4}-\d$/);
       expect(r.resolution, id).toMatch(

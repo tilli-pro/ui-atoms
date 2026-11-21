@@ -1,4 +1,5 @@
-# Deploys the Storybook, the package's documentation site, to GitHub Pages from main.
+# Deploys the GitHub Pages site from main: apps/pages at the root, the Storybook
+# (the package's documentation site) at /storybook/ and the playground at /playground/.
 # Neither job runs in any other repository.
 name: Pages
 
@@ -19,20 +20,33 @@ jobs:
     if: github.repository == 'tilli-pro/ui-atoms'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "22"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm turbo run build --filter=storybook
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - id: pages
+        uses: actions/configure-pages@v6.0.0
+      - run: pnpm turbo run build --filter=pages --filter=storybook --filter=playground
+        env:
+          # apps/pages is built for the path the site is served under; the
+          # Storybook and the playground builds are path-independent.
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+      - name: assemble site
+        run: |
+          mkdir -p _site
+          cp -R apps/pages/dist/. _site/
+          cp -R apps/storybook/storybook-static _site/storybook
+          cp -R apps/playground/dist _site/playground
+      - uses: actions/upload-pages-artifact@v5.0.0
         with:
-          path: apps/storybook/storybook-static
+          path: _site
   deploy:
     if: github.repository == 'tilli-pro/ui-atoms'
     needs: build
@@ -45,4 +59,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1

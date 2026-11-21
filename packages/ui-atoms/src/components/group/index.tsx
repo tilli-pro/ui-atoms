@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "cva";
 import { cn } from "../../utils.js";
 import { Separator, type SeparatorProps } from "../separator/index.js";
 
-// coss base `.coss-base/group.tsx` @8163481. No divergence id and no tilli lead
+// coss base `.coss-base/group.tsx` @b2336c4. No divergence id and no tilli lead
 // touches this component, and `group` is not one of the fourteen the size-ramp
 // hold-back names, so every class string is the base's verbatim.
 

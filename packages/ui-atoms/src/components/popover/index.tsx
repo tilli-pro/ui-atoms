@@ -2,7 +2,7 @@ import { Popover as BaseUIPopover } from "@base-ui/react/popover";
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/popover.tsx` @8163481, taken wholesale. POP-2: the base
+// coss base `.coss-base/popover.tsx` @b2336c4, taken wholesale. POP-2: the base
 // carries no min-width rule at all, so the invalid `not-[class*='w-']:[min-w-80]`
 // is gone and a call site that wants a floor passes its own `w-`/`min-w-`.
 

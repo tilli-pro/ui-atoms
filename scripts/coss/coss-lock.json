@@ -1,9 +1,9 @@
 {
-  "revision": "816348154874bbc0be230277c584cc38019b48b1",
-  "revisionDate": "2026-09-16",
-  "revisionSource": "https://github.com/cosscom/coss/tree/816348154874bbc0be230277c584cc38019b48b1/apps/ui/registry/",
-  "fetchedAt": "2026-09-20",
-  "revisionVerifiedAt": "2026-09-20",
+  "revision": "b2336c45f2b7355c42678ce786b6f14d62b819be",
+  "revisionDate": "2026-11-17",
+  "revisionSource": "https://github.com/cosscom/ui/tree/b2336c45f2b7355c42678ce786b6f14d62b819be/apps/ui/registry/",
+  "fetchedAt": "2026-11-21",
+  "revisionVerifiedAt": "2026-11-21",
   "files": {
     "accordion": {
       "registry": "accordion",
@@ -25,7 +25,7 @@
       "registry": "alert-dialog",
       "path": "registry/default/ui/alert-dialog.tsx",
       "base": "alert-dialog.tsx",
-      "sha256": "e6e8d2aee4115cb2e2d5bba7e3f16941a2cfaa12a2bceae70d605b1751706d82",
+      "sha256": "d44513e3a157229eea1a9190aadbc479e356b47eb13c98e1a91ce4366fa11cf6",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -41,7 +41,7 @@
       "registry": "avatar",
       "path": "registry/default/ui/avatar.tsx",
       "base": "avatar.tsx",
-      "sha256": "a742f2d7c3aa1a867799e66fa7f3b37615e455906fa0117b66c49cfedca0a4f1",
+      "sha256": "2fe6b7b5551b8867a42f764d7616d8a271409432ce696d32611d0d4b74341e9b",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -73,7 +73,7 @@
       "registry": "calendar",
       "path": "registry/default/ui/calendar.tsx",
       "base": "calendar.tsx",
-      "sha256": "e9046da3021b3bb1e77ae657cdacac79a15f71e99596984fbcd54f26f3b60179",
+      "sha256": "547ebebda2747dadee61815f41448a2b6cecce3ad125806666df7595013896f0",
       "dependencies": ["@daypicker/react", "lucide-react"],
       "registryDependencies": []
     },
@@ -84,6 +84,466 @@
       "sha256": "b59dbc0bd5d61694fcf1948fb8134795b0f5a1bf0a28d8d6bc817297c73a006e",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
+    },
+    "chat/chat-bubble": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-bubble.tsx",
+      "base": "chat/chat-bubble.tsx",
+      "sha256": "de364abf74352d9918e81e7fe326c54731cf7892605a02afb3c56b9a6ca83654",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-collapsible-message": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-collapsible-message.tsx",
+      "base": "chat/chat-collapsible-message.tsx",
+      "sha256": "8574b5963ed2fa49e65e6f677505dfc54b2e8d58a175655d85a49282f6ea6ebc",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-conversation": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-conversation.tsx",
+      "base": "chat/chat-conversation.tsx",
+      "sha256": "097feeddec230ba36d74ed16d0c64a1537cf739e7077b777e48481a7cfb8bdd7",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-date-pill": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-date-pill.tsx",
+      "base": "chat/chat-date-pill.tsx",
+      "sha256": "9ee3e67fe8004e1656303d54cd6e9b8a7acda86ddaefa3245a385e6bba6f1786",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-delivery-indicator": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-delivery-indicator.tsx",
+      "base": "chat/chat-delivery-indicator.tsx",
+      "sha256": "64dd09618dec12b74f9dd5aa17bae22358cfdfa28db0c87df2eb2f44567e4669",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-jump-to-latest-button": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-jump-to-latest-button.tsx",
+      "base": "chat/chat-jump-to-latest-button.tsx",
+      "sha256": "7bef8520f5a2cffbbc490b8baaed8e532727d7c49c68fe24ea1e22f663eba7e5",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-members": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-members.tsx",
+      "base": "chat/chat-members.tsx",
+      "sha256": "3b15ec99dc77b987a5ddd56e42f00b20e66e94373644bf7411a99b5782f29d96",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-message-actions": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-actions.tsx",
+      "base": "chat/chat-message-actions.tsx",
+      "sha256": "c68ccda6c59eafa9355329bc4ed8b0d416be6a4a04ffcc2bd8e9f8a3406362f7",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-message-bubble": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-bubble.tsx",
+      "base": "chat/chat-message-bubble.tsx",
+      "sha256": "d3532cd1603f6ab1162db14ccfd025942f3baa0f87a3025409be64d3ebdb9471",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-message-info": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-info.tsx",
+      "base": "chat/chat-message-info.tsx",
+      "sha256": "bbef707c99d55268f0c762d5ed8b70999fa6578c88b292bcfa75b57929332102",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-message-layout": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-layout.tsx",
+      "base": "chat/chat-message-layout.tsx",
+      "sha256": "7b53c09abb5afc25eed06b3ce2bd2887e68223ab349d4bea97ff38166b414f06",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-message-text": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message-text.tsx",
+      "base": "chat/chat-message-text.tsx",
+      "sha256": "d6fd2b372485c442b6b9b404d895c797f35afab80a19909d39e0de4235e1e203",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-message": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-message.tsx",
+      "base": "chat/chat-message.tsx",
+      "sha256": "7b91ba983b78ceff03746c4c59fa6308e8aaa9078b81c6840cdd98936cbc6120",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-reaction-chip": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reaction-chip.tsx",
+      "base": "chat/chat-reaction-chip.tsx",
+      "sha256": "098c1cae2c920bb56ce36e394526671dc636992f774bb5af46d01229c420baad",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-reaction-picker": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reaction-picker.tsx",
+      "base": "chat/chat-reaction-picker.tsx",
+      "sha256": "fc0007a133519f40f5e7d7559da04280f71b4fd50b5bc5a6e07fbb7cf8767e24",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-reply-preview": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reply-preview.tsx",
+      "base": "chat/chat-reply-preview.tsx",
+      "sha256": "f9db2490d2eaa535b1f41a3675c090ae3aa82695b50d00c9873b2059c5e8ee35",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-reply-reference": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-reply-reference.tsx",
+      "base": "chat/chat-reply-reference.tsx",
+      "sha256": "10cee00334c0cf00145dfc82336c5077aa21deab014035c0f1ee4098eba8990a",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-states": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-states.tsx",
+      "base": "chat/chat-states.tsx",
+      "sha256": "4d0e2a3613074c9a9bfa356176a22b790a94cc7007ff4a75ccbd67f316ee6f33",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-typing-indicator": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-typing-indicator.tsx",
+      "base": "chat/chat-typing-indicator.tsx",
+      "sha256": "29d32676b0bd2e1bf0b835dd77e6a82f7306df0a85a5d3c45f02e3ee51cfcff3",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/chat-unread-divider": {
+      "registry": "chat",
+      "path": "registry/default/chat/chat-unread-divider.tsx",
+      "base": "chat/chat-unread-divider.tsx",
+      "sha256": "343ffb669b44fbeab57978151dad8952e967c65809b0d4efc51ee0533370027f",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/hooks/use-chat-popup-dismissal": {
+      "registry": "chat",
+      "path": "registry/default/chat/hooks/use-chat-popup-dismissal.ts",
+      "base": "chat/hooks/use-chat-popup-dismissal.ts",
+      "sha256": "4cf22bfba4ceadd5ba45258a2315827a9f10170c82543f9ac0d520c82965650d",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/hooks/use-chat-scroll": {
+      "registry": "chat",
+      "path": "registry/default/chat/hooks/use-chat-scroll.ts",
+      "base": "chat/hooks/use-chat-scroll.ts",
+      "sha256": "f8da666545393b449d71a066b723f4aa0f999cac8680e2272609a3a910e2d208",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
+    },
+    "chat/lib/split-chat-message-preview": {
+      "registry": "chat",
+      "path": "registry/default/chat/lib/split-chat-message-preview.ts",
+      "base": "chat/lib/split-chat-message-preview.ts",
+      "sha256": "0e9ecf9b6ea145aa1bf881c81ed36b1f26e32a7bb2037d08a5bd7a55dc958ad3",
+      "dependencies": ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/collapsible",
+        "@coss/empty",
+        "@coss/menu",
+        "@coss/popover",
+        "@coss/scroll-area",
+        "@coss/skeleton",
+        "@coss/toggle",
+        "@coss/toolbar",
+        "@coss/tooltip",
+        "@coss/utils"
+      ]
     },
     "checkbox": {
       "registry": "checkbox",
@@ -113,7 +573,7 @@
       "registry": "combobox",
       "path": "registry/default/ui/combobox.tsx",
       "base": "combobox.tsx",
-      "sha256": "df233af98aa9141b3418489d20b71a693aa3d8672a3962e3d19576fb21383087",
+      "sha256": "dd8d7cfaa60c0e9b9a0ffa3f2334d43fbed05aaa67d0259fd4d89f2814c4689b",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/input", "@coss/scroll-area"]
     },
@@ -121,15 +581,23 @@
       "registry": "command",
       "path": "registry/default/ui/command.tsx",
       "base": "command.tsx",
-      "sha256": "4b40973632f7b13bd2212f094b805470aad29fb190a46001f92b13ff2350b7bd",
+      "sha256": "26f77d2322179cd7a5694d865e85362d492db053a91cb0ef7c51b573e45076a4",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/autocomplete"]
+    },
+    "composer": {
+      "registry": "composer",
+      "path": "registry/default/ui/composer.tsx",
+      "base": "composer.tsx",
+      "sha256": "74d988465d970c10ba24e210f92905791944d9a2ec249397e8b7ca5b16d67408",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/composer-editor", "@coss/scroll-area"]
     },
     "context-menu": {
       "registry": "context-menu",
       "path": "registry/default/ui/context-menu.tsx",
       "base": "context-menu.tsx",
-      "sha256": "a47c4563334813d12f0e46380a047483aed03d7ed3e37a9cfde5899f06761abf",
+      "sha256": "c7dd4deefe1b4180ea242c0a97c3cca9a5112bc6113e212413f11be4738432fc",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -137,7 +605,7 @@
       "registry": "dialog",
       "path": "registry/default/ui/dialog.tsx",
       "base": "dialog.tsx",
-      "sha256": "14ad87a5f81d7753e9a954aa0624df49168eccc2c8d3074a41ea0a8bed3970d5",
+      "sha256": "29e99f5d39307acd3781ee0c8f78aabe6d637f667fb3b7893820e4621ddcce7b",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button", "@coss/scroll-area"]
     },
@@ -145,7 +613,7 @@
       "registry": "drawer",
       "path": "registry/default/ui/drawer.tsx",
       "base": "drawer.tsx",
-      "sha256": "e8edbf8de6192c4858395e8a99ed4d3c35fd583618b9cef4b76f260e90f6e4d1",
+      "sha256": "11ea9f5613c748e560187932a8bc1eec4ff07bf3e272d6520d737e0a430fbf91",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button", "@coss/scroll-area"]
     },
@@ -153,7 +621,7 @@
       "registry": "empty",
       "path": "registry/default/ui/empty.tsx",
       "base": "empty.tsx",
-      "sha256": "57341b5a985ba2cc229e4832ab8624b060d172706b678dd99a682fbb476d4aa9",
+      "sha256": "c1d099ad14211cfd92dbf10c169c9e178e85ec82d0160d4f814ac73be3df257b",
       "dependencies": [],
       "registryDependencies": []
     },
@@ -233,7 +701,7 @@
       "registry": "menu",
       "path": "registry/default/ui/menu.tsx",
       "base": "menu.tsx",
-      "sha256": "aeb2ebda24c8c90453fd7087bae8f14510f98e4eee75da5c084dfecaa56f2625",
+      "sha256": "19ed2b219a4a3606488d6bf66d13055bce7b6d5d438f77a1caea5648e4c44aae",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -309,6 +777,14 @@
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
+    "segmented-control": {
+      "registry": "segmented-control",
+      "path": "registry/default/ui/segmented-control.tsx",
+      "base": "segmented-control.tsx",
+      "sha256": "7ccc17c69bf36e2d5be634ba32959d00ad6ff7f3b46cc1b7ff4a93f92e4f74b9",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
     "select": {
       "registry": "select",
       "path": "registry/default/ui/select.tsx",
@@ -329,7 +805,7 @@
       "registry": "sheet",
       "path": "registry/default/ui/sheet.tsx",
       "base": "sheet.tsx",
-      "sha256": "74ce70050415c0ac6ad033a4d6770f023a736a9f24540c994e88c6934c16d9a4",
+      "sha256": "f1d3361a490c9d9a49a4289604aaf6995cb0b138728c3068ba94ee6c9337978a",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button", "@coss/scroll-area"]
     },
@@ -363,7 +839,7 @@
       "registry": "slider",
       "path": "registry/default/ui/slider.tsx",
       "base": "slider.tsx",
-      "sha256": "abf488cac56c237b5eebef7c7c25ff38d07f72581a2b46c7158c019576c7fa71",
+      "sha256": "952c61cfbb6950045792adf00f772a986bb07c7b7986caf40e509d60deb92ce6",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -379,7 +855,7 @@
       "registry": "switch",
       "path": "registry/default/ui/switch.tsx",
       "base": "switch.tsx",
-      "sha256": "2b3bada3d7234149b4d29918d5e312e62919938c2ae0ee61db81350438ad43c4",
+      "sha256": "713321db777570c883348696495f9b12f47f63f1d567b8eab42c27a8d0625c36",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -395,7 +871,7 @@
       "registry": "tabs",
       "path": "registry/default/ui/tabs.tsx",
       "base": "tabs.tsx",
-      "sha256": "cbfe21ce54efe39cc02eb073a8327a4ab81b918d5745d986fdfae07d32204a7a",
+      "sha256": "abf6a27fe48fc407e2a263ccc70997952561e06e8c2603b56c7595f825086895",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/segmented-control"]
     },
@@ -403,7 +879,7 @@
       "registry": "textarea",
       "path": "registry/default/ui/textarea.tsx",
       "base": "textarea.tsx",
-      "sha256": "d153ed8f568a6ffb7b5438ea83385e3d327db9af45ef9fdd0822575d15c4e745",
+      "sha256": "3e30e41c099d7343cb0a603557acd4e8b7c94b43139a7a489df322c04c5f601c",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -411,7 +887,7 @@
       "registry": "toast",
       "path": "registry/default/ui/toast.tsx",
       "base": "toast.tsx",
-      "sha256": "6c83bd6ab5a90388aa06380924381058746bf2bd5ebb7b2187496a59e7c517d6",
+      "sha256": "3be7bcee60026cdc2a2177026598bf51cf8a739f5553466c8fbc9b5bd994d3e1",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button"]
     },
@@ -447,13 +923,64 @@
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
-    "lib/segmented-control": {
-      "registry": "segmented-control",
-      "path": "registry/default/lib/segmented-control.ts",
-      "base": "lib/segmented-control.ts",
-      "sha256": "c1cb84d02ac5b75aa08a70c205feb9cc8668ffbc19751e013364f547ae41a8a8",
-      "dependencies": ["class-variance-authority"],
+    "hooks/use-media-query": {
+      "registry": "use-media-query",
+      "path": "registry/default/hooks/use-media-query.ts",
+      "base": "hooks/use-media-query.ts",
+      "sha256": "17d75ccaf898415db77dd72659c9b1fdb9338290ae54e8371b772e0b221c9fca",
+      "dependencies": [],
       "registryDependencies": []
+    },
+    "hooks/use-copy-to-clipboard": {
+      "registry": "use-copy-to-clipboard",
+      "path": "registry/default/hooks/use-copy-to-clipboard.ts",
+      "base": "hooks/use-copy-to-clipboard.ts",
+      "sha256": "d2e9ba430e34dafd4ae7fe5403d2ad4987fdcd73f2a47bd0571c1f84c143536d",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/composer-editor": {
+      "registry": "composer-editor",
+      "path": "registry/default/lib/composer-editor.ts",
+      "base": "lib/composer-editor.ts",
+      "sha256": "d2e2b65cad6530854be0f111475d56cdeb5614fe34bb0120e67fe9997c37f42c",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["@coss/use-composer-editor"]
+    },
+    "lib/composer-document": {
+      "registry": "composer-document",
+      "path": "registry/default/lib/composer-document.ts",
+      "base": "lib/composer-document.ts",
+      "sha256": "95cc5a3a602f37472d4bc3d2820c58c52f4f5893e3d1cfde2344f8b2a287f492",
+      "dependencies": [],
+      "registryDependencies": ["@coss/composer-query"]
+    },
+    "lib/composer-query": {
+      "registry": "composer-query",
+      "path": "registry/default/lib/composer-query.ts",
+      "base": "lib/composer-query.ts",
+      "sha256": "35afd934063e1b7b7a6aa3611e006cc1740a0e732338a9bdaf94eaf8d08cacb7",
+      "dependencies": [],
+      "registryDependencies": []
+    },
+    "lib/composer-clipboard": {
+      "registry": "composer-clipboard",
+      "path": "registry/default/lib/composer-clipboard.ts",
+      "base": "lib/composer-clipboard.ts",
+      "sha256": "0c9d85b0a2068ef37d6bb86e55075a3c0bd2f391cc636f68c0f3fd91fdf97667",
+      "dependencies": [],
+      "registryDependencies": ["@coss/composer-document"]
+    },
+    "hooks/use-composer-editor": {
+      "registry": "use-composer-editor",
+      "path": "registry/default/hooks/use-composer-editor.ts",
+      "base": "hooks/use-composer-editor.ts",
+      "sha256": "0d990ee73058159cd6e5ded9d612c780e82b721d399f873f650730bbec7b2509",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": [
+        "@coss/composer-document",
+        "@coss/composer-clipboard"
+      ]
     }
   }
 }

@@ -1,7 +1,21 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is([data-theme="dark"]));
+/*
+ * `dark:` applies on the element that carries data-theme="dark" (or "system-dark") AND
+ * on everything inside it. Until 1.1.0 this was `&:is([data-theme="dark"])`, which matched only the
+ * element with the attribute, so with the attribute on <html> no `dark:` utility in any
+ * component ever applied. `:where()` keeps the variant at zero added specificity, as
+ * Tailwind's own dark-mode recipe does.
+ */
+@custom-variant dark (
+  &:where(
+    [data-theme="dark"],
+    [data-theme="dark"] *,
+    [data-theme="system-dark"],
+    [data-theme="system-dark"] *
+  )
+);
 
 @theme inline {
   --font-header: var(--font-header);
@@ -132,10 +146,13 @@
 }
 
 /*
- * Default theme: the tilli brand, light here and dark under [data-theme="dark"].
+ * Default theme: the tilli brand, light here and dark under [data-theme="dark"] or
+ * [data-theme="system-dark"].
  * This file is the canonical home of these values; override any of them after importing it.
  */
-:root {
+:root,
+[data-theme="light"],
+[data-theme="system-light"] {
   --background: oklch(1 0 0);
   --background-secondary: oklch(0.97 0 0);
   --foreground: oklch(0.145 0 0);
@@ -186,7 +203,13 @@
   --warning-foreground: oklch(0.555 0.163 48.998);
 }
 
-[data-theme="dark"] {
+/*
+ * `system-dark` is what a theme script writes when the user has not chosen and the OS is
+ * dark. It must get the same tokens as `dark`, or `dark:` utilities apply (the variant
+ * above matches it) while every colour stays light.
+ */
+[data-theme="dark"],
+[data-theme="system-dark"] {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);

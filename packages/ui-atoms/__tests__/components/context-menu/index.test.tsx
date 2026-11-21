@@ -28,4 +28,23 @@ describe("ContextMenu (CTX-1 — provisional subpath)", () => {
       document.querySelector('[data-slot="context-menu-positioner"]'),
     ).not.toBeNull();
   });
+  it("CTX-2: the popup animates open and closed on Base UI's starting/ending style attributes", async () => {
+    render(
+      <ContextMenu>
+        <ContextMenuTrigger>area</ContextMenuTrigger>
+        <ContextMenuPopup>
+          <ContextMenuItem>Copy</ContextMenuItem>
+        </ContextMenuPopup>
+      </ContextMenu>,
+    );
+    fireEvent.contextMenu(screen.getByText("area"));
+    // Same rule as the menu: the transition sits on the element that carries
+    // data-starting-style / data-ending-style.
+    const popup = await screen.findByRole("menu");
+    expect(popup.className).toContain("transition-[scale,opacity]");
+    expect(popup.className).toContain("data-starting-style:scale-98");
+    expect(popup.className).toContain("data-starting-style:opacity-0");
+    expect(popup.className).toContain("data-ending-style:scale-98");
+    expect(popup.className).toContain("data-ending-style:opacity-0");
+  });
 });

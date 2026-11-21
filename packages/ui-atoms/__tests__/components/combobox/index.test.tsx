@@ -65,6 +65,20 @@ describe("Combobox (coss base, CBX-7/SCR-1)", () => {
       screen.getByRole("combobox", { name: "Show fruits" }),
     ).not.toBeNull();
   });
+  it("CBX-8: the popup frame animates open and closed from the popup's starting/ending style", () => {
+    render(<Picker />);
+    // Base UI marks Combobox.Popup; the visual classes sit on the frame <span>
+    // around it, so the frame reacts through `has-` variants (the older coss
+    // shape did this; the current base dropped the rules).
+    const popup = document.querySelector("[data-slot=combobox-popup]");
+    const frame = popup?.parentElement;
+    expect(frame?.tagName).toBe("SPAN");
+    expect(frame?.className).toContain("transition-[scale,opacity]");
+    expect(frame?.className).toContain("has-data-starting-style:scale-98");
+    expect(frame?.className).toContain("has-data-starting-style:opacity-0");
+    expect(frame?.className).toContain("has-data-ending-style:scale-98");
+    expect(frame?.className).toContain("has-data-ending-style:opacity-0");
+  });
   it("filters to the typed query", async () => {
     render(<Picker />);
     const input = screen.getByPlaceholderText("Pick one") as HTMLInputElement;
