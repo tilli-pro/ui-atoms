@@ -98,6 +98,13 @@ describe("styles.css — canonical token sheet", () => {
       /\n\[data-theme="dark"\],\n\[data-theme="system-dark"\] \{\n {2}--background:/,
     );
   });
+  it("applies the light tokens to :root and to an explicit light scope", () => {
+    // Naming `light` and `system-light` beside `:root` lets a light subtree sit inside a
+    // dark one: without them the subtree would inherit the dark tokens.
+    expect(css).toMatch(
+      /\n:root,\n\[data-theme="light"\],\n\[data-theme="system-light"\] \{\n {2}--background:/,
+    );
+  });
   it("maps exactly the v2 @theme inline keys", () => {
     const theme = block("@theme inline");
     const keys = [...theme.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map((m) => m[1]);
@@ -111,17 +118,18 @@ describe("styles.css — canonical token sheet", () => {
     expect(css).toMatch(/@keyframes toast-error-even/);
   });
   it("carries the 40 tilli values as :root defaults and 38 dark overrides, with NO tenant selectors", () => {
-    const root = block(":root {");
+    const root = block('[data-theme="system-light"] {');
     expect([...root.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(40);
     expect(root).toContain("--primary: oklch(0.205 0 0);");
     expect(root).toContain("--radius: 0.625rem;");
     const dark = block('[data-theme="system-dark"] {');
     expect([...dark.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(38);
-    expect(dark).toContain("--background: oklch(0.145 0 0);");
+    expect(dark).toContain("--background: oklch(0.185 0 0);");
+    expect(dark).toContain("--foreground: oklch(0.945 0 0);");
     expect(css).not.toMatch(/data-tenant/);
   });
   it("a11y: light-theme --muted-foreground and --destructive-foreground are darkened off the v2-pinned values — both failed axe color-contrast at 0.556/0.577 against the near-white surfaces (bg-muted, badge/alert tints) they render text on; dark theme is untouched (not exercised by the failing-axe suite)", () => {
-    const root = block(":root {");
+    const root = block('[data-theme="system-light"] {');
     expect(root).not.toContain("--muted-foreground: oklch(0.556 0 0);");
     expect(root).toContain("--muted-foreground: oklch(0.5 0 0);");
     expect(root).not.toContain(
