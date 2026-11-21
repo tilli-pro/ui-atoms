@@ -3,12 +3,15 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.19.0",
-  "engines": { "node": ">=22", "pnpm": ">=10" },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "scripts": {
-    "dev": "turbo run dev --filter=playground",
+    "dev": "turbo run dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint && biome check .",
+    "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "test": "turbo run test && pnpm test:scripts",
     "test:scripts": "vitest run --config vitest.config.ts",
