@@ -16,7 +16,7 @@ describe("Badge (cva beta migration)", () => {
   });
   it("variants object is cva-beta shaped (callable with an options object)", () => {
     // the outline variant is the base's, not the fork's: `border-input bg-background`,
-    // not `border-border bg-transparent` (coss badge.tsx @8163481)
+    // not `border-border bg-transparent` (coss badge.tsx @b2336c4)
     expect(badgeVariants({ variant: "outline" })).toContain("border-input");
     expect(badgeVariants({ variant: "outline" })).toContain("bg-background");
   });

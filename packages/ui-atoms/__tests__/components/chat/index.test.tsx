@@ -12,7 +12,7 @@ import {
 } from "../../../src/components/chat/index.js";
 import { expectSlot, render, screen } from "../../helpers/render.js";
 
-// coss's chat kit, taken wholesale from `.coss-base/chat/` (post-pin). One smoke render
+// coss's chat kit, taken wholesale from `.coss-base/chat/`. One smoke render
 // per family of parts, through the flat `./chat` barrel.
 describe("chat (coss kit)", () => {
   it("renders an incoming message as an article with author, avatar and a motion bubble", () => {

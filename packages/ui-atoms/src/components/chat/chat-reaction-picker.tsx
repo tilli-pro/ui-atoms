@@ -1,7 +1,7 @@
 "use client";
 
-// coss base `.coss-base/chat/chat-reaction-picker.tsx`, digest-pinned in scripts/coss/coss-lock.json
-// (post-pin item: see the lock entry's `provenance`), taken wholesale with imports rewritten.
+// coss base `.coss-base/chat/chat-reaction-picker.tsx`, digest-pinned in scripts/coss/coss-lock.json at the
+// pinned revision, taken wholesale with imports rewritten.
 // `../toolbar/index.js` is our toolbar (still the v2 port, measure-first), not coss's. It
 // exports the same `Toolbar` / `ToolbarButton` the base imports, and its root differs only in
 // `bg-clip-padding` (coss: `not-dark:bg-clip-padding`), moot under chat's `bg-transparent`.

@@ -1,5 +1,5 @@
-// coss base `.coss-base/lib/composer-query.ts`, digest-pinned in scripts/coss/coss-lock.json (post-pin item:
-// see the lock entry's `provenance`), taken wholesale with imports rewritten.
+// coss base `.coss-base/lib/composer-query.ts`, digest-pinned in scripts/coss/coss-lock.json at the
+// pinned revision, taken wholesale with imports rewritten.
 
 export function getComposerQuery(
   text: string,

@@ -32,12 +32,12 @@ describe("SHADCN pin", () => {
 });
 
 describe("SHADCN_COMPONENTS", () => {
-  it("is exactly the components the coss manifest marks as shadcn-sourced (none today)", () => {
+  it("is exactly the components the coss manifest marks as shadcn-sourced", () => {
     const fromCoss = COMPONENTS.filter((c) => c.source === "shadcn").map(
       (c) => c.name,
     );
     expect(SHADCN_COMPONENTS.map((c) => c.name)).toEqual(fromCoss);
-    expect(fromCoss).toEqual([]);
+    expect(fromCoss).toEqual(["carousel", "resizable"]);
   });
   it("names a template under the Base UI base for every item", () => {
     for (const c of SHADCN_COMPONENTS) {
@@ -90,7 +90,7 @@ describe("the committed .shadcn-base/ bytes", () => {
       template: { path: "", revision: "", revisionDate: "" },
     };
     const findings = committedBaseFindings(
-      { files: { ghost } },
+      { files: { ...REAL_LOCK.files, ghost } },
       join(ROOT, ".shadcn-base"),
       ".shadcn-base",
     );

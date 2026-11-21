@@ -45,16 +45,21 @@ Refreshing: run `--update`, read `git diff .coss-base/`, re-apply our divergence
 the diff touches them, and commit the lock, `.coss-base/` and the component edits
 together. Never hand-edit `.coss-base/` — the offline check exists to catch exactly that.
 
-Items the registry added after the pin (`postPin` in `manifest.ts`: today `composer` and
-its libs/hook, and the multi-file `chat` kit, locked one entry per served file) cannot be verified against a commit — the registry rewrites import paths —
-so their digest is the pin and the lock records `provenance` (source path, last commit)
-for them. The coss repository is `github.com/cosscom/ui` (renamed from `cosscom/coss`
-with history intact); `main` keeps the sources under `packages/ui/src/`.
+An item the registry adds after the pin (`postPin` in `manifest.ts`; none today) cannot be
+verified against the pinned commit, so its digest is the pin and the lock records
+`provenance` (source path, last commit) for it until the next refresh moves the pin past
+it — as happened to `composer` and the `chat` kit in 2026-11. The coss repository is
+`github.com/cosscom/ui` (renamed from `cosscom/coss` with history intact); `main` authors
+the sources under `packages/ui/src/` and commits the registry build, byte-identical to what
+the endpoint serves, under `apps/ui/registry/`. To find the revision to pin, take the head
+of `main` and let `--update` prove it. When the pin moves, re-vendor `.agents/skills/coss/`
+from `apps/ui/skills/coss/` at the same commit and update THIRD-PARTY-NOTICES.
 
 ## The shadcn base (`scripts/shadcn/`, `.shadcn-base/`)
 
-Components with no coss counterpart (none today; the sidebar lived here for a day in 2026-11
-before coss's own was chosen) can be sourced from the shadcn/ui registry, style `base-nova`,
+Components with no coss counterpart (today `carousel`, `keep-ours`, and `resizable`, ported from its
+base with our handle kept; the sidebar lived here for a day in 2026-11 before coss's
+own was chosen) can be sourced from the shadcn/ui registry, style `base-nova`,
 and pinned the same way: `scripts/shadcn/manifest.ts` lists
 them, `shadcn-lock.json` records a SHA-256 per served file, and `.shadcn-base/` holds those
 exact bytes. In the coss manifest they carry `source: "shadcn"` and no coss `registry`, so

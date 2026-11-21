@@ -1,9 +1,9 @@
 {
-  "revision": "816348154874bbc0be230277c584cc38019b48b1",
-  "revisionDate": "2026-09-16",
-  "revisionSource": "https://github.com/cosscom/ui/tree/816348154874bbc0be230277c584cc38019b48b1/apps/ui/registry/",
-  "fetchedAt": "2026-09-20",
-  "revisionVerifiedAt": "2026-09-20",
+  "revision": "b2336c45f2b7355c42678ce786b6f14d62b819be",
+  "revisionDate": "2026-11-17",
+  "revisionSource": "https://github.com/cosscom/ui/tree/b2336c45f2b7355c42678ce786b6f14d62b819be/apps/ui/registry/",
+  "fetchedAt": "2026-11-21",
+  "revisionVerifiedAt": "2026-11-21",
   "files": {
     "accordion": {
       "registry": "accordion",
@@ -25,7 +25,7 @@
       "registry": "alert-dialog",
       "path": "registry/default/ui/alert-dialog.tsx",
       "base": "alert-dialog.tsx",
-      "sha256": "e6e8d2aee4115cb2e2d5bba7e3f16941a2cfaa12a2bceae70d605b1751706d82",
+      "sha256": "d44513e3a157229eea1a9190aadbc479e356b47eb13c98e1a91ce4366fa11cf6",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -41,7 +41,7 @@
       "registry": "avatar",
       "path": "registry/default/ui/avatar.tsx",
       "base": "avatar.tsx",
-      "sha256": "a742f2d7c3aa1a867799e66fa7f3b37615e455906fa0117b66c49cfedca0a4f1",
+      "sha256": "2fe6b7b5551b8867a42f764d7616d8a271409432ce696d32611d0d4b74341e9b",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -73,7 +73,7 @@
       "registry": "calendar",
       "path": "registry/default/ui/calendar.tsx",
       "base": "calendar.tsx",
-      "sha256": "e9046da3021b3bb1e77ae657cdacac79a15f71e99596984fbcd54f26f3b60179",
+      "sha256": "547ebebda2747dadee61815f41448a2b6cecce3ad125806666df7595013896f0",
       "dependencies": ["@daypicker/react", "lucide-react"],
       "registryDependencies": []
     },
@@ -103,12 +103,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-bubble.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-collapsible-message": {
       "registry": "chat",
@@ -128,12 +123,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-collapsible-message.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-conversation": {
       "registry": "chat",
@@ -153,12 +143,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-conversation.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-date-pill": {
       "registry": "chat",
@@ -178,12 +163,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-date-pill.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-delivery-indicator": {
       "registry": "chat",
@@ -203,12 +183,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-delivery-indicator.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-jump-to-latest-button": {
       "registry": "chat",
@@ -228,12 +203,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-jump-to-latest-button.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-members": {
       "registry": "chat",
@@ -253,12 +223,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-members.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-message-actions": {
       "registry": "chat",
@@ -278,12 +243,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-message-actions.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-message-bubble": {
       "registry": "chat",
@@ -303,12 +263,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-message-bubble.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-message-info": {
       "registry": "chat",
@@ -328,12 +283,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-message-info.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-message-layout": {
       "registry": "chat",
@@ -353,12 +303,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-message-layout.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-message-text": {
       "registry": "chat",
@@ -378,12 +323,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-message-text.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-message": {
       "registry": "chat",
@@ -403,12 +343,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-message.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-reaction-chip": {
       "registry": "chat",
@@ -428,12 +363,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-reaction-chip.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-reaction-picker": {
       "registry": "chat",
@@ -453,12 +383,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-reaction-picker.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-reply-preview": {
       "registry": "chat",
@@ -478,12 +403,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-reply-preview.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-reply-reference": {
       "registry": "chat",
@@ -503,12 +423,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-reply-reference.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-states": {
       "registry": "chat",
@@ -528,12 +443,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-states.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-typing-indicator": {
       "registry": "chat",
@@ -553,12 +463,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-typing-indicator.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/chat-unread-divider": {
       "registry": "chat",
@@ -578,12 +483,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/chat-unread-divider.tsx",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/hooks/use-chat-popup-dismissal": {
       "registry": "chat",
@@ -603,12 +503,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/hooks/use-chat-popup-dismissal.ts",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/hooks/use-chat-scroll": {
       "registry": "chat",
@@ -628,12 +523,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/hooks/use-chat-scroll.ts",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "chat/lib/split-chat-message-preview": {
       "registry": "chat",
@@ -653,12 +543,7 @@
         "@coss/toolbar",
         "@coss/tooltip",
         "@coss/utils"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/chat/lib/split-chat-message-preview.ts",
-        "revision": "61eb293020a00c3f87008d75e81ba91eee474b38",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     },
     "checkbox": {
       "registry": "checkbox",
@@ -688,7 +573,7 @@
       "registry": "combobox",
       "path": "registry/default/ui/combobox.tsx",
       "base": "combobox.tsx",
-      "sha256": "df233af98aa9141b3418489d20b71a693aa3d8672a3962e3d19576fb21383087",
+      "sha256": "dd8d7cfaa60c0e9b9a0ffa3f2334d43fbed05aaa67d0259fd4d89f2814c4689b",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/input", "@coss/scroll-area"]
     },
@@ -696,7 +581,7 @@
       "registry": "command",
       "path": "registry/default/ui/command.tsx",
       "base": "command.tsx",
-      "sha256": "4b40973632f7b13bd2212f094b805470aad29fb190a46001f92b13ff2350b7bd",
+      "sha256": "26f77d2322179cd7a5694d865e85362d492db053a91cb0ef7c51b573e45076a4",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/autocomplete"]
     },
@@ -704,20 +589,15 @@
       "registry": "composer",
       "path": "registry/default/ui/composer.tsx",
       "base": "composer.tsx",
-      "sha256": "6aef440608b84382e473ac1487189394d5dd4a66e8801ea6edbd54a4565045f3",
+      "sha256": "74d988465d970c10ba24e210f92905791944d9a2ec249397e8b7ca5b16d67408",
       "dependencies": ["@base-ui/react"],
-      "registryDependencies": ["@coss/composer-editor", "@coss/scroll-area"],
-      "provenance": {
-        "path": "packages/ui/src/components/composer.tsx",
-        "revision": "3d8ca28e7d90123e9e0f44665944dc240b026ccb",
-        "revisionDate": "2026-10-22"
-      }
+      "registryDependencies": ["@coss/composer-editor", "@coss/scroll-area"]
     },
     "context-menu": {
       "registry": "context-menu",
       "path": "registry/default/ui/context-menu.tsx",
       "base": "context-menu.tsx",
-      "sha256": "a47c4563334813d12f0e46380a047483aed03d7ed3e37a9cfde5899f06761abf",
+      "sha256": "c7dd4deefe1b4180ea242c0a97c3cca9a5112bc6113e212413f11be4738432fc",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -725,7 +605,7 @@
       "registry": "dialog",
       "path": "registry/default/ui/dialog.tsx",
       "base": "dialog.tsx",
-      "sha256": "14ad87a5f81d7753e9a954aa0624df49168eccc2c8d3074a41ea0a8bed3970d5",
+      "sha256": "29e99f5d39307acd3781ee0c8f78aabe6d637f667fb3b7893820e4621ddcce7b",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button", "@coss/scroll-area"]
     },
@@ -733,7 +613,7 @@
       "registry": "drawer",
       "path": "registry/default/ui/drawer.tsx",
       "base": "drawer.tsx",
-      "sha256": "e8edbf8de6192c4858395e8a99ed4d3c35fd583618b9cef4b76f260e90f6e4d1",
+      "sha256": "11ea9f5613c748e560187932a8bc1eec4ff07bf3e272d6520d737e0a430fbf91",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button", "@coss/scroll-area"]
     },
@@ -741,7 +621,7 @@
       "registry": "empty",
       "path": "registry/default/ui/empty.tsx",
       "base": "empty.tsx",
-      "sha256": "57341b5a985ba2cc229e4832ab8624b060d172706b678dd99a682fbb476d4aa9",
+      "sha256": "c1d099ad14211cfd92dbf10c169c9e178e85ec82d0160d4f814ac73be3df257b",
       "dependencies": [],
       "registryDependencies": []
     },
@@ -821,7 +701,7 @@
       "registry": "menu",
       "path": "registry/default/ui/menu.tsx",
       "base": "menu.tsx",
-      "sha256": "aeb2ebda24c8c90453fd7087bae8f14510f98e4eee75da5c084dfecaa56f2625",
+      "sha256": "19ed2b219a4a3606488d6bf66d13055bce7b6d5d438f77a1caea5648e4c44aae",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -897,6 +777,14 @@
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
+    "segmented-control": {
+      "registry": "segmented-control",
+      "path": "registry/default/ui/segmented-control.tsx",
+      "base": "segmented-control.tsx",
+      "sha256": "7ccc17c69bf36e2d5be634ba32959d00ad6ff7f3b46cc1b7ff4a93f92e4f74b9",
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": []
+    },
     "select": {
       "registry": "select",
       "path": "registry/default/ui/select.tsx",
@@ -917,7 +805,7 @@
       "registry": "sheet",
       "path": "registry/default/ui/sheet.tsx",
       "base": "sheet.tsx",
-      "sha256": "74ce70050415c0ac6ad033a4d6770f023a736a9f24540c994e88c6934c16d9a4",
+      "sha256": "f1d3361a490c9d9a49a4289604aaf6995cb0b138728c3068ba94ee6c9337978a",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button", "@coss/scroll-area"]
     },
@@ -951,7 +839,7 @@
       "registry": "slider",
       "path": "registry/default/ui/slider.tsx",
       "base": "slider.tsx",
-      "sha256": "abf488cac56c237b5eebef7c7c25ff38d07f72581a2b46c7158c019576c7fa71",
+      "sha256": "952c61cfbb6950045792adf00f772a986bb07c7b7986caf40e509d60deb92ce6",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -967,7 +855,7 @@
       "registry": "switch",
       "path": "registry/default/ui/switch.tsx",
       "base": "switch.tsx",
-      "sha256": "2b3bada3d7234149b4d29918d5e312e62919938c2ae0ee61db81350438ad43c4",
+      "sha256": "713321db777570c883348696495f9b12f47f63f1d567b8eab42c27a8d0625c36",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -983,7 +871,7 @@
       "registry": "tabs",
       "path": "registry/default/ui/tabs.tsx",
       "base": "tabs.tsx",
-      "sha256": "cbfe21ce54efe39cc02eb073a8327a4ab81b918d5745d986fdfae07d32204a7a",
+      "sha256": "abf6a27fe48fc407e2a263ccc70997952561e06e8c2603b56c7595f825086895",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/segmented-control"]
     },
@@ -991,7 +879,7 @@
       "registry": "textarea",
       "path": "registry/default/ui/textarea.tsx",
       "base": "textarea.tsx",
-      "sha256": "d153ed8f568a6ffb7b5438ea83385e3d327db9af45ef9fdd0822575d15c4e745",
+      "sha256": "3e30e41c099d7343cb0a603557acd4e8b7c94b43139a7a489df322c04c5f601c",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
@@ -999,7 +887,7 @@
       "registry": "toast",
       "path": "registry/default/ui/toast.tsx",
       "base": "toast.tsx",
-      "sha256": "6c83bd6ab5a90388aa06380924381058746bf2bd5ebb7b2187496a59e7c517d6",
+      "sha256": "3be7bcee60026cdc2a2177026598bf51cf8a739f5553466c8fbc9b5bd994d3e1",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": ["@coss/button"]
     },
@@ -1035,14 +923,6 @@
       "dependencies": ["@base-ui/react"],
       "registryDependencies": []
     },
-    "lib/segmented-control": {
-      "registry": "segmented-control",
-      "path": "registry/default/lib/segmented-control.ts",
-      "base": "lib/segmented-control.ts",
-      "sha256": "c1cb84d02ac5b75aa08a70c205feb9cc8668ffbc19751e013364f547ae41a8a8",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": []
-    },
     "hooks/use-media-query": {
       "registry": "use-media-query",
       "path": "registry/default/hooks/use-media-query.ts",
@@ -1065,12 +945,7 @@
       "base": "lib/composer-editor.ts",
       "sha256": "d2e2b65cad6530854be0f111475d56cdeb5614fe34bb0120e67fe9997c37f42c",
       "dependencies": ["@base-ui/react"],
-      "registryDependencies": ["@coss/use-composer-editor"],
-      "provenance": {
-        "path": "packages/ui/src/lib/composer-editor.ts",
-        "revision": "107dc0a1f011cd99ff047e2beef8201947a17ff2",
-        "revisionDate": "2026-10-13"
-      }
+      "registryDependencies": ["@coss/use-composer-editor"]
     },
     "lib/composer-document": {
       "registry": "composer-document",
@@ -1078,12 +953,7 @@
       "base": "lib/composer-document.ts",
       "sha256": "95cc5a3a602f37472d4bc3d2820c58c52f4f5893e3d1cfde2344f8b2a287f492",
       "dependencies": [],
-      "registryDependencies": ["@coss/composer-query"],
-      "provenance": {
-        "path": "packages/ui/src/lib/composer-document.ts",
-        "revision": "3686270c94c9d856ee1669bd06cfe3f7939d6796",
-        "revisionDate": "2026-11-05"
-      }
+      "registryDependencies": ["@coss/composer-query"]
     },
     "lib/composer-query": {
       "registry": "composer-query",
@@ -1091,12 +961,7 @@
       "base": "lib/composer-query.ts",
       "sha256": "35afd934063e1b7b7a6aa3611e006cc1740a0e732338a9bdaf94eaf8d08cacb7",
       "dependencies": [],
-      "registryDependencies": [],
-      "provenance": {
-        "path": "packages/ui/src/lib/composer-query.ts",
-        "revision": "6e01ad4aa460841c79d041559dfd63731af72488",
-        "revisionDate": "2026-10-12"
-      }
+      "registryDependencies": []
     },
     "lib/composer-clipboard": {
       "registry": "composer-clipboard",
@@ -1104,28 +969,18 @@
       "base": "lib/composer-clipboard.ts",
       "sha256": "0c9d85b0a2068ef37d6bb86e55075a3c0bd2f391cc636f68c0f3fd91fdf97667",
       "dependencies": [],
-      "registryDependencies": ["@coss/composer-document"],
-      "provenance": {
-        "path": "packages/ui/src/lib/composer-clipboard.ts",
-        "revision": "107dc0a1f011cd99ff047e2beef8201947a17ff2",
-        "revisionDate": "2026-10-13"
-      }
+      "registryDependencies": ["@coss/composer-document"]
     },
     "hooks/use-composer-editor": {
       "registry": "use-composer-editor",
       "path": "registry/default/hooks/use-composer-editor.ts",
       "base": "hooks/use-composer-editor.ts",
-      "sha256": "6a7f24fae95f1372bf1e2476ff32c4745ada9b2656b9afaf53b40e6f370b53f8",
+      "sha256": "0d990ee73058159cd6e5ded9d612c780e82b721d399f873f650730bbec7b2509",
       "dependencies": ["@base-ui/react"],
       "registryDependencies": [
         "@coss/composer-document",
         "@coss/composer-clipboard"
-      ],
-      "provenance": {
-        "path": "packages/ui/src/hooks/use-composer-editor.ts",
-        "revision": "107dc0a1f011cd99ff047e2beef8201947a17ff2",
-        "revisionDate": "2026-10-13"
-      }
+      ]
     }
   }
 }

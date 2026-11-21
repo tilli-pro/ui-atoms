@@ -5,7 +5,7 @@ import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/badge.tsx` @8163481, with the size ramp collapsed to its
+// coss base `.coss-base/badge.tsx` @b2336c4, with the size ramp collapsed to its
 // `sm:` member throughout. `[button&,a&]` is the base's form, so BDG-2's
 // mis-placed-comma variant of that selector is gone with the re-port.
 

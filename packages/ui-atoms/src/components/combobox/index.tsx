@@ -8,7 +8,7 @@ import { cn } from "../../utils.js";
 import { Input } from "../input/index.js";
 import { ScrollArea } from "../scroll-area/index.js";
 
-// coss base `.coss-base/combobox.tsx` @8163481, with the size ramp collapsed to
+// coss base `.coss-base/combobox.tsx` @b2336c4, with the size ramp collapsed to
 // its `sm:` member throughout. CBX-7/SCR-1: the base's `ComboboxList` drives
 // the scroll region through ScrollArea's `scrollFade` / `scrollbarGutter` /
 // `overscrollContain` props, which is what our `className="flex-1"` call site
@@ -572,6 +572,8 @@ export type ComboboxChipRemoveProps = BaseUICombobox.ChipRemove.Props;
 function ComboboxChipRemove({ className, ...props }: ComboboxChipRemoveProps) {
   return (
     <BaseUICombobox.ChipRemove
+      // a11y lead: the base dropped this default at b2336c4, but Base UI 1.8.0
+      // gives the icon-only button no name of its own. Overridable via props.
       aria-label="Remove"
       className={cn(comboboxChipRemoveVariants(), className)}
       data-slot="combobox-chip-remove"

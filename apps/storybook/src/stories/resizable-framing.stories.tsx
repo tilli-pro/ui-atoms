@@ -18,33 +18,33 @@ type Story = StoryObj<typeof meta>;
 export const Horizontal: Story = {
   render: () => (
     <div style={{ width: "500px", height: "200px" }}>
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel defaultSize={50}>
+      <ResizablePanelGroup orientation="horizontal">
+        <ResizablePanel defaultSize="50%">
           <div style={{ padding: "1rem", height: "100%" }}>Left</div>
         </ResizablePanel>
         <ResizableHandle withHandle={true} />
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize="50%">
           <div style={{ padding: "1rem", height: "100%" }}>Right</div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   ),
-  args: { direction: "horizontal" },
+  args: { orientation: "horizontal" },
 };
 
 export const Vertical: Story = {
   render: () => (
     <div style={{ width: "300px", height: "300px" }}>
-      <ResizablePanelGroup direction="vertical">
-        <ResizablePanel defaultSize={50}>
+      <ResizablePanelGroup orientation="vertical">
+        <ResizablePanel defaultSize="50%">
           <div style={{ padding: "1rem", height: "100%" }}>Top</div>
         </ResizablePanel>
         <ResizableHandle withHandle={true} />
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize="50%">
           <div style={{ padding: "1rem", height: "100%" }}>Bottom</div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   ),
-  args: { direction: "vertical" },
+  args: { orientation: "vertical" },
 };

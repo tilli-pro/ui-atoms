@@ -186,7 +186,7 @@ export interface ComponentFile {
   base: string;
   file: RegistryFile;
   /** Source path in the coss repository, for a post-pin item. */
-  postPin?: string;
+  postPin?: string | undefined;
 }
 
 /**

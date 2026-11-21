@@ -2,9 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@tilli.dev/ui-atoms/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
+  SheetPanel,
   SheetTitle,
   SheetTrigger,
 } from "@tilli.dev/ui-atoms/sheet";
@@ -31,7 +34,12 @@ export const Right: Story = {
           <SheetTitle>Sheet Title</SheetTitle>
           <SheetDescription>Sheet description.</SheetDescription>
         </SheetHeader>
-        <p style={{ padding: "1rem 0" }}>Sheet content.</p>
+        <SheetPanel>
+          <p>
+            Body content goes in `SheetPanel`: it is padded to line up with the
+            header and scrolls when it is taller than the sheet.
+          </p>
+        </SheetPanel>
       </SheetContent>
     </Sheet>
   ),
@@ -48,9 +56,8 @@ export const WithForm: Story = {
             Choose how and when you receive notifications.
           </SheetDescription>
         </SheetHeader>
-        <div
+        <SheetPanel
           style={{
-            padding: "1.5rem 0",
             display: "flex",
             flexDirection: "column",
             gap: "1.25rem",
@@ -120,10 +127,11 @@ export const WithForm: Story = {
               </div>
             </div>
           ))}
-        </div>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <Button style={{ flex: 1 }}>Save Preferences</Button>
-        </div>
+        </SheetPanel>
+        <SheetFooter>
+          <SheetClose render={<Button variant="ghost" />}>Cancel</SheetClose>
+          <Button>Save Preferences</Button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   ),
@@ -140,11 +148,77 @@ export const AllSides: Story = {
           <SheetContent side={side}>
             <SheetHeader>
               <SheetTitle>{side} Sheet</SheetTitle>
+              <SheetDescription>Opens from the {side}.</SheetDescription>
             </SheetHeader>
+            <SheetPanel>
+              <p>Sheet content.</p>
+            </SheetPanel>
           </SheetContent>
         </Sheet>
       ))}
     </div>
+  ),
+};
+
+export const Inset: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`variant="inset"` floats the sheet as a rounded card with a margin from `sm:` up; below that it is edge to edge like the default.',
+      },
+    },
+  },
+  render: () => (
+    <Sheet>
+      <SheetTrigger render={<Button variant="outline" />}>
+        Open Inset Sheet
+      </SheetTrigger>
+      <SheetContent side="right" variant="inset">
+        <SheetHeader>
+          <SheetTitle>Invoice 1042</SheetTitle>
+          <SheetDescription>Issued 3 November 2026.</SheetDescription>
+        </SheetHeader>
+        <SheetPanel>
+          <p>Amount due: $240.00</p>
+        </SheetPanel>
+        <SheetFooter variant="bare">
+          <SheetClose render={<Button variant="outline" />}>Close</SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
+};
+
+export const ScrollingBody: Story = {
+  render: () => (
+    <Sheet>
+      <SheetTrigger render={<Button variant="outline" />}>
+        Open Long Sheet
+      </SheetTrigger>
+      <SheetContent side="right">
+        <SheetHeader>
+          <SheetTitle>Activity</SheetTitle>
+          <SheetDescription>
+            The last 40 events on this account.
+          </SheetDescription>
+        </SheetHeader>
+        <SheetPanel>
+          <ul
+            style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+          >
+            {Array.from({ length: 40 }, (_, i) => `Event ${i + 1}`).map(
+              (label) => (
+                <li key={label}>{label}</li>
+              ),
+            )}
+          </ul>
+        </SheetPanel>
+        <SheetFooter>
+          <SheetClose render={<Button />}>Done</SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   ),
 };
 

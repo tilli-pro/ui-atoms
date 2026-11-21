@@ -2,6 +2,33 @@
   "style": "base-nova",
   "registry": "https://ui.shadcn.com/r/styles/base-nova",
   "repo": "https://github.com/shadcn-ui/ui",
-  "fetchedAt": "2026-11-09",
-  "files": {}
+  "fetchedAt": "2026-11-21",
+  "files": {
+    "carousel": {
+      "registry": "carousel",
+      "path": "registry/base-nova/ui/carousel.tsx",
+      "base": "carousel.tsx",
+      "sha256": "64df310fc76336a5b1307bb736d5457fa3767393d4c5ff884851ccee568c8b6c",
+      "dependencies": ["cn", "embla-carousel-react"],
+      "registryDependencies": ["button"],
+      "template": {
+        "path": "registry/bases/base/ui/carousel.tsx",
+        "revision": "c257f688cf4de7ec10cc1be84cad29cd4631182c",
+        "revisionDate": "2026-09-04"
+      }
+    },
+    "resizable": {
+      "registry": "resizable",
+      "path": "registry/base-nova/ui/resizable.tsx",
+      "base": "resizable.tsx",
+      "sha256": "c45c4e1a32aefb83d60406366e2368b9d8a6e772406f8b964154e7202d6304f7",
+      "dependencies": ["cn", "react-resizable-panels"],
+      "registryDependencies": [],
+      "template": {
+        "path": "registry/bases/base/ui/resizable.tsx",
+        "revision": "c257f688cf4de7ec10cc1be84cad29cd4631182c",
+        "revisionDate": "2026-09-04"
+      }
+    }
+  }
 }

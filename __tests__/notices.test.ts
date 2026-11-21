@@ -40,7 +40,7 @@ describe("THIRD-PARTY-NOTICES", () => {
     ).toContain(lock.revision);
     expect(text).toContain(".coss-base/");
   });
-  it("records the digest of the shadcn base the sidebar was taken from", () => {
+  it("records the digest of every shadcn base a component is derived from", () => {
     const lock = JSON.parse(
       readFileSync(
         resolve(

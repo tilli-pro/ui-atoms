@@ -18,12 +18,14 @@ const CONTEXT = /createContext\s*\(/;
  * on the first hook. A directive the rule cannot derive must never be dropped
  * silently, so the dependency is part of the rule.
  *
- * Verified at the versions this package pins (2026-09-20):
+ * Verified at the versions this package pins (2026-09-20; re-checked 2026-11-21 for the
+ * two that moved):
  * - `@daypicker/react` (react-day-picker 10.0.1) — no directive anywhere in
  *   `dist/`; `dist/esm/useDayPicker.js` calls `createContext` at module scope.
- * - `react-resizable-panels` 3.0.6 — no directive in `dist/`; two module-scope
- *   `createContext` calls.
- * - `motion` (framer-motion 12) — `motion` is re-exported from
+ * - `react-resizable-panels` — 3.0.6 had no directive in `dist/` and two module-scope
+ *   `createContext` calls. 4.24.1 ships `"use client"` at the top of its bundle; it stays
+ *   listed because the peer range still decides what a consumer installs.
+ * - `motion` (framer-motion 12, and 14.14.0) — `motion` is re-exported from
  *   `dist/es/render/components/motion/proxy.mjs`, which carries no directive
  *   (the `context/*` siblings that do are not what `motion` comes from).
  * - `embla-carousel-react` 8.6.0 — a hook library, no directive in `dist/`.

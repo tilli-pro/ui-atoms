@@ -9,8 +9,8 @@ metadata:
 
 ## Provenance
 
-- Vendored verbatim from `github.com/cosscom/coss` (MIT), path `apps/ui/skills/coss/`, at commit `816348154874bbc0be230277c584cc38019b48b1` — the same commit `@tilli.dev/ui-atoms` re-bases its components on, so the skill and the components describe one registry line.
-- Refreshed 2026-09-20. It was first vendored on 2026-09-18 from an older copy that had fallen behind upstream: it still named `react-day-picker`, taught the pre-`MenuLinkItem` link pattern, and lacked two reference files.
+- Vendored verbatim from `github.com/cosscom/ui` (MIT; `cosscom/coss` before the rename), path `apps/ui/skills/coss/`, at commit `b2336c45f2b7355c42678ce786b6f14d62b819be` — the same commit `@tilli.dev/ui-atoms` re-bases its components on, so the skill and the components describe one registry line.
+- Refreshed 2026-11-21 with the pin (previously `8163481`, vendored 2026-09-20).
 - This section is the only local edit. When the pinned coss commit moves, re-vendor the whole folder from that commit.
 - Where the skill and the registry disagree, the registry JSON at `https://coss.com/ui/r/<name>.json` is authoritative.
 
@@ -30,9 +30,9 @@ Use this skill to:
 ## Source of truth
 
 - coss components docs: `apps/ui/content/docs/components/*.mdx`
-  - `https://github.com/cosscom/coss/tree/main/apps/ui/content/docs/components`
+  - `https://github.com/cosscom/ui/tree/main/apps/ui/content/docs/components`
 - coss particle examples: `apps/ui/registry/default/particles/p-*.tsx`
-  - `https://github.com/cosscom/coss/tree/main/apps/ui/registry/default/particles`
+  - `https://github.com/cosscom/ui/tree/main/apps/ui/registry/default/particles`
 - coss particles catalog: `https://coss.com/ui/particles`
 - docs map for agents: `https://coss.com/ui/llms.txt`
 
@@ -56,6 +56,7 @@ Always apply before returning coss code:
 
 - Do not invent coss APIs. Verify against component docs first.
 - For trigger-based primitives (Dialog, Menu, Select, Popover, Tooltip), follow each primitive's documented trigger/content hierarchy and composition API; do not mix patterns across components.
+- Use Drawer for edge panels on desktop and mobile. Sheet has been replaced by Drawer; do not introduce Sheet usage.
 - Preserve accessibility labels and error semantics.
 - Consult primitive-specific guides for component invariants and edge cases.
 - For manual install guidance, include all required dependencies and local component files referenced by imports.
@@ -67,12 +68,11 @@ Rule references (read on demand when the task touches these areas):
 - `./references/rules/forms.md` — Field composition, validation, input patterns
 - `./references/rules/composition.md` — Trigger/popup hierarchies, grouped controls
 - `./references/rules/migration.md` — shadcn/Radix to coss/Base UI migration patterns
-- `./references/segmented-control.md` — choose Radio Group, links, Toggle Group, or Tabs before applying segmented-control styling
 - `./references/portal-props.md` — optional `portalProps` on composed popups and toast providers (`keepMounted`, `container`, which surfaces support it)
 
 ## Component discovery
 
-All 54 primitives have dedicated reference guides at `./references/primitives/<name>.md`. To find the right one for a task, consult the component registry index:
+All 55 primitives have dedicated reference guides at `./references/primitives/<name>.md`. To find the right one for a task, consult the component registry index:
 
 - `./references/component-registry.md`
 
@@ -112,7 +112,7 @@ High-risk primitives (read these guides first -- they have the most composition 
 - `./references/primitives/context-menu.md` — right-click/long-press menus at the pointer
 - `./references/primitives/select.md` — items-first pattern, multiple, object values, groups
 - `./references/primitives/form.md` — Field composition, validation, submission
-- `./references/primitives/input-group.md` — addons, DOM order invariant, textarea layouts
+- `./references/primitives/input-group.md` — input-first DOM convention, addon focus lookup, textarea layouts
 - `./references/primitives/toast.md` — toastManager (not Sonner), anchored toasts, providers
 
 ## Output Checklist

@@ -81,7 +81,7 @@ describe("the committed .coss-base/ bytes", () => {
     );
   });
 
-  it("locks one entry per file on disk: at the pinned revision, or digest-pinned with provenance", () => {
+  it("locks one entry per file on disk, all at the pinned revision", () => {
     expect(Object.keys(REAL_LOCK.files)).toHaveLength(86);
     expect(REAL_LOCK.revision).toBe(COSS.revision);
     expect(REAL_LOCK.revisionDate).toBe(COSS.revisionDate);
@@ -90,56 +90,21 @@ describe("the committed .coss-base/ bytes", () => {
       expect(entry.base, key).toBe(
         TS_BASE_KEY_RE.test(key) ? `${key}.ts` : `${key}.tsx`,
       );
-      if (CHAT_KEY_RE.test(key)) {
+      if (CHAT_KEY_RE.test(key))
         expect(entry.path, key).toBe(`registry/default/${entry.base}`);
-        expect(entry.provenance?.path, key).toBe(
-          `packages/ui/src/${entry.base}`,
-        );
-      }
-      if (entry.provenance) {
-        expect(entry.provenance.path, key).toMatch(/^packages\/ui\/src\//);
-        expect(entry.provenance.revision, key).toMatch(SHA40_RE);
-        expect(entry.provenance.revisionDate, key).toMatch(
-          /^\d{4}-\d{2}-\d{2}$/,
-        );
-      }
     }
+    // Every file is inside the tree at this pin and proven against it: nothing is
+    // digest-pinned on provenance alone (composer and chat were, before b2336c4).
     expect(
       Object.entries(REAL_LOCK.files)
         .filter(([, e]) => e.provenance)
-        .map(([k]) => k)
-        .sort(),
-    ).toEqual([
-      "chat/chat-bubble",
-      "chat/chat-collapsible-message",
-      "chat/chat-conversation",
-      "chat/chat-date-pill",
-      "chat/chat-delivery-indicator",
-      "chat/chat-jump-to-latest-button",
-      "chat/chat-members",
-      "chat/chat-message",
-      "chat/chat-message-actions",
-      "chat/chat-message-bubble",
-      "chat/chat-message-info",
-      "chat/chat-message-layout",
-      "chat/chat-message-text",
-      "chat/chat-reaction-chip",
-      "chat/chat-reaction-picker",
-      "chat/chat-reply-preview",
-      "chat/chat-reply-reference",
-      "chat/chat-states",
-      "chat/chat-typing-indicator",
-      "chat/chat-unread-divider",
-      "chat/hooks/use-chat-popup-dismissal",
-      "chat/hooks/use-chat-scroll",
-      "chat/lib/split-chat-message-preview",
-      "composer",
-      "hooks/use-composer-editor",
-      "lib/composer-clipboard",
-      "lib/composer-document",
-      "lib/composer-editor",
-      "lib/composer-query",
-    ]);
+        .map(([k]) => k),
+    ).toEqual([]);
+    // coss's segmented-control is a component base now, not a vendored lib.
+    expect(REAL_LOCK.files["segmented-control"]?.path).toBe(
+      "registry/default/ui/segmented-control.tsx",
+    );
+    expect(REAL_LOCK.files["lib/segmented-control"]).toBeUndefined();
   });
 
   it("ignores the .gitkeep that holds an empty base directory", () => {

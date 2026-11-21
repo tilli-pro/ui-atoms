@@ -42,11 +42,31 @@ export interface ShadcnComponentEntry {
   readonly note?: string;
 }
 
-/** Empty today: the sidebar was moved here in 2026-11 and moved back to the coss base the
- *  same day (coss serves its own Base UI sidebar). The tooling stays so a shadcn-only
- *  component can be pinned the moment one is wanted: add it here, run `pnpm fetch-shadcn
- *  --update`, and give its coss `COMPONENTS` entry `source: "shadcn"`. */
-export const SHADCN_COMPONENTS: readonly ShadcnComponentEntry[] = [];
+/** The two components that were shadcn/ui's all along and were recorded as tilli-only
+ *  until the 2026-11 refresh compared them with the registry. `carousel` is `keep-ours`: its
+ *  base is pinned as the record of what it derives from and as the diff a later refresh
+ *  starts from. `resizable` was re-ported onto its base when the peer moved to 4.x. (The sidebar was moved here in 2026-11 and
+ *  moved back to the coss base the same day: coss serves its own Base UI sidebar.) To add
+ *  one: list it here, run `pnpm fetch-shadcn --update`, and give its coss `COMPONENTS`
+ *  entry `source: "shadcn"`. */
+export const SHADCN_COMPONENTS: readonly ShadcnComponentEntry[] = [
+  {
+    name: "carousel",
+    registry: "carousel",
+    template: "registry/bases/base/ui/carousel.tsx",
+    disposition: "keep-ours",
+    reapply: [],
+    note: "ours keeps lucide ArrowLeft / ArrowRight and size-8 buttons (CAR-1 in the coss manifest); the base generates icon placeholders and icon-sm buttons.",
+  },
+  {
+    name: "resizable",
+    registry: "resizable",
+    template: "registry/bases/base/ui/resizable.tsx",
+    disposition: "merge-selectively",
+    reapply: [],
+    note: "the base's react-resizable-panels 4.x shape and class strings are taken; the styling is ours (RSZ-1 in the coss manifest): a grip handle where the base draws a plain bar, and the coss focus ring and state colours.",
+  },
+];
 
 /** The divergences that stay live under re-basing, and why. Mirrors `LIVE_IDS` in the
  *  coss manifest. Empty while SHADCN_COMPONENTS is. */

@@ -5,7 +5,7 @@ import { Slider as BaseUISlider } from "@base-ui/react/slider";
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/slider.tsx` @8163481, with the thumb's size ramp
+// coss base `.coss-base/slider.tsx` @b2336c4, with the thumb's size ramp
 // collapsed to its `sm:` member (`size-5 … sm:size-4` → `size-4`). SLD-1's
 // `index` on the thumb and SLD-2's `className` on the Root (not the Control)
 // are both the base's behaviour.

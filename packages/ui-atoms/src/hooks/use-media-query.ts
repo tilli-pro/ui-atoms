@@ -1,6 +1,6 @@
 "use client";
 
-// coss base `.coss-base/hooks/use-media-query.ts` @8163481, taken wholesale. `useIsMobile`
+// coss base `.coss-base/hooks/use-media-query.ts` @b2336c4, taken wholesale. `useIsMobile`
 // replaces the shadcn hook that lived in use-mobile.ts (same name, same breakpoint).
 
 import { useCallback, useSyncExternalStore } from "react";

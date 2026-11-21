@@ -16,7 +16,7 @@ import {
 } from "../autocomplete/index.js";
 
 // CMD-2, swap 3 of 4: cmdk → coss's Base UI Autocomplete command. coss base
-// `.coss-base/command.tsx` @8163481.
+// `.coss-base/command.tsx` @b2336c4.
 //
 // Breaking surface for consumers migrating from the earlier component: the `[cmdk-*]` selector
 // vocabulary and the item's `data-selected="true"` / `aria-selected` are
@@ -28,7 +28,7 @@ import {
 // build error over the missing dialog parts disappears with the old file.
 
 const commandDialogBackdropVariants = cva({
-  base: "fixed inset-0 z-50 bg-black/32 backdrop-blur-sm transition-all duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0",
+  base: "fixed inset-0 z-50 bg-black/32 backdrop-blur-sm transition-all duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 supports-[-webkit-touch-callout:none]:absolute",
 });
 
 const commandDialogViewportVariants = cva({

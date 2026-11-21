@@ -14,7 +14,7 @@ import { Button } from "../button/index.js";
 import { ScrollArea } from "../scroll-area/index.js";
 
 // DRW-1, swap 2 of 4: vaul → `@base-ui/react/drawer`. coss base
-// `.coss-base/drawer.tsx` @8163481. `drawer` is not one of the fourteen the
+// `.coss-base/drawer.tsx` @b2336c4. `drawer` is not one of the fourteen the
 // size-ramp hold-back names, so its `sm:` pairs are the base's verbatim.
 //
 // Breaking surface for consumers migrating from the earlier component: `DrawerOverlay` →
@@ -50,11 +50,13 @@ const drawerViewportVariants = cva({
     { className: "pb-(--inset)", position: "bottom", variant: "inset" },
     { className: "pb-(--inset)", position: "left", variant: "inset" },
     { className: "pb-(--inset)", position: "right", variant: "inset" },
+    { className: "sm:after:hidden", position: "bottom", variant: "inset" },
   ],
   defaultVariants: { position: "bottom", variant: "default" },
   variants: {
     position: {
-      bottom: "grid grid-rows-[1fr_auto] pt-12",
+      bottom:
+        "grid grid-rows-[1fr_auto] pt-[max(--spacing(2),env(safe-area-inset-top,0px))] after:pointer-events-none after:fixed after:inset-x-0 after:bottom-0 after:h-(--bleed) after:bg-popover data-closed:after:opacity-0 has-[[data-swiping]]:after:opacity-0",
       left: "flex justify-start",
       right: "flex justify-end",
       top: "grid grid-rows-[auto_1fr] pb-12",
@@ -135,7 +137,7 @@ const drawerPopupVariants = cva({
   variants: {
     position: {
       bottom:
-        "transform-[translateY(calc(var(--drawer-snap-point-offset)+var(--drawer-swipe-movement-y)))] data-ending-style:transform-[translateY(calc(100%+env(safe-area-inset-bottom,0px)+var(--inset)))] data-starting-style:transform-[translateY(calc(100%+env(safe-area-inset-bottom,0px)+var(--inset)))] row-start-2 -mb-[max(0px,calc(var(--drawer-snap-point-offset,0px)+clamp(0,1,var(--drawer-snap-point-offset,0px)/1px)*var(--drawer-swipe-movement-y,0px)))] border-t pb-[max(0px,calc(env(safe-area-inset-bottom,0px)+var(--drawer-snap-point-offset,0px)+clamp(0,1,var(--drawer-snap-point-offset,0px)/1px)*var(--drawer-swipe-movement-y,0px)))] not-data-starting-style:not-data-ending-style:transition-[transform,box-shadow,height,background-color,margin,padding] after:inset-x-0 after:top-full after:h-(--bleed) has-data-[slot=drawer-bar]:pt-2 data-ending-style:mb-0 data-starting-style:mb-0 data-ending-style:pb-0 data-starting-style:pb-0 h-(--drawer-height,auto) [--height:max(0px,calc(var(--drawer-frontmost-height,var(--drawer-height))))] data-nested-drawer-open:h-(--height) data-nested-drawer-open:transform-[translateY(calc(var(--drawer-swipe-movement-y)-var(--stack-peek-offset)-(var(--shrink)*var(--height))))_scale(var(--scale))] origin-[50%_calc(100%-var(--inset))]",
+        "z-1 transform-[translateY(calc(var(--keyboard-snap-offset)+var(--drawer-swipe-movement-y)))] data-ending-style:transform-[translateY(calc(100%+env(safe-area-inset-bottom,0px)+var(--inset)))] data-starting-style:transform-[translateY(calc(100%+env(safe-area-inset-bottom,0px)+var(--inset)))] row-start-2 -mb-[max(0px,calc(var(--keyboard-snap-offset)+clamp(0,1,var(--keyboard-snap-offset)/1px)*var(--drawer-swipe-movement-y,0px)))] border-t pb-[max(0px,calc(max(env(safe-area-inset-bottom,0px),var(--drawer-keyboard-inset,0px))+var(--keyboard-snap-offset)+clamp(0,1,var(--keyboard-snap-offset)/1px)*var(--drawer-swipe-movement-y,0px)))] not-data-starting-style:not-data-ending-style:transition-[transform,box-shadow,height,background-color,margin,padding] [--keyboard-snap-offset:max(0px,calc(var(--drawer-snap-point-offset,0px)-var(--drawer-keyboard-inset,0px)))] after:inset-x-0 after:top-full after:h-(--bleed) has-data-[slot=drawer-bar]:pt-2 data-ending-style:mb-0 data-starting-style:mb-0 data-ending-style:pb-0 data-starting-style:pb-0 h-(--drawer-height,auto) [--height:max(0px,calc(var(--drawer-frontmost-height,var(--drawer-height))))] data-nested-drawer-open:h-(--height) data-nested-drawer-open:transform-[translateY(calc(var(--drawer-swipe-movement-y)-var(--stack-peek-offset)-(var(--shrink)*var(--height))))_scale(var(--scale))] origin-[50%_calc(100%-var(--inset))]",
       left: "data-starting-style:transform-[translateX(calc(-100%-var(--inset)))] data-ending-style:transform-[translateX(calc(-100%-var(--inset)))] transform-[translateX(var(--drawer-swipe-movement-x))] w-[calc(100%-(--spacing(12)))] max-w-md border-e after:inset-y-0 after:end-full after:w-(--bleed) has-data-[slot=drawer-bar]:pe-2 data-nested-drawer-open:transform-[translateX(calc(var(--drawer-swipe-movement-x)+var(--stack-peek-offset)))_scale(var(--scale))] origin-right",
       right:
         "transform-[translateX(var(--drawer-swipe-movement-x))] data-ending-style:transform-[translateX(calc(100%+var(--inset)))] data-starting-style:transform-[translateX(calc(100%+var(--inset)))] col-start-2 w-[calc(100%-(--spacing(12)))] max-w-md border-s after:inset-y-0 after:start-full after:w-(--bleed) has-data-[slot=drawer-bar]:ps-2 data-nested-drawer-open:transform-[translateX(calc(var(--drawer-swipe-movement-x)-var(--stack-peek-offset)))_scale(var(--scale))] origin-left",
@@ -170,7 +172,7 @@ const drawerFooterVariants = cva({
 });
 
 const drawerTitleVariants = cva({
-  base: "font-heading font-semibold text-xl leading-none",
+  base: "font-bold font-heading text-xl leading-none",
 });
 
 const drawerDescriptionVariants = cva({
@@ -372,7 +374,7 @@ function DrawerPopupPrimitive({
   const { position: contextPosition } = React.useContext(DrawerContext);
   const position = positionProp ?? contextPosition;
 
-  return (
+  const popup = (
     <DrawerPortal {...portalProps}>
       <DrawerBackdrop />
       <DrawerViewport position={position} variant={variant}>
@@ -391,6 +393,16 @@ function DrawerPopupPrimitive({
         </BaseUIDrawer.Popup>
       </DrawerViewport>
     </DrawerPortal>
+  );
+
+  // A bottom drawer makes room for the on-screen keyboard: the provider feeds
+  // `--drawer-keyboard-inset`, which the popup's bottom padding and snap offset read.
+  return position === "bottom" ? (
+    <BaseUIDrawer.VirtualKeyboardProvider>
+      {popup}
+    </BaseUIDrawer.VirtualKeyboardProvider>
+  ) : (
+    popup
   );
 }
 
@@ -556,9 +568,10 @@ function DrawerPanelPrimitive({
   });
 
   if (scrollable) {
+    // The popup reserves keyboard space; extra viewport padding would overflow the panel.
     return (
       <ScrollArea
-        className="touch-auto"
+        className="touch-auto *:data-[slot=scroll-area-viewport]:pb-0!"
         overscrollContain={true}
         scrollFade={scrollFade}
       >
@@ -834,7 +847,7 @@ function DrawerMenuCheckboxItemPrimitive({
             className="inset-shadow-[0_1px_--theme(--color-black/4%)] col-start-2 inline-flex h-[calc(var(--thumb-size)+2px)] w-[calc(var(--thumb-size)*2-2px)] shrink-0 items-center rounded-full p-px outline-none transition-[background-color,box-shadow] duration-200 [--thumb-size:--spacing(4)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background data-checked:bg-primary data-unchecked:bg-input data-disabled:opacity-64 sm:[--thumb-size:--spacing(3)]"
             keepMounted={true}
           >
-            <span className="pointer-events-none block aspect-square h-full in-[[data-slot=drawer-menu-checkbox-item][data-checked]]:origin-[var(--thumb-size)_50%] origin-left in-[[data-slot=drawer-menu-checkbox-item][data-checked]]:translate-x-[calc(var(--thumb-size)-4px)] in-[[data-slot=drawer-menu-checkbox-item]:active]:not-data-disabled:scale-x-110 in-[[data-slot=drawer-menu-checkbox-item]:active]:rounded-[var(--thumb-size)/calc(var(--thumb-size)*1.10)] rounded-(--thumb-size) bg-background shadow-sm/5 will-change-transform [transition:translate_.15s,border-radius_.15s,scale_.1s_.1s,transform-origin_.15s]" />
+            <span className="pointer-events-none block aspect-square h-full in-[[data-slot=drawer-menu-checkbox-item][data-checked]]:origin-[var(--thumb-size)_50%] origin-left in-[[data-slot=drawer-menu-checkbox-item][data-checked]]:translate-x-[calc(var(--thumb-size)-4px)] in-[[data-slot=drawer-menu-checkbox-item]:active]:not-data-disabled:scale-x-110 in-[[data-slot=drawer-menu-checkbox-item]:active]:rounded-[var(--thumb-size)/calc(var(--thumb-size)*1.10)] rounded-(--thumb-size) bg-background shadow-sm/5 will-change-transform [transition:translate_.15s,border-radius_.15s,scale_.1s_.1s,transform-origin_.15s] rtl:in-[[data-slot=drawer-menu-checkbox-item][data-checked]]:origin-left rtl:origin-right rtl:in-[[data-slot=drawer-menu-checkbox-item][data-checked]]:-translate-x-[calc(var(--thumb-size)-4px)]" />
           </BaseUICheckbox.Indicator>
         </>
       ) : (

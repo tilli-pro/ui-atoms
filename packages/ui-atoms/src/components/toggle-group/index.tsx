@@ -7,7 +7,7 @@ import { cn } from "../../utils.js";
 import { Separator, type SeparatorProps } from "../separator/index.js";
 import { Toggle, type TogglePrimitiveProps } from "../toggle/index.js";
 
-// coss base `.coss-base/toggle-group.tsx` @8163481. The base's nested ternary on
+// coss base `.coss-base/toggle-group.tsx` @b2336c4. The base's nested ternary on
 // `variant`/`orientation` is expressed as cva compound variants; the class
 // strings are verbatim.
 

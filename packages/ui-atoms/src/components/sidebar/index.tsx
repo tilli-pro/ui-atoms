@@ -26,7 +26,7 @@ import {
   TooltipTrigger,
 } from "../tooltip/index.js";
 
-// coss base `.coss-base/sidebar.tsx` @8163481, merged selectively. House style: `cva`
+// coss base `.coss-base/sidebar.tsx` @b2336c4, merged selectively. House style: `cva`
 // object syntax, the flat export block, no explicit return-type annotations. Divergences,
 // each a LIVE_IDS entry in scripts/coss/manifest.ts so a refresh re-applies them:
 //   SBR-1  the width constants are exported, and the default width is 14rem (base: 16rem)

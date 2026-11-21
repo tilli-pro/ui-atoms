@@ -1,7 +1,7 @@
 "use client";
 
-// coss base `.coss-base/chat/chat-collapsible-message.tsx`, digest-pinned in scripts/coss/coss-lock.json
-// (post-pin item: see the lock entry's `provenance`), taken wholesale with imports rewritten.
+// coss base `.coss-base/chat/chat-collapsible-message.tsx`, digest-pinned in scripts/coss/coss-lock.json at the
+// pinned revision, taken wholesale with imports rewritten.
 
 import type { ReactElement, ReactNode } from "react";
 import { useState } from "react";

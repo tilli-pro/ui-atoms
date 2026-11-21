@@ -2,7 +2,7 @@ import type * as React from "react";
 import { cva, type VariantProps } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/alert.tsx` @8163481. Against our fork the base fixes the
+// coss base `.coss-base/alert.tsx` @b2336c4. Against our fork the base fixes the
 // grid-template ordering and uses `h-lh` in place of `h-[1lh]`; no live id and
 // no tilli lead touches this component, so the base wins throughout.
 

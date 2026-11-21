@@ -3,7 +3,7 @@ import { cva } from "cva";
 import { ChevronDownIcon } from "lucide-react";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/accordion.tsx` @8163481, plus ACC-2 (`headingLevel`),
+// coss base `.coss-base/accordion.tsx` @b2336c4, plus ACC-2 (`headingLevel`),
 // which the base's always-`h3` header cannot express. ACC-1 comes with the
 // base: the chevron carries `data-slot="accordion-indicator"` and the rotate
 // selector targets that slot instead of a bare `svg` child.

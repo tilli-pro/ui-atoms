@@ -6,7 +6,7 @@ import { cn } from "../../utils.js";
 import { Input } from "../input/index.js";
 import { ScrollArea } from "../scroll-area/index.js";
 
-// coss base `.coss-base/autocomplete.tsx` @8163481, with the size ramp
+// coss base `.coss-base/autocomplete.tsx` @b2336c4, with the size ramp
 // collapsed to its `sm:` member throughout. CBX-7/SCR-1: the base's
 // `AutocompleteList` drives the scroll region through ScrollArea's
 // `scrollFade` / `scrollbarGutter` / `overscrollContain` props, which is what

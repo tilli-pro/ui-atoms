@@ -5,19 +5,22 @@ import { Tabs as BaseUITabs } from "@base-ui/react/tabs";
 import { cva } from "cva";
 import {
   type SegmentedControlSize,
+  segmentedControlIndicatorSurfaceClassName,
   segmentedControlItemLayoutClassName,
   segmentedControlItemSizeClassNames,
 } from "../../lib/segmented-control.js";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/tabs.tsx` @8163481 plus TAB-2: the `size` prop and the
+// coss base `.coss-base/tabs.tsx` @b2336c4 plus TAB-2: the `size` prop and the
 // segmented-control size context. TAB-1 (`data-active`) and TAB-3
 // (`tabs-trigger` → `tabs-tab`) come with the base. The size ramp is collapsed
 // to its `sm:` member both in this file's own strings and in the shared
 // `../../lib/segmented-control.js` records this file pastes onto every tab —
 // `tabs` is one of the fourteen components the hold-back names, so no `sm:`
 // size pair reaches it from either source. See that file's header for the
-// TAB-2 "verbatim" deviation this implies.
+// TAB-2 "verbatim" deviation this implies. Upstream the shared strings now come
+// from the segmented-control component file; the indicator's surface is one of
+// them (`segmentedControlIndicatorSurfaceClassName`).
 
 const tabsVariants = cva({
   base: "flex flex-col gap-2 data-[orientation=vertical]:flex-row",
@@ -40,11 +43,11 @@ const tabsListVariants = cva({
 });
 
 const tabsIndicatorVariants = cva({
-  base: "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-200 ease-in-out",
+  base: "absolute bottom-0 left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left) -translate-y-(--active-tab-bottom) transition-[width,translate] duration-200 ease-in-out motion-reduce:transition-none",
   defaultVariants: { variant: "default" },
   variants: {
     variant: {
-      default: "-z-1 rounded-md bg-background shadow-sm/5 dark:bg-input",
+      default: ["-z-1", segmentedControlIndicatorSurfaceClassName],
       underline:
         "z-10 bg-primary data-[orientation=horizontal]:h-0.5 data-[orientation=vertical]:w-0.5 data-[orientation=vertical]:-translate-x-px data-[orientation=horizontal]:translate-y-px",
     },

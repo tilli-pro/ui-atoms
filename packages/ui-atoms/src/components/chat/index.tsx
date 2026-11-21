@@ -1,5 +1,5 @@
-// coss's `chat` kit (`.coss-base/chat/`, post-pin: every file is digest-pinned in
-// scripts/coss/coss-lock.json with its own `provenance`). coss serves it as one file per
+// coss's `chat` kit (`.coss-base/chat/`: every file is digest-pinned in
+// scripts/coss/coss-lock.json at the pinned revision). coss serves it as one file per
 // part with no barrel of its own; this index is ours and re-exports every public part,
 // type and hook flat, the house convention.
 

@@ -149,6 +149,32 @@ export const WithLabel: Story = {
   ),
 };
 
+export const RightToLeft: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Under `dir="rtl"` the thumb rests on the right when off and travels left when on.',
+      },
+    },
+  },
+  render: () => (
+    <div
+      dir="rtl"
+      style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <Switch id="rtl-off" />
+        <label htmlFor="rtl-off">إيقاف</label>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <Switch defaultChecked={true} id="rtl-on" />
+        <label htmlFor="rtl-on">تشغيل</label>
+      </div>
+    </div>
+  ),
+};
+
 export const Interactive: Story = {
   render: () => <Switch aria-label="Airplane mode" />,
   play: async ({ canvasElement }) => {

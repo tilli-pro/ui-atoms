@@ -1,7 +1,7 @@
 "use client";
 
-// coss base `.coss-base/chat/hooks/use-chat-scroll.ts`, digest-pinned in scripts/coss/coss-lock.json
-// (post-pin item: see the lock entry's `provenance`), taken wholesale with imports rewritten.
+// coss base `.coss-base/chat/hooks/use-chat-scroll.ts`, digest-pinned in scripts/coss/coss-lock.json at the
+// pinned revision, taken wholesale with imports rewritten.
 
 import {
   type UIEvent,

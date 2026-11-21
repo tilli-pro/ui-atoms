@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Avatar,
   AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
   AvatarImage,
 } from "@tilli.dev/ui-atoms/avatar";
 
@@ -35,18 +37,26 @@ export const Fallback: Story = {
   ),
 };
 
+const SIZES = [
+  { label: "xs", cls: "[--avatar-size:--spacing(6)]" },
+  { label: "sm", cls: "[--avatar-size:--spacing(8)]" },
+  { label: "md", cls: "[--avatar-size:--spacing(10)]" },
+  { label: "lg", cls: "[--avatar-size:--spacing(14)]" },
+  { label: "xl", cls: "[--avatar-size:--spacing(20)]" },
+] as const;
+
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "An avatar's size is the `--avatar-size` custom property (default `--spacing(8)`). The fallback text scales with it, so no separate text class is needed.",
+      },
+    },
+  },
   render: () => (
     <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-      {(
-        [
-          { label: "xs", cls: "h-6 w-6 text-xs" },
-          { label: "sm", cls: "h-8 w-8 text-sm" },
-          { label: "md", cls: "h-10 w-10" },
-          { label: "lg", cls: "h-14 w-14 text-lg" },
-          { label: "xl", cls: "h-20 w-20 text-xl" },
-        ] as const
-      ).map(({ label, cls }) => (
+      {SIZES.map(({ label, cls }) => (
         <div
           key={label}
           style={{
@@ -59,7 +69,7 @@ export const Sizes: Story = {
           <Avatar className={cls}>
             <AvatarFallback>AB</AvatarFallback>
           </Avatar>
-          <span style={{ fontSize: "0.75rem", color: "#666" }}>{label}</span>
+          <span className="text-muted-foreground text-xs">{label}</span>
         </div>
       ))}
     </div>
@@ -68,15 +78,57 @@ export const Sizes: Story = {
 
 export const Group: Story = {
   render: () => (
-    <div style={{ display: "flex" }}>
-      {["AB", "CD", "EF", "GH", "IJ"].map((initials, idx) => (
-        <Avatar
-          className="border-2 border-background"
-          key={initials}
-          style={{ marginLeft: idx === 0 ? 0 : "-0.5rem" }}
-        >
+    <AvatarGroup>
+      {["AB", "CD", "EF", "GH"].map((initials) => (
+        <Avatar key={initials}>
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
+      ))}
+      <AvatarGroupCount>+3</AvatarGroupCount>
+    </AvatarGroup>
+  ),
+};
+
+export const GroupLastOnTop: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`topmost="last"` stacks the row the other way: each avatar is cut out around the one after it.',
+      },
+    },
+  },
+  render: () => (
+    <AvatarGroup topmost="last">
+      {["AB", "CD", "EF", "GH"].map((initials) => (
+        <Avatar key={initials}>
+          <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
+      ))}
+    </AvatarGroup>
+  ),
+};
+
+export const GroupSizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Set `--avatar-size` on the group and the overlap, gap and cut-out scale with it. `--avatar-overlap` and `--avatar-gap` tune them directly.",
+      },
+    },
+  },
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      {SIZES.slice(0, 4).map(({ label, cls }) => (
+        <AvatarGroup className={cls} key={label}>
+          {["AB", "CD", "EF"].map((initials) => (
+            <Avatar key={initials}>
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+          ))}
+          <AvatarGroupCount>+5</AvatarGroupCount>
+        </AvatarGroup>
       ))}
     </div>
   ),

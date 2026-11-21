@@ -2,7 +2,7 @@ import { CheckboxGroup as BaseUICheckboxGroup } from "@base-ui/react/checkbox-gr
 import { cva } from "cva";
 import { cn } from "../../utils.js";
 
-// coss base `.coss-base/checkbox-group.tsx` @8163481. The base carries no
+// coss base `.coss-base/checkbox-group.tsx` @b2336c4. The base carries no
 // `data-slot`; ours adds none either, so the markup stays identical.
 
 const checkboxGroupVariants = cva({ base: "flex flex-col items-start gap-3" });

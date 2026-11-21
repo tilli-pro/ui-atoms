@@ -3,6 +3,7 @@ import { Button } from "@tilli.dev/ui-atoms/button";
 import {
   Menu,
   MenuCheckboxItem,
+  MenuGroup,
   MenuGroupLabel,
   MenuItem,
   MenuPopup,
@@ -31,10 +32,11 @@ export const Default: Story = {
     <Menu>
       <MenuTrigger render={<Button variant="outline" />}>Open Menu</MenuTrigger>
       <MenuPopup>
-        <MenuGroupLabel>Actions</MenuGroupLabel>
-        <MenuSeparator />
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Duplicate</MenuItem>
+        <MenuGroup>
+          <MenuGroupLabel>Actions</MenuGroupLabel>
+          <MenuItem>Edit</MenuItem>
+          <MenuItem>Duplicate</MenuItem>
+        </MenuGroup>
         <MenuSeparator />
         <MenuItem variant="destructive">Delete</MenuItem>
       </MenuPopup>
@@ -49,13 +51,42 @@ export const WithCheckboxItems: Story = {
         View Options
       </MenuTrigger>
       <MenuPopup>
-        <MenuGroupLabel>Columns</MenuGroupLabel>
-        <MenuSeparator />
-        <MenuCheckboxItem checked={true}>Invoice ID</MenuCheckboxItem>
-        <MenuCheckboxItem checked={true}>Status</MenuCheckboxItem>
-        <MenuCheckboxItem checked={false}>Payment Method</MenuCheckboxItem>
-        <MenuCheckboxItem checked={true}>Amount</MenuCheckboxItem>
-        <MenuCheckboxItem checked={false}>Due Date</MenuCheckboxItem>
+        <MenuGroup>
+          <MenuGroupLabel>Columns</MenuGroupLabel>
+          <MenuCheckboxItem checked={true}>Invoice ID</MenuCheckboxItem>
+          <MenuCheckboxItem checked={true}>Status</MenuCheckboxItem>
+          <MenuCheckboxItem checked={false}>Payment Method</MenuCheckboxItem>
+          <MenuCheckboxItem checked={true}>Amount</MenuCheckboxItem>
+          <MenuCheckboxItem checked={false}>Due Date</MenuCheckboxItem>
+        </MenuGroup>
+      </MenuPopup>
+    </Menu>
+  ),
+};
+
+export const WithSwitchItems: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`variant="switch"` on a checkbox item swaps the tick for a switch-shaped indicator.',
+      },
+    },
+  },
+  render: () => (
+    <Menu>
+      <MenuTrigger render={<Button variant="outline" />}>Display</MenuTrigger>
+      <MenuPopup>
+        <MenuGroup>
+          <MenuGroupLabel>Table</MenuGroupLabel>
+          <MenuCheckboxItem defaultChecked={true} variant="switch">
+            Compact rows
+          </MenuCheckboxItem>
+          <MenuCheckboxItem variant="switch">Show totals</MenuCheckboxItem>
+          <MenuCheckboxItem disabled={true} variant="switch">
+            Group by status
+          </MenuCheckboxItem>
+        </MenuGroup>
       </MenuPopup>
     </Menu>
   ),
@@ -66,18 +97,19 @@ export const WithRadioItems: Story = {
     <Menu>
       <MenuTrigger render={<Button variant="outline" />}>Sort By</MenuTrigger>
       <MenuPopup>
-        <MenuGroupLabel>Sort Order</MenuGroupLabel>
-        <MenuSeparator />
-        <MenuRadioGroup value="date-desc">
-          <MenuRadioItem value="date-desc">Date (newest first)</MenuRadioItem>
-          <MenuRadioItem value="date-asc">Date (oldest first)</MenuRadioItem>
-          <MenuRadioItem value="amount-desc">
-            Amount (highest first)
-          </MenuRadioItem>
-          <MenuRadioItem value="amount-asc">
-            Amount (lowest first)
-          </MenuRadioItem>
-        </MenuRadioGroup>
+        <MenuGroup>
+          <MenuGroupLabel>Sort Order</MenuGroupLabel>
+          <MenuRadioGroup value="date-desc">
+            <MenuRadioItem value="date-desc">Date (newest first)</MenuRadioItem>
+            <MenuRadioItem value="date-asc">Date (oldest first)</MenuRadioItem>
+            <MenuRadioItem value="amount-desc">
+              Amount (highest first)
+            </MenuRadioItem>
+            <MenuRadioItem value="amount-asc">
+              Amount (lowest first)
+            </MenuRadioItem>
+          </MenuRadioGroup>
+        </MenuGroup>
       </MenuPopup>
     </Menu>
   ),
@@ -88,18 +120,20 @@ export const Nested: Story = {
     <Menu>
       <MenuTrigger render={<Button variant="outline" />}>Account</MenuTrigger>
       <MenuPopup>
-        <MenuGroupLabel>My Account</MenuGroupLabel>
-        <MenuSeparator />
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>Billing</MenuItem>
+        <MenuGroup>
+          <MenuGroupLabel>My Account</MenuGroupLabel>
+          <MenuItem>Profile</MenuItem>
+          <MenuItem>Billing</MenuItem>
+        </MenuGroup>
         <MenuSub>
           <MenuSubTrigger>Notifications</MenuSubTrigger>
           <MenuSubPopup>
-            <MenuGroupLabel>Notify me via</MenuGroupLabel>
-            <MenuSeparator />
-            <MenuCheckboxItem checked={true}>Email</MenuCheckboxItem>
-            <MenuCheckboxItem checked={false}>SMS</MenuCheckboxItem>
-            <MenuCheckboxItem checked={true}>Push</MenuCheckboxItem>
+            <MenuGroup>
+              <MenuGroupLabel>Notify me via</MenuGroupLabel>
+              <MenuCheckboxItem checked={true}>Email</MenuCheckboxItem>
+              <MenuCheckboxItem checked={false}>SMS</MenuCheckboxItem>
+              <MenuCheckboxItem checked={true}>Push</MenuCheckboxItem>
+            </MenuGroup>
           </MenuSubPopup>
         </MenuSub>
         <MenuSeparator />

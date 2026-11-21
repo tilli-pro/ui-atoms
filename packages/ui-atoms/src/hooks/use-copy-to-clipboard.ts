@@ -1,6 +1,6 @@
 "use client";
 
-// coss base `.coss-base/hooks/use-copy-to-clipboard.ts` @8163481, taken wholesale.
+// coss base `.coss-base/hooks/use-copy-to-clipboard.ts` @b2336c4, taken wholesale.
 
 import * as React from "react";
 
