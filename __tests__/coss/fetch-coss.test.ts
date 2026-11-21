@@ -29,7 +29,7 @@ const REGISTRY_PATH_RE = /^registry\/default\/(ui|lib|hooks|chat)\//;
 /** A `.ts` base: a vendored lib or hook, or one inside a multi-file kit (`chat/hooks/…`). */
 const TS_BASE_KEY_RE = /^(chat\/)?(lib|hooks)\//;
 const CHAT_KEY_RE = /^chat\//;
-const SHA40_RE = /^[0-9a-f]{40}$/;
+const _SHA40_RE = /^[0-9a-f]{40}$/;
 const CARVE_OUT_RE = /only apps\/ui\/registry/;
 
 const temps: string[] = [];

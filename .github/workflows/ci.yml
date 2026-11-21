@@ -19,11 +19,13 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "22"
           cache: pnpm
@@ -68,27 +70,33 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "22"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      - run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
   storybook:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "22"
           cache: pnpm
@@ -102,11 +110,13 @@ jobs:
   visual:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "22"
           cache: pnpm
@@ -116,12 +126,12 @@ jobs:
       # A workflow_dispatch with update_snapshots=true re-captures instead of asserting (exit 0, PNGs land in __screenshots__).
       - run: pnpm --filter storybook ${{ github.event_name == 'workflow_dispatch' && inputs.update_snapshots && 'visual:update' || 'visual' }}
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: visual-screenshots
           path: apps/storybook/visual/__screenshots__
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: visual-diffs
           path: apps/storybook/test-results

@@ -75,7 +75,7 @@ describe("the Storybook is the documentation site", () => {
       "cp -R apps/storybook/storybook-static _site/storybook",
     );
     expect(pages).toContain("path: _site");
-    expect(pages).toContain("uses: actions/deploy-pages@v4");
+    expect(pages).toMatch(/uses: actions\/deploy-pages@v5\.\d+\.\d+$/m);
     expect(pages).toMatch(/pages: write\n\s+id-token: write/);
   });
 });

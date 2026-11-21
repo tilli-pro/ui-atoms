@@ -20,3 +20,5 @@ apps/storybook/visual/preport/
 
 # superpowers plan workspaces (scratch)
 .superpowers/
+# agent worktrees (git worktree add .claude/worktrees/<name>)
+.claude/worktrees/

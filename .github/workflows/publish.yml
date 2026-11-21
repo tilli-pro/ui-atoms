@@ -7,10 +7,8 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
-  pull-requests: write
-  id-token: write
+# Nothing by default; the one job below asks for exactly what it needs.
+permissions: {}
 
 concurrency: release-${{ github.ref }}
 
@@ -18,24 +16,28 @@ jobs:
   release:
     if: github.repository == 'tilli-pro/ui-atoms'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the version commit and release tags, create GitHub releases
+      pull-requests: write # open and update the "version packages" pull request
+      id-token: write # OIDC token for npm provenance
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.1
         with:
           version: 10.19.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Version pull request or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2.1.2
         with:
-          publish: pnpm release
-          version: pnpm version-packages
-          title: "chore: version packages"
-          commit: "chore: version packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish-script: pnpm release
+          version-script: pnpm version-packages
+          pr-title: "chore: version packages"
+          commit-message: "chore: version packages"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
