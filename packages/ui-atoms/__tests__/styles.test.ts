@@ -124,8 +124,8 @@ describe("styles.css — canonical token sheet", () => {
     expect(root).toContain("--radius: 0.625rem;");
     const dark = block('[data-theme="system-dark"] {');
     expect([...dark.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(38);
-    expect(dark).toContain("--background: oklch(0.185 0 0);");
-    expect(dark).toContain("--foreground: oklch(0.945 0 0);");
+    expect(dark).toContain("--background: oklch(0.145 0 0);");
+    expect(dark).toContain("--foreground: oklch(0.985 0 0);");
     expect(css).not.toMatch(/data-tenant/);
   });
   it("a11y: light-theme --muted-foreground and --destructive-foreground are darkened off the v2-pinned values — both failed axe color-contrast at 0.556/0.577 against the near-white surfaces (bg-muted, badge/alert tints) they render text on; dark theme is untouched (not exercised by the failing-axe suite)", () => {
