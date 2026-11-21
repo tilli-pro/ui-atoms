@@ -1,0 +1,18 @@
+@import "@tilli.dev/ui-atoms/styles.css";
+@source "../node_modules/@tilli.dev/ui-atoms/dist";
+
+/* Families behind the ui-atoms font tokens; the faces are loaded from Google Fonts in index.html. */
+:root {
+  --font-header: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+body [data-theme="dark"] *,
+body [data-theme="system-dark"] * {
+  background-color: black;
+}
+
+main {
+  min-height: 100vh;
+}

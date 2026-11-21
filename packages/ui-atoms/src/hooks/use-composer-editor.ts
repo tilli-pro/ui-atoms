@@ -4,8 +4,8 @@
 // pinned revision, taken wholesale with imports rewritten.
 
 import type {
+  ChangeEvent,
   ComponentProps,
-  FormEvent,
   KeyboardEvent,
   RefObject,
 } from "react";
@@ -88,6 +88,10 @@ type ComposerEditorController = {
   };
 };
 
+const inputModificationPattern =
+  /^(insertText|deleteContentBackward|deleteContentForward)$/;
+const whitespaceSuffixRegex = /\s$/u;
+const whitespacePattern = /^\s/u;
 export function useComposerEditor({
   value,
   onValueChange,
@@ -320,9 +324,7 @@ export function useComposerEditor({
         const now = Date.now();
         const group =
           reason === "input" &&
-          /^(insertText|deleteContentBackward|deleteContentForward)$/.test(
-            before.type,
-          ) &&
+          inputModificationPattern.test(before.type) &&
           previous.inputType === before.type &&
           now - previous.timestamp < 1000 &&
           before.selection?.anchor === previous.current.selection?.anchor &&
@@ -404,8 +406,9 @@ export function useComposerEditor({
     const end = Math.max(selection.anchor, selection.focus);
     const preceding = text.slice(0, start);
     const following = text.slice(end);
-    const prefix = preceding && !/\s$/u.test(preceding) ? " " : "";
-    const suffix = following && !/^\s/u.test(following) ? " " : "";
+    const prefix =
+      preceding && !whitespaceSuffixRegex.test(preceding) ? " " : "";
+    const suffix = following && !whitespacePattern.test(following) ? " " : "";
     pendingInput.current = { type: "trigger", selection: readSelection(input) };
     insertPlainText(input, `${prefix}${character}${suffix}`);
     if (suffix) {
@@ -517,7 +520,7 @@ export function useComposerEditor({
       forceReconcile((revision) => revision + 1);
     },
     formProps: {
-      onSubmit: (event: FormEvent<HTMLFormElement>) => {
+      onSubmit: (event: ChangeEvent<HTMLFormElement>) => {
         if (event.defaultPrevented || event.target !== event.currentTarget)
           return;
         event.preventDefault();

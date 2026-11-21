@@ -6,7 +6,7 @@
 // unrelated `segmented-control` component under `src/components/`. The root
 // class string and the item cva of the old lib had no consumer and went with it.
 //
-// One change from the base — **the size-ramp hold-back** (see
+// Two changes from the base. The first — **the size-ramp hold-back** (see
 // `__tests__/size-ramp-holdback.test.ts`). `tabs` is the only consumer of this
 // file and is one of the fourteen components the hold-back names, so every
 // responsive size pair is collapsed to its `sm:` member here rather than being
@@ -32,5 +32,10 @@ export const segmentedControlItemSizeClassNames: Record<
 export const segmentedControlItemLayoutClassName =
   "gap-1.5 [&_svg:not([class*='opacity-'])]:opacity-80 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:-mx-0.5 [&_svg]:shrink-0";
 
+// Second change from the base: its `dark:bg-input` is dropped. coss's dark
+// `--input` (8% white) is lighter than its `--muted` (4% white), so the active
+// pill reads as raised; in our token sheet the two are the same colour and the
+// pill would vanish into the list. `bg-background` keeps it visible in both
+// themes, as it was before `dark:` utilities took effect at all (1.1.0).
 export const segmentedControlIndicatorSurfaceClassName =
-  "rounded-md bg-background shadow-sm/5 dark:bg-input";
+  "rounded-md bg-background shadow-sm/5";
