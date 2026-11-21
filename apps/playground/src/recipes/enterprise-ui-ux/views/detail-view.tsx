@@ -37,6 +37,7 @@ import {
 } from "@tilli.dev/ui-atoms/tooltip";
 import type { LucideIcon } from "lucide-react";
 import { ChevronDown } from "lucide-react";
+import { useHref, useLocation } from "react-router";
 import {
   type ActionSpec,
   type CardContent as CardContentSpec,
@@ -94,8 +95,13 @@ function DetailViewInner<R extends Row, D>({
   const menu = spec.menu(persona);
   const moduleHash = backHash.split("/").slice(0, 2).join("/");
 
+  // The real href under the playground's router (a hash router nests the
+  // recipe's hash), so opening a crumb in a new tab lands on the same view.
+  const { pathname, search } = useLocation();
+  const moduleHref = useHref({ hash: moduleHash, pathname, search });
+  const backHref = useHref({ hash: backHash, pathname, search });
   const crumb = (href: string) => ({
-    href,
+    href: href === moduleHash ? moduleHref : backHref,
     onClick: (e: { preventDefault: () => void }) => {
       e.preventDefault();
       onNavigate(href);

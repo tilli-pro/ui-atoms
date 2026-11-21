@@ -1,6 +1,6 @@
 ---
 name: playground-recipes
-description: Use when adding, editing, versioning, listing or deleting a recipe in apps/playground (the ui-atoms recipes registry - recipes.json plus src/recipes/<slug>.tsx), when a recipe must appear on the playground root page or at /recipes/<slug>, or when the catalog test, vite build or dev console complain that recipes.json and src/recipes disagree.
+description: Use when adding, editing, versioning, listing or deleting a recipe in apps/playground (the ui-atoms recipes registry - recipes.json plus src/recipes/<slug>.tsx), when a recipe must appear on the playground root page or at /#/recipes/<slug>, or when the catalog test, vite build or dev console complain that recipes.json and src/recipes disagree.
 ---
 
 # Playground recipes

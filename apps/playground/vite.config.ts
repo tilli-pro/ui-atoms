@@ -44,6 +44,8 @@ function recipeParity(): Plugin {
 }
 
 export default defineConfig({
+  // Relative asset URLs: the build is served from a sub-path on GitHub Pages.
+  base: "./",
   plugins: [react(), tailwindcss(), recipeParity()],
   test: {
     environment: "jsdom",

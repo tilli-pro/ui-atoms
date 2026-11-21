@@ -12,9 +12,12 @@ pnpm --filter @tilli.dev/ui-atoms build   # the playground imports ui-atoms from
 pnpm --filter playground dev              # http://localhost:5173
 ```
 
-- `/` lists every recipe as a card (title, description, version), 16 per
-  page; the page is in the URL (`/?page=2`).
-- `/recipes/<slug>` renders that recipe's default-exported component, loaded
+Routes live in the URL hash, so the same build runs at any path (GitHub Pages
+serves it at `/ui-atoms/playground/`):
+
+- `/#/` lists every recipe as a card (title, description, version), 16 per
+  page; the page is in the URL (`/#/?page=2`).
+- `/#/recipes/<slug>` renders that recipe's default-exported component, loaded
   as its own chunk.
 - Anything else is a 404 page.
 

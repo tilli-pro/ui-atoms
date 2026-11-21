@@ -52,7 +52,7 @@ function recipeRoute(recipe: Recipe, load: RecipeLoader): RouteObject {
 
 /**
  * `/` lists the recipes, `/recipes/<slug>` renders that recipe's default
- * export, anything else is a 404. One static route per recipes.json entry
+ * export, anything else is a 404 (served from the URL hash: `/#/recipes/<slug>`). One static route per recipes.json entry
  * that has a module, so an unknown slug never matches a recipe route.
  */
 export function buildRoutes(

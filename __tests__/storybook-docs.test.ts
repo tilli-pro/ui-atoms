@@ -71,7 +71,10 @@ describe("the Storybook is the documentation site", () => {
     expect(
       pages.match(/^ {4}if: github\.repository == 'tilli-pro\/ui-atoms'$/gm),
     ).toHaveLength(2);
-    expect(pages).toContain("path: apps/storybook/storybook-static");
+    expect(pages).toContain(
+      "cp -R apps/storybook/storybook-static _site/storybook",
+    );
+    expect(pages).toContain("path: _site");
     expect(pages).toContain("uses: actions/deploy-pages@v4");
     expect(pages).toMatch(/pages: write\n\s+id-token: write/);
   });

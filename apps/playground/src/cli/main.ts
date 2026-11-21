@@ -88,7 +88,7 @@ async function create(paths: PlaygroundPaths): Promise<void> {
   );
   log.success(
     `Created "${recipe.title}" (${recipe.slug}) at v${recipe.version}.\n` +
-      `Edit ${relative(process.cwd(), modulePath(paths, recipe.slug))}, then open /recipes/${recipe.slug}.`,
+      `Edit ${relative(process.cwd(), modulePath(paths, recipe.slug))}, then open /#/recipes/${recipe.slug}.`,
   );
 }
 
