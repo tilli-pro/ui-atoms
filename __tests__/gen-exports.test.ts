@@ -25,6 +25,7 @@ describe("gen-exports", () => {
       "./utils",
       "./formatters",
       "./hooks",
+      "./theme",
       "./alert",
       "./button",
     ]);
@@ -35,6 +36,11 @@ describe("gen-exports", () => {
     });
     expect(exp["./styles.css"]).toBe("./dist/styles.css");
     expect(exp["./styles/core.css"]).toBe("./dist/styles/core.css");
+    expect(exp["./theme"]).toEqual({
+      types: "./dist/theme/index.d.ts",
+      import: "./dist/theme/index.js",
+      default: "./dist/theme/index.js",
+    });
     expect(exp["./utils"]).toEqual({
       types: "./dist/utils.d.ts",
       import: "./dist/utils.js",

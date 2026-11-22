@@ -43,6 +43,7 @@ export function generateExports(
     "./utils": entry("utils"),
     "./formatters": entry("formatters"),
     "./hooks": entry("hooks/index"),
+    "./theme": entry("theme/index"),
   };
   for (const name of componentDirs)
     out[`./${name}`] = entry(`components/${name}/index`);
