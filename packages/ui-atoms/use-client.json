@@ -50,6 +50,7 @@
     "src/lib/composer-editor.ts",
     "src/theme/store.ts",
     "src/theme/theme-provider.tsx",
+    "src/theme/use-custom-theme.ts",
     "src/theme/use-theme.ts"
   ],
   "server": [
@@ -109,6 +110,7 @@
     "src/theme/index.ts",
     "src/theme/script.ts",
     "src/theme/theme-script.tsx",
+    "src/theme/tokens.ts",
     "src/utils.ts"
   ]
 }

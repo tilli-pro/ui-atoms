@@ -100,6 +100,9 @@ describe("use-client rule (RSC-first)", () => {
     ]);
     expect(exempt?.needsClient).toBe(false);
     expect(other?.needsClient).toBe(true);
-    expect(SERVER_SAFE_FILES).toEqual(["src/theme/script.ts"]);
+    expect(SERVER_SAFE_FILES).toEqual([
+      "src/theme/script.ts",
+      "src/theme/tokens.ts",
+    ]);
   });
 });

@@ -51,8 +51,14 @@ const CLIENT_ONLY_MODULES: readonly string[] = [
  *   friends, but the module only serialises that function into the pre-paint script
  *   string. `getThemeScript()` is called while rendering `<head>` on the server; a
  *   directive would turn it into a client reference that cannot be called there.
+ * - `src/theme/tokens.ts`: exports the `THEME_TOKENS` list and `tokenToCssVariable`,
+ *   which server code may read. `applyThemeTokens` names `document` only as the default
+ *   for its `target` parameter, evaluated when it is called (in an effect or handler).
  */
-export const SERVER_SAFE_FILES: readonly string[] = ["src/theme/script.ts"];
+export const SERVER_SAFE_FILES: readonly string[] = [
+  "src/theme/script.ts",
+  "src/theme/tokens.ts",
+];
 
 /** `from "x"` in a value import, plus bare side-effect `import "x"`. */
 const VALUE_IMPORT = /\bimport\s+(type\s+)?[^;]*?\bfrom\s*["']([^"']+)["']/g;

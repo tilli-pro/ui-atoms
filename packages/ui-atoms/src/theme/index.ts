@@ -21,4 +21,15 @@ export {
 } from "./store.js";
 export { ThemeProvider, type ThemeProviderProps } from "./theme-provider.js";
 export { ThemeScript, type ThemeScriptProps } from "./theme-script.js";
+export {
+  applyThemeTokens,
+  THEME_TOKENS,
+  type ThemeToken,
+  type ThemeTokens,
+  tokenToCssVariable,
+} from "./tokens.js";
+export {
+  type UseCustomThemeOptions,
+  useCustomTheme,
+} from "./use-custom-theme.js";
 export { type UseThemeResult, useTheme } from "./use-theme.js";
