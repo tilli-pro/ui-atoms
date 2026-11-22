@@ -1,6 +1,6 @@
 {
   "name": "@tilli.dev/themes",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Themes for @tilli.dev/ui-atoms: the tilli brand palette, and beacon, which adds a spectrum for telling an application's sections apart",
   "type": "module",
   "license": "MIT",
