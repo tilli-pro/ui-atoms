@@ -21,6 +21,10 @@ const SETS = [
   "theme-tilli-dark",
   "theme-tilli-contrast-light",
   "theme-tilli-contrast-dark",
+  "theme-beacon-light",
+  "theme-beacon-dark",
+  "theme-beacon-contrast-light",
+  "theme-beacon-contrast-dark",
 ];
 
 const compiled = compileCss(CORE, SETS);
@@ -197,5 +201,88 @@ describe("tilli theme", () => {
         "--background"
       ],
     ).toBe("oklch(0.145 0.012 258)");
+  });
+});
+describe("beacon theme", () => {
+  const SPECTRUM = [1, 2, 3, 4, 5, 6];
+  const spectrumKeys = SPECTRUM.flatMap((n) => [
+    `--spectrum-${n}`,
+    `--spectrum-${n}-to`,
+    `--spectrum-${n}-contrast`,
+    `--spectrum-${n}-foreground`,
+  ]);
+
+  it.each(["light", "dark"])(
+    "%s: is the tilli theme plus the six spectrum colours",
+    async (mode) => {
+      const beacon = await set(`theme-beacon-${mode}`);
+      const tilli = await set(`theme-tilli-${mode}`);
+      expect(Object.keys(beacon).sort()).toEqual(
+        [...Object.keys(tilli), ...spectrumKeys].sort(),
+      );
+      for (const [token, value] of Object.entries(tilli))
+        expect(beacon[token], token).toBe(value);
+      expect(await set(`theme-beacon-contrast-${mode}`)).toEqual(
+        await set(`theme-tilli-contrast-${mode}`),
+      );
+    },
+  );
+  it.each(["light", "dark"])(
+    "%s: each spectrum colour carries its own contrast colour across the whole gradient, and has readable text",
+    async (mode) => {
+      const t = await set(`theme-beacon-${mode}`);
+      for (const n of SPECTRUM) {
+        const on = color(t, `--spectrum-${n}-contrast`);
+        expect(
+          contrast(on, color(t, `--spectrum-${n}`)),
+          `${n} fill`,
+        ).toBeGreaterThanOrEqual(4.5);
+        expect(
+          contrast(on, color(t, `--spectrum-${n}-to`)),
+          `${n} gradient end`,
+        ).toBeGreaterThanOrEqual(4.5);
+        for (const surface of ["--background", "--card", "--sidebar"])
+          expect(
+            contrast(color(t, `--spectrum-${n}-foreground`), color(t, surface)),
+            `${n} text on ${surface}`,
+          ).toBeGreaterThanOrEqual(4.5);
+      }
+    },
+  );
+  it("keeps every spectrum hue apart from its neighbours and out of the brand blue's range", async () => {
+    const t = await set("theme-beacon-light");
+    const brand = color(t, "--brand").h;
+    const apart = (a: number, b: number) =>
+      Math.min(Math.abs(a - b), 360 - Math.abs(a - b));
+    const hues = SPECTRUM.map((n) => color(t, `--spectrum-${n}`).h);
+    for (const n of SPECTRUM) {
+      for (const key of [`--spectrum-${n}`, `--spectrum-${n}-to`])
+        expect(
+          apart(color(t, key).h, brand),
+          `${key} vs brand`,
+        ).toBeGreaterThanOrEqual(35);
+    }
+    for (let i = 0; i < hues.length; i++)
+      for (let j = i + 1; j < hues.length; j++)
+        expect(
+          apart(hues[i] ?? 0, hues[j] ?? 0),
+          `${i + 1} vs ${j + 1}`,
+        ).toBeGreaterThanOrEqual(40);
+  });
+  it("maps the spectrum to Tailwind colours and ships styles/beacon.css", async () => {
+    const out = await compileCss(CORE, [
+      "bg-spectrum-1",
+      "text-spectrum-4-foreground",
+      "to-spectrum-6-to",
+    ]);
+    expect(out).toContain("background-color: var(--spectrum-1)");
+    expect(out).toContain("color: var(--spectrum-4-foreground)");
+    const normalise = (css: string) => css.slice(css.indexOf("\n:root,"));
+    const neutral = readFileSync(join(SRC, "styles.css"), "utf8");
+    const beacon = readFileSync(join(SRC, "styles", "beacon.css"), "utf8");
+    expect(beacon).toMatch(/^@import "\.\/core\.css";/);
+    expect(normalise(beacon)).toBe(
+      normalise(neutral).replaceAll("theme-neutral-", "theme-beacon-"),
+    );
   });
 });

@@ -1,0 +1,8 @@
+/*
+ * The beacon theme, through the package's own entry point. Not imported as a stylesheet:
+ * .storybook/preview.tsx loads it as text and adds it after globals.css when the Theme
+ * toolbar is set to beacon, where its rules (same selectors, later in the page) take over.
+ */
+@import "@tilli.dev/ui-atoms/styles/beacon.css";
+@source "../../../../packages/ui-atoms/src";
+@source "../stories";

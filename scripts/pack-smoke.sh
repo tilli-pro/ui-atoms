@@ -25,7 +25,7 @@ echo "— tarball must contain every published file"
 # One entry per `files` member in package.json (`dist` stands in as its stylesheet
 # entrypoint, the one dist file no import-time check below would notice missing).
 # __tests__/pack-smoke.test.ts keeps this list in step with `files`.
-for path in package/dist/styles.css package/dist/styles/core.css package/dist/styles/tilli.css package/README.md package/LICENSE package/THIRD-PARTY-NOTICES.md; do
+for path in package/dist/styles.css package/dist/styles/core.css package/dist/styles/tilli.css package/dist/styles/beacon.css package/README.md package/LICENSE package/THIRD-PARTY-NOTICES.md; do
   grep -Fqx "$path" "$ENTRIES" || { echo "missing from tarball: $path"; exit 1; }
 done
 echo "— tarball must contain no forbidden files"

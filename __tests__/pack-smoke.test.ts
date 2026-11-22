@@ -32,6 +32,7 @@ describe("pack-smoke", () => {
     // `styles.css` is only an `@import` of it: a tarball without it is a broken package.
     expect(required).toContain("package/dist/styles/core.css");
     expect(required).toContain("package/dist/styles/tilli.css");
+    expect(required).toContain("package/dist/styles/beacon.css");
   });
 
   it("reads the tarball listing from a file, not from a pipe into grep", () => {

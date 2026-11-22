@@ -114,9 +114,15 @@ describe("the Storybook is the documentation site", () => {
     expect(read("apps/storybook/src/styles/tilli.css")).toContain(
       '@import "@tilli.dev/ui-atoms/styles/tilli.css";',
     );
+    expect(read("apps/storybook/src/styles/beacon.css")).toContain(
+      '@import "@tilli.dev/ui-atoms/styles/beacon.css";',
+    );
     expect(preview).toContain('"../src/styles/tilli.css?inline"');
+    expect(preview).toContain('"../src/styles/beacon.css?inline"');
     expect(preview).toMatch(/palette:\s*\{[^}]*name: "Theme"/);
-    expect(preview).toMatch(/value: "neutral"[\s\S]*value: "tilli"/);
+    expect(preview).toMatch(
+      /value: "neutral"[\s\S]*value: "tilli"[\s\S]*value: "beacon"/,
+    );
     expect(preview).toMatch(/initialGlobals:[^\n]*palette: "neutral"/);
   });
 });

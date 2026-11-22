@@ -2,7 +2,14 @@ import { useEffect } from "react";
 import type { Decorator, Preview } from "@storybook/react-vite";
 import { defaultThemeStore } from "@tilli.dev/ui-atoms/theme";
 import "../src/styles/globals.css";
+import beaconStyles from "../src/styles/beacon.css?inline";
 import tilliStyles from "../src/styles/tilli.css?inline";
+
+/** The built-in themes that are added on top of the neutral sheet, as stylesheet text. */
+const THEME_SHEETS: Record<string, string> = {
+  tilli: tilliStyles,
+  beacon: beaconStyles,
+};
 
 /**
  * The toolbar globals drive the package's own theme store, so the Storybook exercises the
@@ -11,7 +18,7 @@ import tilliStyles from "../src/styles/tilli.css?inline";
 const withTheme: Decorator = (Story, context) => {
   const theme = context.globals.theme === "dark" ? "dark" : "light";
   const contrast = context.globals.contrast === "high" ? "high" : "normal";
-  const palette = context.globals.palette === "tilli" ? "tilli" : "neutral";
+  const palette = String(context.globals.palette ?? "neutral");
   useEffect(() => {
     defaultThemeStore.setTheme(theme);
   }, [theme]);
@@ -20,12 +27,13 @@ const withTheme: Decorator = (Story, context) => {
   }, [contrast]);
   // Both built-in themes answer to the same data-theme / data-contrast values, so
   // switching theme is switching stylesheet: the neutral one is always loaded, and the
-  // tilli one is added after it, where its rules win.
+  // others are added after it, where their rules win.
   useEffect(() => {
-    if (palette !== "tilli") return;
+    const sheet = THEME_SHEETS[palette];
+    if (!sheet) return;
     const style = document.createElement("style");
-    style.setAttribute("data-palette", "tilli");
-    style.textContent = tilliStyles;
+    style.setAttribute("data-palette", palette);
+    style.textContent = sheet;
     document.head.append(style);
     return () => style.remove();
   }, [palette]);
@@ -43,6 +51,7 @@ const preview: Preview = {
         items: [
           { value: "neutral", title: "Neutral theme" },
           { value: "tilli", title: "tilli theme" },
+          { value: "beacon", title: "Beacon theme" },
         ],
         dynamicTitle: true,
       },

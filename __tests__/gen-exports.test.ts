@@ -22,6 +22,7 @@ describe("gen-exports", () => {
       "./package.json",
       "./styles.css",
       "./styles/core.css",
+      "./styles/beacon.css",
       "./styles/tilli.css",
       "./utils",
       "./formatters",
@@ -38,6 +39,7 @@ describe("gen-exports", () => {
     expect(exp["./styles.css"]).toBe("./dist/styles.css");
     expect(exp["./styles/core.css"]).toBe("./dist/styles/core.css");
     expect(exp["./styles/tilli.css"]).toBe("./dist/styles/tilli.css");
+    expect(exp["./styles/beacon.css"]).toBe("./dist/styles/beacon.css");
     expect(exp["./theme"]).toEqual({
       types: "./dist/theme/index.d.ts",
       import: "./dist/theme/index.js",

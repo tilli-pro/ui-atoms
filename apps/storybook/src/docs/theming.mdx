@@ -162,9 +162,38 @@ its stylesheet instead of `styles.css`:
 
 It responds to the same `data-theme` and `data-contrast` values, so the runtime above works
 unchanged. The Theme control in this Storybook's toolbar switches every story between the
-two; Mode and Contrast work with either. With your own selector, apply `theme-tilli-light` and `theme-tilli-dark` (and
+built-in themes; Mode and Contrast work with either. With your own selector, apply `theme-tilli-light` and `theme-tilli-dark` (and
 `theme-tilli-contrast-light` / `theme-tilli-contrast-dark`) the way the recipe above applies the
 neutral sets.
+
+## The beacon theme
+
+The beacon theme is the tilli theme plus a six-colour spectrum, for applications with several
+sections that need telling apart at a glance (a rail of modules, for example). Import
+`@tilli.dev/ui-atoms/styles/beacon.css` instead of `styles.css`, or apply `theme-beacon-light` /
+`theme-beacon-dark` with your own selector.
+
+Each of the six colours (1 violet, 2 pink, 3 orange, 4 yellow, 5 green, 6 cyan) has four tokens:
+
+| Token | Use | Class |
+|---|---|---|
+| `--spectrum-N` | The fill. | `bg-spectrum-1`, `from-spectrum-1`, `bg-spectrum-1/10` |
+| `--spectrum-N-to` | The far end of its gradient. | `to-spectrum-1-to` |
+| `--spectrum-N-contrast` | Text and icons on the fill or the gradient. | `text-spectrum-1-contrast` |
+| `--spectrum-N-foreground` | The colour as text on a page, card or sidebar. Lighter in dark. | `text-spectrum-1-foreground` |
+
+Three rules:
+
+- **Use the contrast token on a fill, not white.** Yellow, green, orange and cyan are light
+  fills and take dark text; violet and pink take white. The token is whichever reads at 4.5:1
+  across the whole gradient.
+- **The spectrum is for identity, never state.** Success, warning and error have their own
+  tokens. A green section is not "ok".
+- **Blue is not in the spectrum.** Every hue stays clear of the brand blue, so no section is
+  mistaken for the main action.
+
+The Spectrum story shows all six in light and dark. The tokens exist only in the beacon theme;
+`THEME_TOKENS` and the token override helpers cover the tokens every theme shares.
 
 ## Brand colour
 

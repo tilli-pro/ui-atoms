@@ -64,6 +64,30 @@ const THEME_KEYS = [
   "--color-brand",
   "--color-brand-foreground",
   "--color-brand-illustration",
+  "--color-spectrum-1",
+  "--color-spectrum-1-to",
+  "--color-spectrum-1-contrast",
+  "--color-spectrum-1-foreground",
+  "--color-spectrum-2",
+  "--color-spectrum-2-to",
+  "--color-spectrum-2-contrast",
+  "--color-spectrum-2-foreground",
+  "--color-spectrum-3",
+  "--color-spectrum-3-to",
+  "--color-spectrum-3-contrast",
+  "--color-spectrum-3-foreground",
+  "--color-spectrum-4",
+  "--color-spectrum-4-to",
+  "--color-spectrum-4-contrast",
+  "--color-spectrum-4-foreground",
+  "--color-spectrum-5",
+  "--color-spectrum-5-to",
+  "--color-spectrum-5-contrast",
+  "--color-spectrum-5-foreground",
+  "--color-spectrum-6",
+  "--color-spectrum-6-to",
+  "--color-spectrum-6-contrast",
+  "--color-spectrum-6-foreground",
 ];
 
 function block(selector: string): string {
@@ -107,7 +131,7 @@ describe("styles.css — canonical token sheet", () => {
     const theme = block("@theme inline");
     const keys = [...theme.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map((m) => m[1]);
     expect(keys.sort()).toEqual([...THEME_KEYS].sort());
-    expect(keys).toHaveLength(55);
+    expect(keys).toHaveLength(79);
   });
   it("declares the four TST-4 toast replay keyframes coss keeps out of the registry", () => {
     expect(css).toMatch(/@keyframes toast-success-odd/);

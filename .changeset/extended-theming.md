@@ -51,6 +51,12 @@ instead of `styles.css`), built from the `theme-tilli-light` / `theme-tilli-dark
 blue carries actions and information, greys are tinted to match the wordmark, and the focus ring
 is blue.
 
+The beacon theme: `./styles/beacon.css` (token sets `theme-beacon-light` / `theme-beacon-dark`) is
+the tilli theme plus a six-colour spectrum for telling an application's sections apart. Each
+colour has four tokens, `--spectrum-N`, `--spectrum-N-to`, `--spectrum-N-contrast` and
+`--spectrum-N-foreground` (classes `bg-spectrum-1`, `text-spectrum-1-contrast`, …). The hues are at
+least 40 degrees apart and stay clear of the brand blue.
+
 Brand colour: three new tokens in every theme, `--brand`, `--brand-foreground` and
 `--brand-illustration` (classes `bg-brand`, `text-brand-foreground`, …), and a `brand` variant on
 `Button`. `--primary` stays neutral. `THEME_TOKENS` gains `brand`, `brandForeground` and

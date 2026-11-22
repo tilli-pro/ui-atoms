@@ -61,9 +61,9 @@ jobs:
         run: |
           cd packages/ui-atoms
           pnpm exec publint --strict
-          # `./styles.css` and the two under `./styles/` are stylesheet entrypoints: they resolve to no JS and no
+          # `./styles.css` and those under `./styles/` are stylesheet entrypoints: they resolve to no JS and no
           # type declarations by design, which attw can only report as a failure.
-          pnpm exec attw --pack . --profile esm-only --exclude-entrypoints styles.css styles/core.css styles/tilli.css
+          pnpm exec attw --pack . --profile esm-only --exclude-entrypoints styles.css styles/core.css styles/tilli.css styles/beacon.css
       - run: scripts/pack-smoke.sh
 
   commitlint:
