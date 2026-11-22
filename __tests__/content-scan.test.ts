@@ -1,5 +1,11 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -181,6 +187,9 @@ describe("content-scan CLI collection and exit decision", () => {
     write("assets/brand.woff2", " binary-ish\n");
     execFileSync("git", ["-C", root, "init", "-q"]);
     execFileSync("git", ["-C", root, "add", "-A"]);
+    // The fixture must be its own repository. If `git init` did not create one here, the
+    // commands above ran against whatever repository the environment pointed at.
+    expect(existsSync(join(root, ".git"))).toBe(true);
     write(
       "packages/ui-atoms/dist/components/leak.js",
       'var t = "Acme Utilities";\n',
@@ -188,6 +197,13 @@ describe("content-scan CLI collection and exit decision", () => {
     write("packages/ui-atoms/dist/brand.woff2", " binary-ish\n");
   });
   afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+  // Git exports GIT_DIR, GIT_INDEX_FILE and friends to its hooks, and the pre-push hook runs
+  // this suite. Inherited, they make the `git init` and `git add -A` below operate on the
+  // real repository instead of the fixture: that once marked the checkout bare and replaced
+  // a worktree's index with these fixture files. The fixture must see none of them.
+  for (const key of Object.keys(process.env))
+    if (key.startsWith("GIT_")) delete process.env[key];
 
   it("collects tracked files plus dist, and reads text only for text extensions", () => {
     const files = collectFiles(root);
