@@ -43,6 +43,17 @@ const CLIENT_ONLY_MODULES: readonly string[] = [
   "react-resizable-panels",
 ];
 
+/**
+ * Files the text rules would call client but which must stay importable from a Server
+ * Component. Each entry needs a reason a reviewer can check.
+ *
+ * - `src/theme/script.ts`: `applyThemeBeforePaint` names `document`, `window` and
+ *   friends, but the module only serialises that function into the pre-paint script
+ *   string. `getThemeScript()` is called while rendering `<head>` on the server; a
+ *   directive would turn it into a client reference that cannot be called there.
+ */
+export const SERVER_SAFE_FILES: readonly string[] = ["src/theme/script.ts"];
+
 /** `from "x"` in a value import, plus bare side-effect `import "x"`. */
 const VALUE_IMPORT = /\bimport\s+(type\s+)?[^;]*?\bfrom\s*["']([^"']+)["']/g;
 const SIDE_EFFECT_IMPORT = /\bimport\s*["']([^"']+)["']/g;
@@ -82,7 +93,8 @@ export function auditUseClient(
 ) {
   return files.map((f) => ({
     path: f.path,
-    needsClient: needsClientDirective(f.text),
+    needsClient:
+      !SERVER_SAFE_FILES.includes(f.path) && needsClientDirective(f.text),
     hasDirective: /^\s*["']use client["'];/.test(f.text),
   }));
 }

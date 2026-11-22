@@ -3,6 +3,7 @@ import {
   auditUseClient,
   needsClientDirective,
   runtimeImports,
+  SERVER_SAFE_FILES,
 } from "../scripts/use-client-audit.js";
 
 describe("use-client rule (RSC-first)", () => {
@@ -87,5 +88,18 @@ describe("use-client rule (RSC-first)", () => {
       { path: "b.tsx", needsClient: true, hasDirective: false },
       { path: "c.tsx", needsClient: false, hasDirective: true },
     ]);
+  });
+  it("exempts a file that only serialises browser code, and nothing else by accident", () => {
+    // src/theme/script.ts holds the pre-paint function: it names `document` and
+    // `window`, but only so it can be turned into a string on the server. A directive
+    // there would make getThemeScript() uncallable from a Server Component.
+    const text = "export function f() { document.title = window.name; }";
+    const [exempt, other] = auditUseClient([
+      { path: "src/theme/script.ts", text },
+      { path: "src/theme/other.ts", text },
+    ]);
+    expect(exempt?.needsClient).toBe(false);
+    expect(other?.needsClient).toBe(true);
+    expect(SERVER_SAFE_FILES).toEqual(["src/theme/script.ts"]);
   });
 });
