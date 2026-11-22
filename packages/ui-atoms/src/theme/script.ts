@@ -7,89 +7,86 @@ import {
 /**
  * Runs in the browser before first paint, serialised with `Function.prototype.toString`.
  * It must therefore be self-contained: no imports, no closures, nothing but its argument
- * and browser globals. It is exported so the same code path is type-checked and tested.
+ * and browser globals. It also declares no named function or arrow of its own, because a
+ * bundler option such as esbuild's `keepNames` wraps those in a helper defined outside
+ * this function, which would not exist in the page. It is exported so the same code path
+ * is type-checked and tested.
  */
 export function applyThemeBeforePaint(config: ThemeConfig): void {
   try {
     const root = document.documentElement;
-    const matches = (query: string) => {
+    // [attribute, storage key, default, query, values, value when it matches, when not]
+    const axes: [
+      string | false,
+      string,
+      string,
+      string,
+      Record<string, string>,
+      string,
+      string,
+    ][] = [
+      [
+        config.attribute,
+        config.storageKey,
+        config.defaultTheme,
+        "(prefers-color-scheme: dark)",
+        config.values,
+        "dark",
+        "light",
+      ],
+      [
+        config.contrastAttribute,
+        config.contrastStorageKey,
+        config.defaultContrast,
+        "(prefers-contrast: more)",
+        config.contrastValues,
+        "high",
+        "normal",
+      ],
+    ];
+    for (const [attribute, key, fallback, query, values, on, off] of axes) {
+      if (attribute === false) continue;
+      let preference = fallback;
       try {
-        return window.matchMedia(query).matches;
+        const saved = window.localStorage.getItem(key);
+        if (saved === on || saved === off || saved === "system")
+          preference = saved;
       } catch {
-        return false;
+        // Storage unavailable: use the default.
       }
-    };
-    const stored = (key: string) => {
-      try {
-        return window.localStorage.getItem(key);
-      } catch {
-        return null;
+      let state = preference;
+      if (preference === "system") {
+        let matches = false;
+        try {
+          matches = window.matchMedia(query).matches;
+        } catch {
+          // No matchMedia: treat as not matching.
+        }
+        state = `system-${matches ? on : off}`;
       }
-    };
-    const apply = (
-      attribute: string | false,
-      value: string,
-      all: Record<string, string>,
-    ) => {
-      if (attribute === false) return;
+      const value = values[state] ?? "";
       if (attribute === "class") {
-        for (const key in all) {
-          const other = all[key];
+        for (const name in values) {
+          const other = values[name];
           if (other && other !== value) root.classList.remove(other);
         }
-        root.classList.add(value);
+        if (value) root.classList.add(value);
       } else {
         root.setAttribute(attribute, value);
       }
-    };
-
-    const savedTheme = stored(config.storageKey);
-    const theme =
-      savedTheme === "light" || savedTheme === "dark" || savedTheme === "system"
-        ? savedTheme
-        : config.defaultTheme;
-    apply(
-      config.attribute,
-      theme === "system"
-        ? config.values[
-            matches("(prefers-color-scheme: dark)")
-              ? "system-dark"
-              : "system-light"
-          ]
-        : config.values[theme],
-      config.values,
-    );
-
-    if (config.contrastAttribute !== false) {
-      const savedContrast = stored(config.contrastStorageKey);
-      const contrast =
-        savedContrast === "normal" ||
-        savedContrast === "high" ||
-        savedContrast === "system"
-          ? savedContrast
-          : config.defaultContrast;
-      apply(
-        config.contrastAttribute,
-        contrast === "system"
-          ? config.contrastValues[
-              matches("(prefers-contrast: more)")
-                ? "system-high"
-                : "system-normal"
-            ]
-          : config.contrastValues[contrast],
-        config.contrastValues,
-      );
     }
 
     if (config.disableTransitionsOnChange) {
       const style = document.createElement("style");
       style.setAttribute("data-theme-transition", "");
+      if (config.nonce) style.setAttribute("nonce", config.nonce);
       style.textContent = "*,*::before,*::after{transition:none!important}";
       document.head.appendChild(style);
-      const remove = () => style.remove();
       if (typeof requestAnimationFrame === "function")
-        requestAnimationFrame(() => requestAnimationFrame(remove));
-      else setTimeout(remove, 32);
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => style.remove()),
+        );
+      else setTimeout(() => style.remove(), 32);
     }
   } catch {
     // A theme that fails to apply early is applied by the store on mount; never break the page.

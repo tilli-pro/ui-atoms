@@ -1,6 +1,9 @@
 import { render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getThemeScript } from "../../src/theme/script.js";
+import {
+  applyThemeBeforePaint,
+  getThemeScript,
+} from "../../src/theme/script.js";
 import { createThemeStore } from "../../src/theme/store.js";
 import { ThemeScript } from "../../src/theme/theme-script.js";
 import { mockMedia } from "./helpers.js";
@@ -130,6 +133,50 @@ describe("getThemeScript", () => {
     expect(source.startsWith("(")).toBe(true);
     expect(source.endsWith(")")).toBe(true);
   });
+  it("has no named inner function a bundler could wrap in an outside helper", () => {
+    // esbuild's keepNames rewrites `const f = () => …` to `__name(() => …, "f")`, and
+    // __name lives outside the serialised function: the script would throw and, since it
+    // swallows errors, silently apply nothing.
+    const body = applyThemeBeforePaint.toString();
+    expect(body).not.toMatch(
+      /\b(?:const|let|var)\s+\w+\s*=\s*(?:async\s*)?(?:\(|function\b|\w+\s*=>)/,
+    );
+    expect(body.slice(body.indexOf("{"))).not.toMatch(/\bfunction\s+\w+/);
+  });
+  it("treats an empty class value as no class", () => {
+    mockMedia({ dark: false });
+    html.className = "app dark";
+    run({
+      attribute: "class",
+      values: {
+        light: "",
+        "system-light": "",
+        dark: "dark",
+        "system-dark": "dark",
+      },
+    });
+    expect([...html.classList]).toEqual(["app"]);
+    localStorage.setItem("theme", "dark");
+    run({
+      attribute: "class",
+      values: {
+        light: "",
+        "system-light": "",
+        dark: "dark",
+        "system-dark": "dark",
+      },
+    });
+    expect([...html.classList].sort()).toEqual(["app", "dark"]);
+  });
+  it("puts the nonce on the style it injects", () => {
+    mockMedia();
+    run({ nonce: "abc" });
+    expect(
+      document.head
+        .querySelector("style[data-theme-transition]")
+        ?.getAttribute("nonce"),
+    ).toBe("abc");
+  });
   it("cannot be broken out of by a configured value", () => {
     const source = getThemeScript({ storageKey: "</script><script>alert(1)" });
     expect(source).not.toContain("</script>");
@@ -145,7 +192,7 @@ describe("ThemeScript", () => {
     const { container } = render(<ThemeScript nonce="abc" />);
     const script = container.querySelector("script");
     expect(script?.getAttribute("nonce")).toBe("abc");
-    expect(script?.textContent).toBe(getThemeScript());
+    expect(script?.textContent).toBe(getThemeScript({ nonce: "abc" }));
   });
   it("generates from the config it is given", () => {
     const config = { storageKey: "app-theme" };

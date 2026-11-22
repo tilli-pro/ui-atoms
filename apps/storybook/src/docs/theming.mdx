@@ -52,7 +52,8 @@ function ThemeToggle() {
 - `contrast` and `resolvedContrast`, the same pair for contrast.
 - `setTheme` and `setContrast`.
 
-The choice is saved in `localStorage` and shared across tabs. The attribute on the element is
+The choice is saved in `localStorage` and shared across tabs. A stored choice wins over a
+`data-theme` written in your HTML. The attribute on the element is
 the state: anything else that changes it (devtools, another library) is picked up. While
 rendering on the server and during hydration, `useTheme()` returns the configured defaults
 with `system` resolved as light, then updates. If you render theme-dependent text, expect
@@ -94,8 +95,11 @@ const themeConfig = defineThemeConfig({ storageKey: "my-app-theme", defaultTheme
 | `defaultTheme`, `defaultContrast` | `"system"` | Used when nothing is stored. |
 | `values`, `contrastValues` | the attribute values above | What is written for each state. Override any subset. |
 | `disableTransitionsOnChange` | `true` | |
+| `nonce` | none | Put on the `<style>` element that suppresses transitions, for a CSP that requires a nonce on inline styles. `<ThemeScript nonce>` sets it for the script. |
 
-`ThemeProvider` also takes `target`, a ref to the element to theme. Outside React, use the
+`ThemeProvider` also takes `target`, a ref to the element to theme. That element must be
+mounted when the first `useTheme()` under the provider mounts; until it is, nothing is written
+(never `html` instead). Outside React, use the
 store directly: `createThemeStore(config)` returns `getSnapshot`, `subscribe`, `setTheme` and
 `setContrast`, and `defaultThemeStore` is the one `useTheme()` uses without a provider.
 `isThemePreference` and `isContrastPreference` validate a value you read from somewhere else.
@@ -121,7 +125,8 @@ of your own, import the core and write those lines yourself:
 }
 ```
 
-Then tell the runtime to write a class instead of `data-theme`:
+Then tell the runtime to write a class instead of `data-theme`. A value may be an empty string
+for a state that should have no class (`light: ""`):
 
 ```ts
 const themeConfig = defineThemeConfig({
@@ -171,8 +176,9 @@ const restore = applyThemeTokens({ primary: "oklch(0.5 0.2 260)" }, element);
 ```
 
 Keys are the token names in camelCase (`mutedForeground`, `chart1`); `THEME_TOKENS` lists them
-all and `tokenToCssVariable("mutedForeground")` gives `--muted-foreground`. An override is an
-inline style, so it applies in both light and dark. For a value per mode, write CSS instead.
+all and `tokenToCssVariable("mutedForeground")` gives `--muted-foreground`. Overrides of the same token on the same element stack: the latest shows, and ending one reveals
+the one beneath, in any order. An override is an inline style, so it applies in both light and
+dark. For a value per mode, write CSS instead.
 
 ## Seeded themes
 

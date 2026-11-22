@@ -74,29 +74,40 @@ function readStored(key: string): string | null {
   }
 }
 
-function preference<R extends string>(axis: Axis<R>): R | "system" {
+/** The preference the user has actually stored, if any. */
+function stored<R extends string>(axis: Axis<R>): R | "system" | undefined {
   if (axis.memory !== undefined) return axis.memory;
-  const stored = readStored(axis.storageKey);
-  return axis.isPreference(stored) ? stored : axis.fallback;
+  const value = readStored(axis.storageKey);
+  return axis.isPreference(value) ? value : undefined;
+}
+
+function preference<R extends string>(axis: Axis<R>): R | "system" {
+  return stored(axis) ?? axis.fallback;
 }
 
 /** What the attribute currently says, or `undefined` when it holds no value we know. */
 function applied<R extends string>(
   axis: Axis<R>,
-  el: HTMLElement,
+  el: HTMLElement | null,
 ): R | undefined {
-  if (axis.attribute === false) return;
+  if (axis.attribute === false || el === null) return;
   const { on, off, systemOn, systemOff } = axis.written;
   const has =
     axis.attribute === "class"
-      ? (value: string) => el.classList.contains(value)
+      ? // An empty value means "no class for this state"; it is never itself present.
+        (value: string) => value !== "" && el.classList.contains(value)
       : (value: string) => el.getAttribute(axis.attribute as string) === value;
   if (has(on) || has(systemOn)) return axis.on;
   if (has(off) || has(systemOff)) return axis.off;
+  // In class mode an empty value stands for a state: no theme class at all is that state.
+  if (axis.attribute === "class") {
+    if (on === "" || systemOn === "") return axis.on;
+    if (off === "" || systemOff === "") return axis.off;
+  }
   return;
 }
 
-function resolve<R extends string>(axis: Axis<R>, el: HTMLElement): R {
+function resolve<R extends string>(axis: Axis<R>, el: HTMLElement | null): R {
   const fromDom = applied(axis, el);
   if (fromDom !== undefined) return fromDom;
   if (axis.attribute === false) return axis.off;
@@ -106,8 +117,8 @@ function resolve<R extends string>(axis: Axis<R>, el: HTMLElement): R {
   return mediaMatches(axis.query) ? axis.on : axis.off;
 }
 
-function write<R extends string>(axis: Axis<R>, el: HTMLElement): void {
-  if (axis.attribute === false) return;
+function write<R extends string>(axis: Axis<R>, el: HTMLElement | null): void {
+  if (axis.attribute === false || el === null) return;
   const chosen = preference(axis);
   const { on, off, systemOn, systemOff } = axis.written;
   let value: string;
@@ -116,16 +127,17 @@ function write<R extends string>(axis: Axis<R>, el: HTMLElement): void {
   else value = mediaMatches(axis.query) ? systemOn : systemOff;
   if (axis.attribute === "class") {
     for (const other of [on, off, systemOn, systemOff])
-      if (other !== value) el.classList.remove(other);
-    el.classList.add(value);
+      if (other !== value && other !== "") el.classList.remove(other);
+    if (value !== "") el.classList.add(value);
   } else if (el.getAttribute(axis.attribute) !== value) {
     el.setAttribute(axis.attribute, value);
   }
 }
 
-function suppressTransitions(): void {
+function suppressTransitions(nonce: string | undefined): void {
   const style = document.createElement("style");
   style.setAttribute("data-theme-transition", "");
+  if (nonce) style.setAttribute("nonce", nonce);
   style.textContent = NO_TRANSITIONS;
   document.head.append(style);
   const remove = () => style.remove();
@@ -136,7 +148,7 @@ function suppressTransitions(): void {
 
 export function createThemeStore(
   overrides: ThemeConfigOverrides = {},
-  target: () => HTMLElement = () => document.documentElement,
+  target: () => HTMLElement | null = () => document.documentElement,
 ): ThemeStore {
   const config = defineThemeConfig(overrides);
 
@@ -211,11 +223,17 @@ export function createThemeStore(
 
   function start(): () => void {
     const el = target();
-    // Without a pre-paint script nothing has written the attribute yet; with one, or with
-    // anything else that set it, what is there stands.
+    // A stored choice is always applied: after the pre-paint script that is a no-op, and
+    // without one it is what restores the choice over an attribute hard-coded in the
+    // markup. With nothing stored, an attribute something else set stands, and only an
+    // element with no known value gets the default.
     refresh();
-    if (applied(themeAxis, el) === undefined) write(themeAxis, el);
-    if (applied(contrastAxis, el) === undefined) write(contrastAxis, el);
+    const apply = <R extends string>(axis: Axis<R>) => {
+      if (stored(axis) !== undefined || applied(axis, el) === undefined)
+        write(axis, el);
+    };
+    apply(themeAxis);
+    apply(contrastAxis);
     refresh();
 
     const cleanups: (() => void)[] = [];
@@ -223,7 +241,9 @@ export function createThemeStore(
     const attributes = [themeAxis.attribute, contrastAxis.attribute].filter(
       (attribute): attribute is ThemeAttribute => attribute !== false,
     );
-    if (typeof MutationObserver === "function") {
+    // A target that is not mounted yet cannot be observed. Writes still reach it once it
+    // is, because the target is looked up again on every change.
+    if (el !== null && typeof MutationObserver === "function") {
       const observer = new MutationObserver(emit);
       observer.observe(el, {
         attributes: true,
@@ -248,6 +268,8 @@ export function createThemeStore(
     follow(contrastAxis);
 
     const onStorage = (event: StorageEvent) => {
+      if (event.storageArea && event.storageArea !== window.localStorage)
+        return;
       // `key` is null when the whole store was cleared.
       const sync = <R extends string>(axis: Axis<R>) => {
         if (event.key !== null && event.key !== axis.storageKey) return;
@@ -274,7 +296,7 @@ export function createThemeStore(
     } catch {
       axis.memory = value;
     }
-    if (config.disableTransitionsOnChange) suppressTransitions();
+    if (config.disableTransitionsOnChange) suppressTransitions(config.nonce);
     write(axis, target());
     emit();
   }

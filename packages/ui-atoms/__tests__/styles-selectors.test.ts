@@ -93,12 +93,21 @@ describe("stylesheet selectors", () => {
     );
     expect(hc["--muted-foreground"]).toBe("oklch(0.145 0 0)");
   });
-  it("styles.css applies the dark set where the theme is dark, on the same element or nested either way", async () => {
+  it("styles.css applies the dark set in a dark scope, and an element with both attributes follows its own theme", async () => {
+    // The cascade itself (which rule wins in which nesting) is asserted in a browser by the
+    // Components/ThemeScopes story; this pins the selectors that story depends on.
     const out = await compileCss(DEFAULT);
     const D = ':is([data-theme="dark"], [data-theme="system-dark"])';
+    const L = ':is([data-theme="light"], [data-theme="system-light"])';
     const H = ':is([data-contrast="high"], [data-contrast="system-high"])';
-    const hc = declarationsFor(out, `${D}${H}, ${D} ${H}, ${H} ${D}`);
-    expect(hc["--muted-foreground"]).toBe("oklch(0.985 0 0)");
+    const dark = "oklch(0.985 0 0)";
+    const light = "oklch(0.145 0 0)";
+    const muted = (selector: string) =>
+      declarationsFor(out, selector)["--muted-foreground"];
+    expect(muted(`${D} ${H}, ${H} ${D}`)).toBe(dark);
+    expect(muted(`${D} ${L} ${H}`)).toBe(light);
+    expect(muted(`[data-theme]${L}${H}`)).toBe(light);
+    expect(muted(`[data-theme]${D}${H}`)).toBe(dark);
   });
   it("styles.css follows prefers-contrast for data-contrast=system", async () => {
     const out = squash(await compileCss(DEFAULT));

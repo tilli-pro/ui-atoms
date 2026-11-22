@@ -56,26 +56,65 @@ export function tokenToCssVariable(token: ThemeToken): `--${string}` {
   return `--${token.replace(BOUNDARY, (part) => `-${part.toLowerCase()}`)}`;
 }
 
+interface Layers {
+  /** The inline value and priority from before the first override. */
+  base: readonly [value: string, priority: string];
+  /** Active overrides, oldest first; the last one is what the element shows. */
+  active: { id: symbol; value: string }[];
+}
+
+const REGISTRY = new WeakMap<HTMLElement, Map<string, Layers>>();
+
 /**
  * Sets inline custom properties on `target` (default `<html>`) and returns a function
- * that restores exactly what was there: a property that had an inline value gets it back,
- * with its priority, and one that had none is removed.
+ * that undoes it. Overrides of the same property on the same element stack: the latest
+ * one shows, ending one reveals the one beneath, and ending the last restores exactly what
+ * was there before any of them (a prior inline value with its priority, or nothing),
+ * whatever order they end in.
  */
 export function applyInlineProperties(
   properties: readonly (readonly [name: string, value: string])[],
   target: HTMLElement = document.documentElement,
 ): () => void {
-  const previous = properties.map(
-    ([name]) =>
-      [
-        name,
-        target.style.getPropertyValue(name),
-        target.style.getPropertyPriority(name),
-      ] as const,
-  );
-  for (const [name, value] of properties) target.style.setProperty(name, value);
+  const id = Symbol("override");
+  let perElement = REGISTRY.get(target);
+  if (!perElement) {
+    perElement = new Map();
+    REGISTRY.set(target, perElement);
+  }
+  const names: string[] = [];
+  for (const [name, value] of properties) {
+    let layers = perElement.get(name);
+    if (!layers) {
+      layers = {
+        base: [
+          target.style.getPropertyValue(name),
+          target.style.getPropertyPriority(name),
+        ],
+        active: [],
+      };
+      perElement.set(name, layers);
+    }
+    layers.active.push({ id, value });
+    target.style.setProperty(name, value);
+    names.push(name);
+  }
   return () => {
-    for (const [name, value, priority] of previous) {
+    const registered = REGISTRY.get(target);
+    if (!registered) return;
+    for (const name of names) {
+      const layers = registered.get(name);
+      const index = layers?.active.findIndex((layer) => layer.id === id) ?? -1;
+      if (!layers || index === -1) continue;
+      const wasShowing = index === layers.active.length - 1;
+      layers.active.splice(index, 1);
+      const top = layers.active.at(-1);
+      if (top) {
+        if (wasShowing) target.style.setProperty(name, top.value);
+        continue;
+      }
+      registered.delete(name);
+      const [value, priority] = layers.base;
       if (value === "") target.style.removeProperty(name);
       else target.style.setProperty(name, value, priority);
     }

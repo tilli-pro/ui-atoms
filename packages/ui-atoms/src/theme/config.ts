@@ -36,6 +36,11 @@ export interface ThemeConfig {
   contrastValues: Record<ContrastValueKey, string>;
   /** Suppress CSS transitions while a change is applied. Default `true`. */
   disableTransitionsOnChange: boolean;
+  /**
+   * Set on the `<style>` element that suppresses transitions, for a
+   * Content-Security-Policy that requires a nonce on inline styles. Default: none.
+   */
+  nonce?: string | undefined;
 }
 
 /** What a consumer passes: any subset, with the two value maps overridable key by key. */

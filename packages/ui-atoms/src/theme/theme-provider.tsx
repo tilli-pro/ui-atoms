@@ -11,7 +11,10 @@ export interface ThemeProviderProps {
    * memoised object): a new object creates a new store.
    */
   config?: ThemeConfigOverrides | undefined;
-  /** Scope the theme to an element instead of `<html>`. */
+  /**
+   * Scope the theme to an element instead of `<html>`. The element must be mounted when
+   * the first `useTheme()` under this provider mounts; until it is, nothing is written.
+   */
   target?: React.RefObject<HTMLElement | null> | undefined;
   children: React.ReactNode;
 }
@@ -27,9 +30,8 @@ export function ThemeProvider({
 }: ThemeProviderProps): React.ReactElement {
   const store = React.useMemo(
     () =>
-      createThemeStore(
-        config,
-        () => target?.current ?? document.documentElement,
+      createThemeStore(config, () =>
+        target ? target.current : document.documentElement,
       ),
     [config, target],
   );

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { renderHook } from "@testing-library/react";
+import { render, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   applyThemeTokens,
@@ -57,6 +57,26 @@ describe("theme tokens", () => {
     expect(el.style.getPropertyValue("--primary")).toBe("red");
     expect(el.style.getPropertyPriority("--primary")).toBe("important");
   });
+  it("restores correctly when overlapping overrides end in any order", () => {
+    el.style.setProperty("--primary", "red");
+    const restoreA = applyThemeTokens({ primary: "blue" }, el);
+    const restoreB = applyThemeTokens({ primary: "green" }, el);
+    expect(el.style.getPropertyValue("--primary")).toBe("green");
+    restoreA();
+    // B is still active and was applied last.
+    expect(el.style.getPropertyValue("--primary")).toBe("green");
+    restoreB();
+    expect(el.style.getPropertyValue("--primary")).toBe("red");
+
+    const first = applyThemeTokens({ ring: "blue" }, el);
+    const second = applyThemeTokens({ ring: "green" }, el);
+    second();
+    expect(el.style.getPropertyValue("--ring")).toBe("blue");
+    first();
+    expect(el.style.getPropertyValue("--ring")).toBe("");
+    first();
+    expect(el.style.getPropertyValue("--ring")).toBe("");
+  });
   it("defaults to <html>", () => {
     const restore = applyThemeTokens({ primary: "blue" });
     expect(document.documentElement.style.getPropertyValue("--primary")).toBe(
@@ -102,6 +122,32 @@ describe("useCustomTheme", () => {
     el.style.setProperty("--primary", "orange");
     rerender({ ring: "green", primary: "blue" });
     expect(el.style.getPropertyValue("--primary")).toBe("orange");
+  });
+  it("applies to a target whose ref is attached by an ancestor, never to <html>", () => {
+    function Child({
+      target,
+    }: {
+      target: React.RefObject<HTMLElement | null>;
+    }) {
+      useCustomTheme({ primary: "blue" }, { target });
+      return null;
+    }
+    function Parent() {
+      const ref = React.useRef<HTMLDivElement>(null);
+      return (
+        <div data-testid="scope" ref={ref}>
+          <Child target={ref} />
+        </div>
+      );
+    }
+    const { getByTestId, unmount } = render(<Parent />);
+    expect(getByTestId("scope").style.getPropertyValue("--primary")).toBe(
+      "blue",
+    );
+    expect(document.documentElement.style.getPropertyValue("--primary")).toBe(
+      "",
+    );
+    unmount();
   });
   it("does nothing for undefined", () => {
     const { unmount } = renderHook(useOn, { initialProps: undefined });

@@ -8,6 +8,7 @@ beforeEach(() => {
   el = document.createElement("div");
   document.body.append(el);
   localStorage.clear();
+  for (const style of document.head.querySelectorAll("style")) style.remove();
 });
 afterEach(() => {
   el.remove();
@@ -252,5 +253,86 @@ describe("createThemeStore", () => {
     expect(
       document.head.querySelector("style[data-theme-transition]"),
     ).toBeNull();
+  });
+  it("applies a stored preference on first subscribe over an attribute hard-coded in the markup", () => {
+    // <html data-theme="dark"> in the HTML is what 1.1.0 told consumers to write. Adding
+    // only useTheme() must still restore the visitor's stored choice after a reload.
+    mockMedia({ dark: false });
+    el.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "light");
+    const store = createThemeStore({}, () => el);
+    store.subscribe(() => undefined);
+    expect(el.getAttribute("data-theme")).toBe("light");
+    expect(store.getSnapshot()).toMatchObject({
+      theme: "light",
+      resolvedTheme: "light",
+    });
+  });
+  it("treats an empty class value as no class", () => {
+    // The usual "dark class or nothing" convention.
+    mockMedia();
+    el.className = "app";
+    const store = createThemeStore(
+      {
+        attribute: "class",
+        values: {
+          light: "",
+          "system-light": "",
+          dark: "dark",
+          "system-dark": "dark",
+        },
+      },
+      () => el,
+    );
+    expect(() => store.setTheme("dark")).not.toThrow();
+    expect([...el.classList].sort()).toEqual(["app", "dark"]);
+    expect(store.getSnapshot().resolvedTheme).toBe("dark");
+    expect(() => store.setTheme("light")).not.toThrow();
+    expect([...el.classList]).toEqual(["app"]);
+    expect(store.getSnapshot().resolvedTheme).toBe("light");
+  });
+  it("never falls back to <html> when its target is not mounted yet", () => {
+    mockMedia({ dark: true });
+    let mounted: HTMLElement | null = null;
+    const store = createThemeStore({}, () => mounted);
+    expect(store.getSnapshot()).toMatchObject({
+      theme: "system",
+      resolvedTheme: "dark",
+    });
+    expect(() => store.setTheme("light")).not.toThrow();
+    const off = store.subscribe(() => undefined);
+    expect(document.documentElement.hasAttribute("data-theme")).toBe(false);
+    expect(document.documentElement.hasAttribute("data-contrast")).toBe(false);
+    mounted = el;
+    store.setTheme("dark");
+    expect(el.getAttribute("data-theme")).toBe("dark");
+    off();
+  });
+  it("puts the configured nonce on the transition-suppressing style", () => {
+    mockMedia();
+    const store = createThemeStore({ nonce: "abc" }, () => el);
+    store.setTheme("dark");
+    expect(
+      document.head
+        .querySelector("style[data-theme-transition]")
+        ?.getAttribute("nonce"),
+    ).toBe("abc");
+  });
+  it("ignores storage events from another storage area", () => {
+    mockMedia();
+    const store = createThemeStore({}, () => el);
+    const listener = vi.fn();
+    store.subscribe(listener);
+    store.setTheme("dark");
+    listener.mockClear();
+    window.dispatchEvent(
+      new StorageEvent("storage", {
+        key: "theme",
+        newValue: "light",
+        storageArea: sessionStorage,
+      }),
+    );
+    expect(listener).not.toHaveBeenCalled();
+    expect(el.getAttribute("data-theme")).toBe("dark");
   });
 });
