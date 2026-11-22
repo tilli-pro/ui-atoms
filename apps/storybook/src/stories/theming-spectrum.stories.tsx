@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The beacon theme's six spectrum colours, for telling sections of an application apart. Each has a fill, a gradient end, a contrast colour for text and icons on the fill, and a foreground for text on a surface. The classes below are written out in full so Tailwind generates them.",
+          "The beacon theme's spectrum, for telling sections of an application apart: six hues, and slate, a neutral for a section that belongs to none of them. Each has a fill, a gradient end, a contrast colour for text and icons on the fill, and a foreground for text on a surface. The classes below are written out in full so Tailwind generates them.",
       },
     },
   },
@@ -56,6 +56,12 @@ const SPECTRUM = [
     text: "text-spectrum-cyan-foreground",
     tint: "bg-spectrum-cyan/10",
   },
+  {
+    name: "slate",
+    fill: "bg-linear-to-br from-spectrum-slate to-spectrum-slate-to text-spectrum-slate-contrast",
+    text: "text-spectrum-slate-foreground",
+    tint: "bg-spectrum-slate/10",
+  },
 ];
 
 function Swatches({ mode }: { mode: "light" | "dark" }) {
@@ -67,7 +73,7 @@ function Swatches({ mode }: { mode: "light" | "dark" }) {
           : "theme-beacon-dark theme-mode-dark bg-background p-6 text-foreground"
       }
     >
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {SPECTRUM.map((color) => (
           <div
             className="flex w-36 flex-col overflow-hidden rounded-lg border bg-card"

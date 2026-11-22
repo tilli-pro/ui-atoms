@@ -53,7 +53,9 @@ const SPECTRUM: [name: string, from: number, to: number][] = [
 ];
 const within = (hue: number, from: number, to: number) =>
   from <= to ? hue >= from && hue <= to : hue >= from || hue <= to;
-const spectrumKeys = SPECTRUM.flatMap(([name]) => [
+/** Every name in the spectrum: the six hues, and slate, the neutral one. */
+const SPECTRUM_NAMES = [...SPECTRUM.map(([name]) => name), "slate"];
+const spectrumKeys = SPECTRUM_NAMES.flatMap((name) => [
   `--spectrum-${name}`,
   `--spectrum-${name}-to`,
   `--spectrum-${name}-contrast`,
@@ -151,7 +153,7 @@ describe("tilli theme", () => {
 
 describe("beacon theme", () => {
   it.each(["light", "dark"])(
-    "%s: is the tilli theme plus the six spectrum colours",
+    "%s: is the tilli theme plus the spectrum",
     async (mode) => {
       const beacon = await set(`theme-beacon-${mode}`);
       const tilli = await set(`theme-tilli-${mode}`);
@@ -166,7 +168,7 @@ describe("beacon theme", () => {
     "%s: each spectrum colour carries its contrast colour across the whole gradient, and has readable text",
     async (mode) => {
       const t = await set(`theme-beacon-${mode}`);
-      for (const [name] of SPECTRUM) {
+      for (const name of SPECTRUM_NAMES) {
         const on = color(t, `--spectrum-${name}-contrast`);
         expect(
           contrast(on, color(t, `--spectrum-${name}`)),
@@ -226,14 +228,36 @@ describe("beacon theme", () => {
           `${SPECTRUM[i]?.[0]} vs ${SPECTRUM[j]?.[0]}`,
         ).toBeGreaterThanOrEqual(40);
   });
+  it("slate is a grey from the theme's own neutrals, not a seventh hue", async () => {
+    // It is the "none of the above" colour: it must not read as a colour at all.
+    for (const mode of ["light", "dark"]) {
+      const t = await set(`theme-beacon-${mode}`);
+      const neutralHue = color(t, "--foreground").h;
+      for (const key of [
+        "--spectrum-slate",
+        "--spectrum-slate-to",
+        "--spectrum-slate-foreground",
+      ]) {
+        expect(color(t, key).c, `${mode} ${key} chroma`).toBeLessThanOrEqual(
+          0.03,
+        );
+        expect(color(t, key).h, `${mode} ${key} hue`).toBe(neutralHue);
+      }
+    }
+  });
   it("maps the spectrum to Tailwind colours", async () => {
     const out = await compileCss(
       SHEET,
-      ["bg-spectrum-violet", "text-spectrum-yellow-foreground"],
+      [
+        "bg-spectrum-violet",
+        "text-spectrum-yellow-foreground",
+        "bg-spectrum-slate",
+      ],
       { base: SRC },
     );
     expect(out).toContain("background-color: var(--spectrum-violet)");
     expect(out).toContain("color: var(--spectrum-yellow-foreground)");
+    expect(out).toContain("background-color: var(--spectrum-slate)");
   });
 });
 

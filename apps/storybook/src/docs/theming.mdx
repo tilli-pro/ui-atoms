@@ -192,7 +192,9 @@ The tilli theme plus a six-colour spectrum, for applications with several sectio
 telling apart at a glance (a rail of modules, for example). Token sets: `theme-beacon-light`,
 `theme-beacon-dark` and their `-contrast-` pairs.
 
-The six colours are violet, pink, orange, yellow, green and cyan. Each has four tokens:
+The spectrum is six hues (violet, pink, orange, yellow, green, cyan) and slate, a grey from the
+theme's own neutrals for a section that belongs to none of them, such as a cross-cutting
+"everything" view. Each has four tokens:
 
 | Token | Use | Class |
 |---|---|---|
@@ -204,7 +206,7 @@ The six colours are violet, pink, orange, yellow, green and cyan. Each has four 
 Three rules:
 
 - **Use the contrast token on a fill, not white.** Yellow, green, orange and cyan are light
-  fills and take dark text; violet and pink take white. The token is whichever reads at 4.5:1
+  fills and take dark text; violet, pink and slate take white. The token is whichever reads at 4.5:1
   across the whole gradient.
 - **The spectrum is for identity, never state.** Success, warning and error have their own
   tokens. A green section is not "ok".
@@ -212,7 +214,7 @@ Three rules:
   mistaken for the main action.
 
 A foreground is the name's colour family made readable, not the fill itself: on a light surface
-`text-spectrum-yellow-foreground` is a dark olive. The Spectrum story shows all six in light and
+`text-spectrum-yellow-foreground` is a dark olive. The Spectrum story shows all seven in light and
 dark. These tokens exist only in the beacon theme; `THEME_TOKENS` and the token override helpers
 cover the tokens every theme shares.
 

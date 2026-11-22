@@ -26,12 +26,12 @@ work as they do with the default theme.
 | Theme | Stylesheet | What it is |
 |---|---|---|
 | tilli | `@tilli.dev/themes/tilli.css` | The tilli brand palette: one blue for actions and information, greys tinted to match the wordmark. |
-| beacon | `@tilli.dev/themes/beacon.css` | The tilli theme plus a six-colour spectrum for telling an application's sections apart. |
+| beacon | `@tilli.dev/themes/beacon.css` | The tilli theme plus a spectrum of six hues and a neutral for telling an application's sections apart. |
 
 ### The beacon spectrum
 
-Six colours: violet, pink, orange, yellow, green, cyan. Each has four tokens, shown here for
-green:
+Six hues (violet, pink, orange, yellow, green, cyan) and slate, a neutral for a section that
+belongs to none of them. Each has four tokens, shown here for green:
 
 | Token | Use | Class |
 |---|---|---|
@@ -40,8 +40,7 @@ green:
 | `--spectrum-green-contrast` | Text and icons on the fill | `text-spectrum-green-contrast` |
 | `--spectrum-green-foreground` | The colour as text on a surface | `text-spectrum-green-foreground` |
 
-Use the contrast token on a fill, not white: four of the six fills are light and take dark
-text. The spectrum is for identity, never state; success, warning and error have their own
+Use the contrast token on a fill, not white: four of the fills are light and take dark text. The spectrum is for identity, never state; success, warning and error have their own
 tokens.
 
 ## Your own selector

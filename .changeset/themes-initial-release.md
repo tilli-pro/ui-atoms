@@ -8,8 +8,8 @@ instead of `@tilli.dev/ui-atoms/styles.css`, and each responds to the same `data
 
 - `@tilli.dev/themes/tilli.css`: the tilli brand palette. One blue carries actions and
   information, greys are tinted to match the wordmark, and the focus ring is blue.
-- `@tilli.dev/themes/beacon.css`: the tilli theme plus a six-colour spectrum (violet, pink,
-  orange, yellow, green, cyan) for telling an application's sections apart. Each colour has
+- `@tilli.dev/themes/beacon.css`: the tilli theme plus a spectrum for telling an application's
+  sections apart: six hues (violet, pink, orange, yellow, green, cyan) and slate, a neutral. Each colour has
   four tokens: `--spectrum-<name>`, `-to`, `-contrast` and `-foreground`, with classes such as
   `bg-spectrum-green` and `text-spectrum-green-contrast`.
 - `@tilli.dev/themes/tilli/tokens.css` and `@tilli.dev/themes/beacon/tokens.css`: the token sets

@@ -4,8 +4,9 @@
  * selector, or use them as classes. "../beacon.css" does the wiring for the default
  * selectors.
  *
- * Beacon is the tilli theme plus a six-colour spectrum for telling the sections of an
- * application apart: violet, pink, orange, yellow, green and cyan. Each has four tokens:
+ * Beacon is the tilli theme plus a spectrum for telling the sections of an application
+ * apart: six hues (violet, pink, orange, yellow, green, cyan) and slate, a grey from the
+ * theme's own neutrals for a section that belongs to none of them. Each has four tokens:
  *   --spectrum-<name>             the fill
  *   --spectrum-<name>-to          the far end of its gradient
  *   --spectrum-<name>-contrast    text and icons on the fill or the gradient (white or
@@ -43,6 +44,10 @@
   --color-spectrum-cyan-to: var(--spectrum-cyan-to);
   --color-spectrum-cyan-contrast: var(--spectrum-cyan-contrast);
   --color-spectrum-cyan-foreground: var(--spectrum-cyan-foreground);
+  --color-spectrum-slate: var(--spectrum-slate);
+  --color-spectrum-slate-to: var(--spectrum-slate-to);
+  --color-spectrum-slate-contrast: var(--spectrum-slate-contrast);
+  --color-spectrum-slate-foreground: var(--spectrum-slate-foreground);
 }
 
 @utility theme-beacon-light {
@@ -112,6 +117,10 @@
   --spectrum-cyan-to: oklch(0.73 0.124 200);
   --spectrum-cyan-contrast: oklch(0.145 0.012 258);
   --spectrum-cyan-foreground: oklch(0.46 0.08 215);
+  --spectrum-slate: oklch(0.44 0.018 258);
+  --spectrum-slate-to: oklch(0.53 0.018 258);
+  --spectrum-slate-contrast: oklch(1 0 0);
+  --spectrum-slate-foreground: oklch(0.44 0.018 258);
 }
 
 @utility theme-beacon-dark {
@@ -181,6 +190,10 @@
   --spectrum-cyan-to: oklch(0.73 0.124 200);
   --spectrum-cyan-contrast: oklch(0.145 0.012 258);
   --spectrum-cyan-foreground: oklch(0.8 0.13 215);
+  --spectrum-slate: oklch(0.44 0.018 258);
+  --spectrum-slate-to: oklch(0.53 0.018 258);
+  --spectrum-slate-contrast: oklch(1 0 0);
+  --spectrum-slate-foreground: oklch(0.87 0.014 258);
 }
 
 @utility theme-beacon-contrast-light {
