@@ -19,7 +19,11 @@ export async function compileCss(
 }
 
 function normalise(selector: string): string {
-  return selector.replace(/\s+/g, " ").trim();
+  return selector
+    .replace(/\s+/g, " ")
+    .replace(/\( /g, "(")
+    .replace(/ \)/g, ")")
+    .trim();
 }
 
 /**

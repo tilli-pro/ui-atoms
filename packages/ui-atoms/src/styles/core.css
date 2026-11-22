@@ -26,6 +26,26 @@
   }
 }
 
+/*
+ * `high-contrast:` applies under data-contrast="high", "system-high" (what a theme script
+ * writes when it follows the OS), or "system" while the OS asks for more contrast.
+ */
+@custom-variant high-contrast {
+  &:where(
+    [data-contrast="high"],
+    [data-contrast="high"] *,
+    [data-contrast="system-high"],
+    [data-contrast="system-high"] *
+  ) {
+    @slot;
+  }
+  @media (prefers-contrast: more) {
+    &:where([data-contrast="system"], [data-contrast="system"] *) {
+      @slot;
+    }
+  }
+}
+
 @theme inline {
   --font-header: var(--font-header);
   --font-body: var(--font-body);
@@ -256,6 +276,23 @@
   --success-foreground: oklch(0.765 0.177 163.223);
   --warning: oklch(0.769 0.188 70.08);
   --warning-foreground: oklch(0.828 0.189 84.429);
+}
+
+/*
+ * High contrast changes three tokens per theme, reusing values the theme already has:
+ * muted text takes the foreground value, and borders and inputs take the muted-text value.
+ * The values are literals because a custom property cannot refer to its own inherited value.
+ */
+@utility theme-tilli-contrast-light {
+  --muted-foreground: oklch(0.145 0 0);
+  --border: oklch(0.5 0 0);
+  --input: oklch(0.5 0 0);
+}
+
+@utility theme-tilli-contrast-dark {
+  --muted-foreground: oklch(0.985 0 0);
+  --border: oklch(0.708 0 0);
+  --input: oklch(0.708 0 0);
 }
 
 @layer base {

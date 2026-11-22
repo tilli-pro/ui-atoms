@@ -57,4 +57,65 @@ describe("stylesheet selectors", () => {
       "oklch(0.985 0 0)",
     );
   });
+  it("high contrast raises three tokens and nothing else", async () => {
+    const out = await compileCss(CORE, [
+      "theme-tilli-contrast-light",
+      "theme-tilli-contrast-dark",
+      "theme-tilli-light",
+      "theme-tilli-dark",
+    ]);
+    const light = declarationsFor(out, ".theme-tilli-light");
+    const dark = declarationsFor(out, ".theme-tilli-dark");
+    const hcLight = declarationsFor(out, ".theme-tilli-contrast-light");
+    const hcDark = declarationsFor(out, ".theme-tilli-contrast-dark");
+    expect(light["--foreground"]).toBeDefined();
+    expect(Object.keys(hcLight).sort()).toEqual([
+      "--border",
+      "--input",
+      "--muted-foreground",
+    ]);
+    expect(hcLight).toEqual({
+      "--muted-foreground": light["--foreground"],
+      "--border": light["--muted-foreground"],
+      "--input": light["--muted-foreground"],
+    });
+    expect(hcDark).toEqual({
+      "--muted-foreground": dark["--foreground"],
+      "--border": dark["--muted-foreground"],
+      "--input": dark["--muted-foreground"],
+    });
+  });
+  it("styles.css applies the light set for high and system-high", async () => {
+    const out = await compileCss(DEFAULT);
+    const hc = declarationsFor(
+      out,
+      ':is([data-contrast="high"], [data-contrast="system-high"]), :is([data-contrast="high"], [data-contrast="system-high"]) :is([data-theme="light"], [data-theme="system-light"])',
+    );
+    expect(hc["--muted-foreground"]).toBe("oklch(0.145 0 0)");
+  });
+  it("styles.css applies the dark set where the theme is dark, on the same element or nested either way", async () => {
+    const out = await compileCss(DEFAULT);
+    const D = ':is([data-theme="dark"], [data-theme="system-dark"])';
+    const H = ':is([data-contrast="high"], [data-contrast="system-high"])';
+    const hc = declarationsFor(out, `${D}${H}, ${D} ${H}, ${H} ${D}`);
+    expect(hc["--muted-foreground"]).toBe("oklch(0.985 0 0)");
+  });
+  it("styles.css follows prefers-contrast for data-contrast=system", async () => {
+    const out = squash(await compileCss(DEFAULT));
+    expect(out).toContain(
+      '@media(prefers-contrast:more){[data-contrast="system"],[data-contrast="system"]:is([data-theme="light"],[data-theme="system-light"]){--muted-foreground:',
+    );
+    expect(out).toContain(
+      "@media(prefers-color-scheme:dark)and(prefers-contrast:more){",
+    );
+  });
+  it("high-contrast: is a variant, for high, system-high, and system under the media query", async () => {
+    const out = squash(await compileCss(DEFAULT, ["high-contrast:underline"]));
+    expect(out).toContain(
+      '.high-contrast\\:underline:where([data-contrast="high"],[data-contrast="high"]*,[data-contrast="system-high"],[data-contrast="system-high"]*){text-decoration-line:underline;}',
+    );
+    expect(out).toContain(
+      '@media(prefers-contrast:more){.high-contrast\\:underline:where([data-contrast="system"],[data-contrast="system"]*){text-decoration-line:underline;}}',
+    );
+  });
 });
