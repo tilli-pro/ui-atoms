@@ -9,17 +9,17 @@
 :root,
 [data-theme="light"],
 [data-theme="system-light"] {
-  @apply theme-tilli-light;
+  @apply theme-tilli-light theme-mode-light;
 }
 
 [data-theme="dark"],
 [data-theme="system-dark"] {
-  @apply theme-tilli-dark;
+  @apply theme-tilli-dark theme-mode-dark;
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="system"] {
-    @apply theme-tilli-dark;
+    @apply theme-tilli-dark theme-mode-dark;
   }
 }
 

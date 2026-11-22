@@ -57,29 +57,42 @@ export function tokenToCssVariable(token: ThemeToken): `--${string}` {
 }
 
 /**
- * Sets the given tokens as inline custom properties on `target` (default `<html>`).
- * The returned function restores exactly what was there: a property that had an inline
- * value gets it back, with its priority, and one that had none is removed.
+ * Sets inline custom properties on `target` (default `<html>`) and returns a function
+ * that restores exactly what was there: a property that had an inline value gets it back,
+ * with its priority, and one that had none is removed.
  */
-export function applyThemeTokens(
-  tokens: ThemeTokens,
+export function applyInlineProperties(
+  properties: readonly (readonly [name: string, value: string])[],
   target: HTMLElement = document.documentElement,
 ): () => void {
-  const previous: [name: string, value: string, priority: string][] = [];
-  for (const [token, value] of Object.entries(tokens)) {
-    if (!KNOWN.has(token) || typeof value !== "string") continue;
-    const name = tokenToCssVariable(token as ThemeToken);
-    previous.push([
-      name,
-      target.style.getPropertyValue(name),
-      target.style.getPropertyPriority(name),
-    ]);
-    target.style.setProperty(name, value);
-  }
+  const previous = properties.map(
+    ([name]) =>
+      [
+        name,
+        target.style.getPropertyValue(name),
+        target.style.getPropertyPriority(name),
+      ] as const,
+  );
+  for (const [name, value] of properties) target.style.setProperty(name, value);
   return () => {
     for (const [name, value, priority] of previous) {
       if (value === "") target.style.removeProperty(name);
       else target.style.setProperty(name, value, priority);
     }
   };
+}
+
+/**
+ * Sets the given tokens as inline custom properties on `target` (default `<html>`).
+ * The returned function restores exactly what was there.
+ */
+export function applyThemeTokens(
+  tokens: ThemeTokens,
+  target?: HTMLElement,
+): () => void {
+  const properties: [string, string][] = [];
+  for (const [token, value] of Object.entries(tokens))
+    if (KNOWN.has(token) && typeof value === "string")
+      properties.push([tokenToCssVariable(token as ThemeToken), value]);
+  return applyInlineProperties(properties, target);
 }

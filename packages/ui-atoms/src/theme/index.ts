@@ -13,6 +13,7 @@ export {
   type ThemeValueKey,
 } from "./config.js";
 export { getThemeScript } from "./script.js";
+export { applyThemeSeeds, type ThemeSeeds } from "./seeds.js";
 export {
   createThemeStore,
   defaultThemeStore,

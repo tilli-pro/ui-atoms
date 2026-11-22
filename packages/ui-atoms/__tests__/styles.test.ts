@@ -92,12 +92,12 @@ describe("styles.css — canonical token sheet", () => {
     expect(wiring).toMatch(/^@import "\.\/styles\/core\.css";/);
     // `light` and `system-light` beside `:root` let a light subtree sit inside a dark one.
     expect(wiring).toMatch(
-      /\n:root,\n\[data-theme="light"\],\n\[data-theme="system-light"\] \{\n {2}@apply theme-tilli-light;/,
+      /\n:root,\n\[data-theme="light"\],\n\[data-theme="system-light"\] \{\n {2}@apply theme-tilli-light theme-mode-light;/,
     );
     // A theme script writes `system-dark` when the OS is dark and nothing is stored; it
     // must get the dark tokens, not just the `dark:` variant.
     expect(wiring).toMatch(
-      /\n\[data-theme="dark"\],\n\[data-theme="system-dark"\] \{\n {2}@apply theme-tilli-dark;/,
+      /\n\[data-theme="dark"\],\n\[data-theme="system-dark"\] \{\n {2}@apply theme-tilli-dark theme-mode-dark;/,
     );
   });
   it("maps exactly the v2 @theme inline keys", () => {
