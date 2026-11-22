@@ -103,4 +103,20 @@ describe("the Storybook is the documentation site", () => {
     ])
       expect(guide, utility).toContain(utility);
   });
+
+  it("lets a visitor switch between the built-in themes", () => {
+    const preview = read("apps/storybook/.storybook/preview.tsx");
+    // The neutral sheet is always loaded; the tilli sheet is the package's own entry point,
+    // added on top when the toolbar asks for it.
+    expect(read("apps/storybook/src/styles/globals.css")).toContain(
+      '@import "@tilli.dev/ui-atoms/styles.css";',
+    );
+    expect(read("apps/storybook/src/styles/tilli.css")).toContain(
+      '@import "@tilli.dev/ui-atoms/styles/tilli.css";',
+    );
+    expect(preview).toContain('"../src/styles/tilli.css?inline"');
+    expect(preview).toMatch(/palette:\s*\{[^}]*name: "Theme"/);
+    expect(preview).toMatch(/value: "neutral"[\s\S]*value: "tilli"/);
+    expect(preview).toMatch(/initialGlobals:[^\n]*palette: "neutral"/);
+  });
 });
