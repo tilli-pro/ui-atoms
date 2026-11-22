@@ -25,7 +25,7 @@ describe("the Storybook is the documentation site", () => {
     }
   });
 
-  it("loads four MDX pages and sorts Docs before Components", () => {
+  it("loads five MDX pages and sorts Docs before Components", () => {
     expect(read("apps/storybook/.storybook/main.ts")).toContain(
       '"../src/**/*.mdx"',
     );
@@ -35,6 +35,7 @@ describe("the Storybook is the documentation site", () => {
       "installation.mdx",
       "introduction.mdx",
       "styling-and-tokens.mdx",
+      "theming.mdx",
     ]);
     expect(
       pages.map(
@@ -45,9 +46,10 @@ describe("the Storybook is the documentation site", () => {
       "Docs/Installation",
       "Docs/Introduction",
       "Docs/Styling and tokens",
+      "Docs/Theming",
     ]);
     expect(read("apps/storybook/.storybook/preview.tsx")).toMatch(
-      /order:\s*\[\s*"Docs",\s*\[\s*"Introduction",\s*"Installation",\s*"Styling and tokens",\s*"Accessibility",?\s*\],\s*"Components",?\s*\]/,
+      /order:\s*\[\s*"Docs",\s*\[\s*"Introduction",\s*"Installation",\s*"Styling and tokens",\s*"Theming",\s*"Accessibility",?\s*\],\s*"Components",?\s*\]/,
     );
   });
 
@@ -77,5 +79,28 @@ describe("the Storybook is the documentation site", () => {
     expect(pages).toContain("path: _site");
     expect(pages).toMatch(/uses: actions\/deploy-pages@v5\.\d+\.\d+$/m);
     expect(pages).toMatch(/pages: write\n\s+id-token: write/);
+  });
+
+  it("documents every public export of ./theme in the theming guide", () => {
+    const guide = read(`${DOCS}/theming.mdx`);
+    const index = read("packages/ui-atoms/src/theme/index.ts");
+    const names = [...index.matchAll(/export \{([^}]+)\}/g)]
+      .flatMap((m) => (m[1] ?? "").split(","))
+      .map((name) => name.trim())
+      .filter((name) => name !== "" && !name.startsWith("type "));
+    expect(names.length).toBeGreaterThan(10);
+    for (const name of names) expect(guide, name).toContain(name);
+    for (const utility of [
+      "theme-tilli-light",
+      "theme-tilli-dark",
+      "theme-tilli-contrast-light",
+      "theme-tilli-contrast-dark",
+      "theme-mode-light",
+      "theme-mode-dark",
+      "theme-seeded",
+      "high-contrast:",
+      "styles/core.css",
+    ])
+      expect(guide, utility).toContain(utility);
   });
 });

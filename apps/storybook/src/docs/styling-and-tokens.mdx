@@ -14,8 +14,12 @@ Your Tailwind entry css needs the package's sheet and its class strings in scan 
 
 `styles.css` is the default theme: the tilli brand, in light and dark. Every colour token and the
 base radius are CSS custom properties on `:root`, with the dark values on `[data-theme="dark"]`;
-set `data-theme="dark"` on the `html` element to switch. The sheet is the canonical home of these
-values: override any of them in your own stylesheet after importing it.
+set `data-theme="dark"` on the `html` element to switch, or `data-theme="system"` to follow the
+OS. The sheet is the canonical home of these values: override any of them in your own stylesheet
+after importing it.
+
+For a theme toggle with persistence, a different theming selector (such as a `.dark` class), high
+contrast, or a theme derived from two colours, see the Theming page.
 
 Fonts are consumer-provided CSS variables: `--font-header`, `--font-body`, `--font-mono`,
 optional `--font-button`. The package ships no font files.

@@ -1,13 +1,21 @@
 import { useEffect } from "react";
 import type { Decorator, Preview } from "@storybook/react-vite";
+import { defaultThemeStore } from "@tilli.dev/ui-atoms/theme";
 import "../src/styles/globals.css";
 
+/**
+ * The toolbar globals drive the package's own theme store, so the Storybook exercises the
+ * same code a consumer's toggle does. The store writes data-theme / data-contrast on <html>.
+ */
 const withTheme: Decorator = (Story, context) => {
-  const theme = (context.globals.theme as string) || "light";
+  const theme = context.globals.theme === "dark" ? "dark" : "light";
+  const contrast = context.globals.contrast === "high" ? "high" : "normal";
   useEffect(() => {
-    if (theme === "dark") document.documentElement.dataset.theme = "dark";
-    else delete document.documentElement.dataset.theme;
+    defaultThemeStore.setTheme(theme);
   }, [theme]);
+  useEffect(() => {
+    defaultThemeStore.setContrast(contrast);
+  }, [contrast]);
   return <Story />;
 };
 
@@ -26,8 +34,20 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    contrast: {
+      name: "Contrast",
+      description: "Contrast preference",
+      toolbar: {
+        icon: "accessibility",
+        items: [
+          { value: "normal", title: "Normal contrast" },
+          { value: "high", title: "High contrast" },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
-  initialGlobals: { theme: "light" },
+  initialGlobals: { theme: "light", contrast: "normal" },
   decorators: [withTheme],
   parameters: {
     options: {
@@ -38,6 +58,7 @@ const preview: Preview = {
             "Introduction",
             "Installation",
             "Styling and tokens",
+            "Theming",
             "Accessibility",
           ],
           "Components",
