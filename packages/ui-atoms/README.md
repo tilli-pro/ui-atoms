@@ -33,6 +33,24 @@ Your Tailwind entry css needs the package's sheet and its class strings in scan 
 Fonts are consumer-provided CSS variables: `--font-header`, `--font-body`,
 `--font-mono`, optional `--font-button`.
 
+## Theming
+
+Set `data-theme="dark"` on `<html>` for dark, or `data-theme="system"` to follow the OS.
+For a toggle with persistence and no flash on load:
+
+    import { ThemeScript, useTheme } from "@tilli.dev/ui-atoms/theme";
+
+    // in <head>
+    <ThemeScript />
+
+    // in a client component
+    const { theme, resolvedTheme, setTheme } = useTheme();
+
+To theme with your own selector (a `.dark` class, say), import
+`@tilli.dev/ui-atoms/styles/core.css` instead of `styles.css`. The Theming page of the
+documentation covers that, high contrast, runtime token overrides and themes derived from
+two colours.
+
 ## Usage
 
     import { Button } from "@tilli.dev/ui-atoms/button";

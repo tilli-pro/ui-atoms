@@ -22,6 +22,7 @@ import {
   classes,
   colorfulPanelHeaderClassName,
   type Gradient,
+  sectionStyle,
 } from "./theme.js";
 import type { Route } from "./routing.js";
 
@@ -84,10 +85,10 @@ export function ModulePanel({
         )}
         style={
           colorful && activeSection
-            ? ({
-                "--from": gradients[activeSection.key].from,
-                "--to": gradients[activeSection.key].to,
-              } as React.CSSProperties)
+            ? (sectionStyle(
+                activeSection.key,
+                gradients[activeSection.key],
+              ) as React.CSSProperties)
             : undefined
         }
       >

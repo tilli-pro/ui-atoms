@@ -47,7 +47,11 @@
     "src/hooks/use-media-query.ts",
     "src/lib/composer-clipboard.ts",
     "src/lib/composer-document.ts",
-    "src/lib/composer-editor.ts"
+    "src/lib/composer-editor.ts",
+    "src/theme/store.ts",
+    "src/theme/theme-provider.tsx",
+    "src/theme/use-custom-theme.ts",
+    "src/theme/use-theme.ts"
   ],
   "server": [
     "src/components/accordion/index.tsx",
@@ -102,6 +106,12 @@
     "src/hooks/index.ts",
     "src/lib/composer-query.ts",
     "src/lib/segmented-control.ts",
+    "src/theme/config.ts",
+    "src/theme/index.ts",
+    "src/theme/script.ts",
+    "src/theme/seeds.ts",
+    "src/theme/theme-script.tsx",
+    "src/theme/tokens.ts",
     "src/utils.ts"
   ]
 }

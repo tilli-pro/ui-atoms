@@ -15,3 +15,11 @@ renders on whatever OS the machine runs and those PNGs must never be
 committed; macOS and Linux Chromium render fonts differently enough that a
 macOS-captured set fails CI's `ubuntu-latest` runner. Commit only the PNGs a
 `workflow_dispatch` run produced.
+
+## Themes
+
+Every story is captured in the neutral theme, in light and dark. The themes from
+`@tilli.dev/themes` are captured on a subset listed as `THEMED` in `stories.spec.ts`: about
+thirty stories in tilli, and the sidebar and spectrum stories in beacon. Their files are named
+`<story>-<theme>-<mode>.png`. Add a story to `THEMED` when a component could look wrong on a
+tinted surface in a way the token contrast tests would not catch.

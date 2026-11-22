@@ -14,6 +14,7 @@
     "serve": "http-server storybook-static -p 6007 -s"
   },
   "dependencies": {
+    "@tilli.dev/themes": "workspace:^",
     "@tilli.dev/ui-atoms": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:"

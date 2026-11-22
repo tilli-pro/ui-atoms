@@ -21,3 +21,9 @@ built on `@base-ui/react`, which is already a required peer.
 
 An absent optional peer surfaces as your bundler's module-not-found error naming that
 package; nothing is swallowed.
+
+`./theme` (the theme toggle runtime) needs no optional peer either. It is separate from the
+stylesheet: importing `styles.css` alone gives you light, dark and `data-theme="system"`.
+
+`@tilli.dev/themes` is a separate, optional package with the tilli and beacon themes. See the
+Theming page.

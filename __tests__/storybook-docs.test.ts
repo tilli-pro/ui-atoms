@@ -25,7 +25,7 @@ describe("the Storybook is the documentation site", () => {
     }
   });
 
-  it("loads four MDX pages and sorts Docs before Components", () => {
+  it("loads five MDX pages and sorts Docs before Components", () => {
     expect(read("apps/storybook/.storybook/main.ts")).toContain(
       '"../src/**/*.mdx"',
     );
@@ -35,6 +35,7 @@ describe("the Storybook is the documentation site", () => {
       "installation.mdx",
       "introduction.mdx",
       "styling-and-tokens.mdx",
+      "theming.mdx",
     ]);
     expect(
       pages.map(
@@ -45,9 +46,10 @@ describe("the Storybook is the documentation site", () => {
       "Docs/Installation",
       "Docs/Introduction",
       "Docs/Styling and tokens",
+      "Docs/Theming",
     ]);
     expect(read("apps/storybook/.storybook/preview.tsx")).toMatch(
-      /order:\s*\[\s*"Docs",\s*\[\s*"Introduction",\s*"Installation",\s*"Styling and tokens",\s*"Accessibility",?\s*\],\s*"Components",?\s*\]/,
+      /order:\s*\[\s*"Docs",\s*\[\s*"Introduction",\s*"Installation",\s*"Styling and tokens",\s*"Theming",\s*"Accessibility",?\s*\],\s*"Components",?\s*\]/,
     );
   });
 
@@ -77,5 +79,50 @@ describe("the Storybook is the documentation site", () => {
     expect(pages).toContain("path: _site");
     expect(pages).toMatch(/uses: actions\/deploy-pages@v5\.\d+\.\d+$/m);
     expect(pages).toMatch(/pages: write\n\s+id-token: write/);
+  });
+
+  it("documents every public export of ./theme in the theming guide", () => {
+    const guide = read(`${DOCS}/theming.mdx`);
+    const index = read("packages/ui-atoms/src/theme/index.ts");
+    const names = [...index.matchAll(/export \{([^}]+)\}/g)]
+      .flatMap((m) => (m[1] ?? "").split(","))
+      .map((name) => name.trim())
+      .filter((name) => name !== "" && !name.startsWith("type "));
+    expect(names.length).toBeGreaterThan(10);
+    for (const name of names) expect(guide, name).toContain(name);
+    for (const utility of [
+      "theme-neutral-light",
+      "theme-neutral-dark",
+      "theme-neutral-contrast-light",
+      "theme-neutral-contrast-dark",
+      "theme-mode-light",
+      "theme-mode-dark",
+      "theme-seeded",
+      "high-contrast:",
+      "styles/core.css",
+    ])
+      expect(guide, utility).toContain(utility);
+  });
+
+  it("lets a visitor switch between the built-in themes", () => {
+    const preview = read("apps/storybook/.storybook/preview.tsx");
+    // The neutral sheet is always loaded; the others are @tilli.dev/themes' own entry points,
+    // added on top when the toolbar asks for them.
+    expect(read("apps/storybook/src/styles/globals.css")).toContain(
+      '@import "@tilli.dev/ui-atoms/styles.css";',
+    );
+    expect(read("apps/storybook/src/styles/tilli.css")).toContain(
+      '@import "@tilli.dev/themes/tilli.css";',
+    );
+    expect(read("apps/storybook/src/styles/beacon.css")).toContain(
+      '@import "@tilli.dev/themes/beacon.css";',
+    );
+    expect(preview).toContain('"../src/styles/tilli.css?inline"');
+    expect(preview).toContain('"../src/styles/beacon.css?inline"');
+    expect(preview).toMatch(/palette:\s*\{[^}]*name: "Theme"/);
+    expect(preview).toMatch(
+      /value: "neutral"[\s\S]*value: "tilli"[\s\S]*value: "beacon"/,
+    );
+    expect(preview).toMatch(/initialGlobals:[^\n]*palette: "neutral"/);
   });
 });

@@ -17,6 +17,7 @@ type Manifest = {
 };
 const manifest = JSON.parse(read("packages/ui-atoms/package.json")) as Manifest;
 const icons = JSON.parse(read("packages/icons/package.json")) as Manifest;
+const themes = JSON.parse(read("packages/themes/package.json")) as Manifest;
 
 // `changeset version` deletes the changesets it consumes, so this suite checks whichever are
 // pending and passes when there are none (the public snapshot has none).
@@ -33,11 +34,12 @@ describe("pending changesets", () => {
     expect(Array.isArray(pendingChangesets)).toBe(true);
   });
   it.each(pendingChangesets)(
-    "$file names the published package and a valid bump",
+    "$file names a published package and a valid bump",
     ({ text }) => {
       const front = FRONT_MATTER.exec(text);
       expect(front, 'front matter must be `"<name>": <bump>`').not.toBeNull();
-      expect(front?.[1]).toBe(manifest.name);
+      // A changeset may only name a package this repository publishes.
+      expect([manifest.name, themes.name]).toContain(front?.[1]);
       expect(["patch", "minor", "major"]).toContain(front?.[2]);
     },
   );
@@ -70,17 +72,18 @@ describe("the public release workflow (publish.yml)", () => {
       /^ {4}permissions:\n(?: {6}.+\n)* {6}id-token: write( #.*)?$/m,
     );
   });
-  it("asks npm for public access and provenance in both manifests", () => {
-    for (const pkg of [manifest, icons])
+  it("asks npm for public access and provenance in every manifest", () => {
+    for (const pkg of [manifest, icons, themes])
       expect(pkg.publishConfig, pkg.name).toEqual({
         access: "public",
         provenance: true,
       });
   });
   it("names the repository npm checks provenance against", () => {
-    expect(manifest.repository?.url).toBe(
-      "git+https://github.com/tilli-pro/ui-atoms.git",
-    );
+    for (const pkg of [manifest, themes])
+      expect(pkg.repository?.url, pkg.name).toBe(
+        "git+https://github.com/tilli-pro/ui-atoms.git",
+      );
   });
 });
 

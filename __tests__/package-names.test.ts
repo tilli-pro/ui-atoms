@@ -11,12 +11,15 @@ const manifest = (path: string) =>
   };
 
 describe("package names (npm scope @tilli.dev)", () => {
-  it("names both packages in the @tilli.dev scope", () => {
+  it("names every package in the @tilli.dev scope", () => {
     expect(manifest("packages/ui-atoms/package.json").name).toBe(
       "@tilli.dev/ui-atoms",
     );
     expect(manifest("packages/icons/package.json").name).toBe(
       "@tilli.dev/icons",
+    );
+    expect(manifest("packages/themes/package.json").name).toBe(
+      "@tilli.dev/themes",
     );
   });
 

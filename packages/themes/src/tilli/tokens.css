@@ -1,0 +1,113 @@
+/*
+ * The tilli theme's token sets, as Tailwind utilities with no selector of their own. Import
+ * this after "@tilli.dev/ui-atoms/styles/core.css" and apply the sets with your own
+ * selector, or use them as classes to theme a subtree. "../tilli.css" does the wiring for
+ * the default selectors.
+ *
+ * The palette: one blue (hue 266.12, the U mark's blue stroke) carries actions and
+ * information, greys carry a faint blue cast (hue 258) so they sit in the same family as
+ * the wordmark, and cyan is kept for illustration. The sets declare exactly the tokens
+ * ui-atoms' neutral theme does. Every value is oklch(L C H) with at most four decimals of
+ * lightness and chroma and two of hue, inside sRGB.
+ */
+@utility theme-tilli-light {
+  --background: oklch(0.985 0.004 258);
+  --background-secondary: oklch(0.965 0.007 258);
+  --foreground: oklch(0.145 0.012 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.012 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.012 258);
+  --primary: oklch(0.19 0.014 258);
+  --primary-foreground: oklch(0.985 0.004 258);
+  --secondary: oklch(0.965 0.007 258);
+  --secondary-foreground: oklch(0.19 0.014 258);
+  --muted: oklch(0.965 0.007 258);
+  --muted-foreground: oklch(0.53 0.018 258);
+  --accent: oklch(0.965 0.007 258);
+  --accent-foreground: oklch(0.19 0.014 258);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.5 0.204 27.32);
+  --border: oklch(0.925 0.012 258);
+  --input: oklch(0.925 0.012 258);
+  --ring: oklch(0.5502 0.2319 266.12);
+  --chart-1: oklch(0.5502 0.2319 266.12);
+  --chart-2: oklch(0.7232 0.1623 238.87);
+  --chart-3: oklch(0.32 0.15 266.12);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.696 0.151 162.48);
+  --sidebar: oklch(0.965 0.007 258);
+  --sidebar-foreground: oklch(0.145 0.012 258);
+  --sidebar-primary: oklch(0.19 0.014 258);
+  --sidebar-primary-foreground: oklch(0.985 0.004 258);
+  --sidebar-accent: oklch(0.925 0.012 258);
+  --sidebar-accent-foreground: oklch(0.19 0.014 258);
+  --sidebar-border: oklch(0.925 0.012 258);
+  --sidebar-ring: oklch(0.5502 0.2319 266.12);
+  --info: oklch(0.5502 0.2319 266.12);
+  --info-foreground: oklch(0.47 0.22 266.12);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.508 0.106 165.61);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.555 0.149 49);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.5502 0.2319 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
+}
+
+@utility theme-tilli-dark {
+  --background: oklch(0.145 0.012 258);
+  --background-secondary: oklch(0.19 0.014 258);
+  --foreground: oklch(0.965 0.007 258);
+  --card: oklch(0.19 0.014 258);
+  --card-foreground: oklch(0.965 0.007 258);
+  --popover: oklch(0.19 0.014 258);
+  --popover-foreground: oklch(0.965 0.007 258);
+  --primary: oklch(0.965 0.007 258);
+  --primary-foreground: oklch(0.19 0.014 258);
+  --secondary: oklch(0.26 0.016 258);
+  --secondary-foreground: oklch(0.965 0.007 258);
+  --muted: oklch(0.26 0.016 258);
+  --muted-foreground: oklch(0.72 0.016 258);
+  --accent: oklch(0.26 0.016 258);
+  --accent-foreground: oklch(0.965 0.007 258);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.7 0.18 25.33);
+  --border: oklch(0.26 0.016 258);
+  --input: oklch(0.26 0.016 258);
+  --ring: oklch(0.68 0.166 266.12);
+  --chart-1: oklch(0.68 0.166 266.12);
+  --chart-2: oklch(0.7232 0.1623 238.87);
+  --chart-3: oklch(0.87 0.062 266.12);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.696 0.151 162.48);
+  --sidebar: oklch(0.19 0.014 258);
+  --sidebar-foreground: oklch(0.965 0.007 258);
+  --sidebar-primary: oklch(0.965 0.007 258);
+  --sidebar-primary-foreground: oklch(0.19 0.014 258);
+  --sidebar-accent: oklch(0.26 0.016 258);
+  --sidebar-accent-foreground: oklch(0.965 0.007 258);
+  --sidebar-border: oklch(0.26 0.016 258);
+  --sidebar-ring: oklch(0.68 0.166 266.12);
+  --info: oklch(0.5502 0.2319 266.12);
+  --info-foreground: oklch(0.79 0.104 266.12);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.765 0.164 163.22);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.828 0.169 84.43);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.68 0.166 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
+}
+
+@utility theme-tilli-contrast-light {
+  --muted-foreground: oklch(0.145 0.012 258);
+  --border: oklch(0.53 0.018 258);
+  --input: oklch(0.53 0.018 258);
+}
+
+@utility theme-tilli-contrast-dark {
+  --muted-foreground: oklch(0.965 0.007 258);
+  --border: oklch(0.72 0.016 258);
+  --input: oklch(0.72 0.016 258);
+}

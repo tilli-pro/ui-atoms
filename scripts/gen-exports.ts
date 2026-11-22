@@ -39,9 +39,11 @@ export function generateExports(
   const out: Record<string, unknown> = {
     "./package.json": "./package.json",
     "./styles.css": "./dist/styles.css",
+    "./styles/core.css": "./dist/styles/core.css",
     "./utils": entry("utils"),
     "./formatters": entry("formatters"),
     "./hooks": entry("hooks/index"),
+    "./theme": entry("theme/index"),
   };
   for (const name of componentDirs)
     out[`./${name}`] = entry(`components/${name}/index`);

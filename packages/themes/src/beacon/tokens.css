@@ -1,0 +1,209 @@
+/*
+ * The beacon theme's token sets, as Tailwind utilities with no selector of their own.
+ * Import this after "@tilli.dev/ui-atoms/styles/core.css" and apply the sets with your own
+ * selector, or use them as classes. "../beacon.css" does the wiring for the default
+ * selectors.
+ *
+ * Beacon is the tilli theme plus a spectrum for telling the sections of an application
+ * apart: six hues (violet, pink, orange, yellow, green, cyan) and slate, a grey from the
+ * theme's own neutrals for a section that belongs to none of them. Each has four tokens:
+ *   --spectrum-<name>             the fill
+ *   --spectrum-<name>-to          the far end of its gradient
+ *   --spectrum-<name>-contrast    text and icons on the fill or the gradient (white or
+ *                                 ink, whichever reads at 4.5:1 across the whole gradient)
+ *   --spectrum-<name>-foreground  the colour as text on a page, card or sidebar
+ * The hues are at least 40 degrees apart and stay 35 degrees clear of the brand blue, so
+ * no section is mistaken for another or for the main action. Lightness varies by hue to
+ * keep yellow and green vivid, which is why the contrast colour is a token and not always
+ * white. The spectrum is for identity, not state: never use it for success or error.
+ * __tests__/themes.test.ts pins each name to a hue range, so a name cannot drift away
+ * from the colour it says.
+ */
+@theme inline {
+  --color-spectrum-violet: var(--spectrum-violet);
+  --color-spectrum-violet-to: var(--spectrum-violet-to);
+  --color-spectrum-violet-contrast: var(--spectrum-violet-contrast);
+  --color-spectrum-violet-foreground: var(--spectrum-violet-foreground);
+  --color-spectrum-pink: var(--spectrum-pink);
+  --color-spectrum-pink-to: var(--spectrum-pink-to);
+  --color-spectrum-pink-contrast: var(--spectrum-pink-contrast);
+  --color-spectrum-pink-foreground: var(--spectrum-pink-foreground);
+  --color-spectrum-orange: var(--spectrum-orange);
+  --color-spectrum-orange-to: var(--spectrum-orange-to);
+  --color-spectrum-orange-contrast: var(--spectrum-orange-contrast);
+  --color-spectrum-orange-foreground: var(--spectrum-orange-foreground);
+  --color-spectrum-yellow: var(--spectrum-yellow);
+  --color-spectrum-yellow-to: var(--spectrum-yellow-to);
+  --color-spectrum-yellow-contrast: var(--spectrum-yellow-contrast);
+  --color-spectrum-yellow-foreground: var(--spectrum-yellow-foreground);
+  --color-spectrum-green: var(--spectrum-green);
+  --color-spectrum-green-to: var(--spectrum-green-to);
+  --color-spectrum-green-contrast: var(--spectrum-green-contrast);
+  --color-spectrum-green-foreground: var(--spectrum-green-foreground);
+  --color-spectrum-cyan: var(--spectrum-cyan);
+  --color-spectrum-cyan-to: var(--spectrum-cyan-to);
+  --color-spectrum-cyan-contrast: var(--spectrum-cyan-contrast);
+  --color-spectrum-cyan-foreground: var(--spectrum-cyan-foreground);
+  --color-spectrum-slate: var(--spectrum-slate);
+  --color-spectrum-slate-to: var(--spectrum-slate-to);
+  --color-spectrum-slate-contrast: var(--spectrum-slate-contrast);
+  --color-spectrum-slate-foreground: var(--spectrum-slate-foreground);
+}
+
+@utility theme-beacon-light {
+  --background: oklch(0.985 0.004 258);
+  --background-secondary: oklch(0.965 0.007 258);
+  --foreground: oklch(0.145 0.012 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.012 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.012 258);
+  --primary: oklch(0.19 0.014 258);
+  --primary-foreground: oklch(0.985 0.004 258);
+  --secondary: oklch(0.965 0.007 258);
+  --secondary-foreground: oklch(0.19 0.014 258);
+  --muted: oklch(0.965 0.007 258);
+  --muted-foreground: oklch(0.53 0.018 258);
+  --accent: oklch(0.965 0.007 258);
+  --accent-foreground: oklch(0.19 0.014 258);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.5 0.204 27.32);
+  --border: oklch(0.925 0.012 258);
+  --input: oklch(0.925 0.012 258);
+  --ring: oklch(0.5502 0.2319 266.12);
+  --chart-1: oklch(0.5502 0.2319 266.12);
+  --chart-2: oklch(0.7232 0.1623 238.87);
+  --chart-3: oklch(0.32 0.15 266.12);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.696 0.151 162.48);
+  --sidebar: oklch(0.965 0.007 258);
+  --sidebar-foreground: oklch(0.145 0.012 258);
+  --sidebar-primary: oklch(0.19 0.014 258);
+  --sidebar-primary-foreground: oklch(0.985 0.004 258);
+  --sidebar-accent: oklch(0.925 0.012 258);
+  --sidebar-accent-foreground: oklch(0.19 0.014 258);
+  --sidebar-border: oklch(0.925 0.012 258);
+  --sidebar-ring: oklch(0.5502 0.2319 266.12);
+  --info: oklch(0.5502 0.2319 266.12);
+  --info-foreground: oklch(0.47 0.22 266.12);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.508 0.106 165.61);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.555 0.149 49);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.5502 0.2319 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
+  --spectrum-violet: oklch(0.54 0.21 305);
+  --spectrum-violet-to: oklch(0.54 0.19 337);
+  --spectrum-violet-contrast: oklch(1 0 0);
+  --spectrum-violet-foreground: oklch(0.46 0.17 305);
+  --spectrum-pink: oklch(0.56 0.21 355);
+  --spectrum-pink-to: oklch(0.56 0.19 25);
+  --spectrum-pink-contrast: oklch(1 0 0);
+  --spectrum-pink-foreground: oklch(0.46 0.17 355);
+  --spectrum-orange: oklch(0.68 0.204 42);
+  --spectrum-orange-to: oklch(0.71 0.15 74);
+  --spectrum-orange-contrast: oklch(0.145 0.012 258);
+  --spectrum-orange-foreground: oklch(0.46 0.138 42);
+  --spectrum-yellow: oklch(0.8 0.162 92);
+  --spectrum-yellow-to: oklch(0.83 0.19 124);
+  --spectrum-yellow-contrast: oklch(0.145 0.012 258);
+  --spectrum-yellow-foreground: oklch(0.46 0.094 92);
+  --spectrum-green: oklch(0.7 0.192 150);
+  --spectrum-green-to: oklch(0.73 0.152 165);
+  --spectrum-green-contrast: oklch(0.145 0.012 258);
+  --spectrum-green-foreground: oklch(0.46 0.126 150);
+  --spectrum-cyan: oklch(0.7 0.122 215);
+  --spectrum-cyan-to: oklch(0.73 0.124 200);
+  --spectrum-cyan-contrast: oklch(0.145 0.012 258);
+  --spectrum-cyan-foreground: oklch(0.46 0.08 215);
+  --spectrum-slate: oklch(0.44 0.018 258);
+  --spectrum-slate-to: oklch(0.53 0.018 258);
+  --spectrum-slate-contrast: oklch(1 0 0);
+  --spectrum-slate-foreground: oklch(0.44 0.018 258);
+}
+
+@utility theme-beacon-dark {
+  --background: oklch(0.145 0.012 258);
+  --background-secondary: oklch(0.19 0.014 258);
+  --foreground: oklch(0.965 0.007 258);
+  --card: oklch(0.19 0.014 258);
+  --card-foreground: oklch(0.965 0.007 258);
+  --popover: oklch(0.19 0.014 258);
+  --popover-foreground: oklch(0.965 0.007 258);
+  --primary: oklch(0.965 0.007 258);
+  --primary-foreground: oklch(0.19 0.014 258);
+  --secondary: oklch(0.26 0.016 258);
+  --secondary-foreground: oklch(0.965 0.007 258);
+  --muted: oklch(0.26 0.016 258);
+  --muted-foreground: oklch(0.72 0.016 258);
+  --accent: oklch(0.26 0.016 258);
+  --accent-foreground: oklch(0.965 0.007 258);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.7 0.18 25.33);
+  --border: oklch(0.26 0.016 258);
+  --input: oklch(0.26 0.016 258);
+  --ring: oklch(0.68 0.166 266.12);
+  --chart-1: oklch(0.68 0.166 266.12);
+  --chart-2: oklch(0.7232 0.1623 238.87);
+  --chart-3: oklch(0.87 0.062 266.12);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.696 0.151 162.48);
+  --sidebar: oklch(0.19 0.014 258);
+  --sidebar-foreground: oklch(0.965 0.007 258);
+  --sidebar-primary: oklch(0.965 0.007 258);
+  --sidebar-primary-foreground: oklch(0.19 0.014 258);
+  --sidebar-accent: oklch(0.26 0.016 258);
+  --sidebar-accent-foreground: oklch(0.965 0.007 258);
+  --sidebar-border: oklch(0.26 0.016 258);
+  --sidebar-ring: oklch(0.68 0.166 266.12);
+  --info: oklch(0.5502 0.2319 266.12);
+  --info-foreground: oklch(0.79 0.104 266.12);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.765 0.164 163.22);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.828 0.169 84.43);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.68 0.166 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
+  --spectrum-violet: oklch(0.54 0.21 305);
+  --spectrum-violet-to: oklch(0.54 0.19 337);
+  --spectrum-violet-contrast: oklch(1 0 0);
+  --spectrum-violet-foreground: oklch(0.8 0.126 305);
+  --spectrum-pink: oklch(0.56 0.21 355);
+  --spectrum-pink-to: oklch(0.56 0.19 25);
+  --spectrum-pink-contrast: oklch(1 0 0);
+  --spectrum-pink-foreground: oklch(0.8 0.128 355);
+  --spectrum-orange: oklch(0.68 0.204 42);
+  --spectrum-orange-to: oklch(0.71 0.15 74);
+  --spectrum-orange-contrast: oklch(0.145 0.012 258);
+  --spectrum-orange-foreground: oklch(0.8 0.12 42);
+  --spectrum-yellow: oklch(0.8 0.162 92);
+  --spectrum-yellow-to: oklch(0.83 0.19 124);
+  --spectrum-yellow-contrast: oklch(0.145 0.012 258);
+  --spectrum-yellow-foreground: oklch(0.8 0.13 92);
+  --spectrum-green: oklch(0.7 0.192 150);
+  --spectrum-green-to: oklch(0.73 0.152 165);
+  --spectrum-green-contrast: oklch(0.145 0.012 258);
+  --spectrum-green-foreground: oklch(0.8 0.13 150);
+  --spectrum-cyan: oklch(0.7 0.122 215);
+  --spectrum-cyan-to: oklch(0.73 0.124 200);
+  --spectrum-cyan-contrast: oklch(0.145 0.012 258);
+  --spectrum-cyan-foreground: oklch(0.8 0.13 215);
+  --spectrum-slate: oklch(0.44 0.018 258);
+  --spectrum-slate-to: oklch(0.53 0.018 258);
+  --spectrum-slate-contrast: oklch(1 0 0);
+  --spectrum-slate-foreground: oklch(0.87 0.014 258);
+}
+
+@utility theme-beacon-contrast-light {
+  --muted-foreground: oklch(0.145 0.012 258);
+  --border: oklch(0.53 0.018 258);
+  --input: oklch(0.53 0.018 258);
+}
+
+@utility theme-beacon-contrast-dark {
+  --muted-foreground: oklch(0.965 0.007 258);
+  --border: oklch(0.72 0.016 258);
+  --input: oklch(0.72 0.016 258);
+}

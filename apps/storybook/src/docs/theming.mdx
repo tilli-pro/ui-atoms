@@ -1,0 +1,319 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Theming" />
+
+# Theming
+
+Theming is CSS variables switched by an attribute. `styles.css` does that on its own; the
+optional `@tilli.dev/ui-atoms/theme` entry adds the runtime most apps otherwise write by hand:
+a toggle with persistence, following the OS, and a script that applies the theme before first
+paint.
+
+## Attribute values
+
+`data-theme` on any element (normally `html`) selects the theme for it and everything inside it.
+
+| Value | Meaning |
+|---|---|
+| `light`, `dark` | An explicit choice. |
+| `system` | Follow the OS, in CSS alone (a `prefers-color-scheme` media query). No script needed. |
+| `system-light`, `system-dark` | What the runtime writes when the user has not chosen and it is following the OS. CSS treats them as `light` and `dark`; your code can tell a followed preference from a choice. |
+
+With no attribute at all, the light theme applies.
+
+`data-contrast` works the same way, with `normal`, `high`, `system`, `system-normal` and
+`system-high`. See [High contrast](#high-contrast).
+
+## The runtime
+
+```tsx
+import { ThemeScript, useTheme } from "@tilli.dev/ui-atoms/theme";
+
+// In your document head, so the stored theme is applied before first paint:
+<head>
+  <ThemeScript />
+</head>;
+
+// Anywhere in a client component:
+function ThemeToggle() {
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  return (
+    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      {theme === "system" ? `System (${resolvedTheme})` : theme}
+    </button>
+  );
+}
+```
+
+`useTheme()` returns:
+
+- `theme`: what the user chose, `"light" | "dark" | "system"`.
+- `resolvedTheme`: what is showing, `"light" | "dark"`.
+- `contrast` and `resolvedContrast`, the same pair for contrast.
+- `setTheme` and `setContrast`.
+
+The choice is saved in `localStorage` and shared across tabs. A stored choice wins over a
+`data-theme` written in your HTML. The attribute on the element is
+the state: anything else that changes it (devtools, another library) is picked up. While
+rendering on the server and during hydration, `useTheme()` returns the configured defaults
+with `system` resolved as light, then updates. If you render theme-dependent text, expect
+that one update.
+
+### The pre-paint script
+
+Without it, a visitor who chose dark sees a light page until your JavaScript runs.
+
+- React: render `<ThemeScript />` in `<head>`. It is a Server Component. Pass `nonce` if your
+  Content-Security-Policy requires one on inline scripts.
+- Anything else: `getThemeScript()` returns the same source as a string. Put it in an inline
+  `<script>` in your HTML shell.
+
+The script suppresses CSS transitions for two frames while it applies the theme, as do
+`setTheme` and `setContrast`, so nothing animates from the wrong colours. Set
+`disableTransitionsOnChange: false` to turn that off.
+
+### Configuration and the provider
+
+`useTheme()` needs no provider. Render `ThemeProvider` only to use a non-default config or to
+theme an element other than `html`:
+
+```tsx
+import { defineThemeConfig, ThemeProvider, ThemeScript } from "@tilli.dev/ui-atoms/theme";
+
+// Module scope, so the reference is stable. Give the script the same object.
+const themeConfig = defineThemeConfig({ storageKey: "my-app-theme", defaultTheme: "light" });
+
+<ThemeScript config={themeConfig} />;
+<ThemeProvider config={themeConfig}>{children}</ThemeProvider>;
+```
+
+| Option | Default | |
+|---|---|---|
+| `attribute` | `"data-theme"` | Any `data-*` name, or `"class"`. |
+| `contrastAttribute` | `"data-contrast"` | `false` turns the contrast axis off. |
+| `storageKey`, `contrastStorageKey` | `"theme"`, `"contrast"` | |
+| `defaultTheme`, `defaultContrast` | `"system"` | Used when nothing is stored. |
+| `values`, `contrastValues` | the attribute values above | What is written for each state. Override any subset. |
+| `disableTransitionsOnChange` | `true` | |
+| `nonce` | none | Put on the `<style>` element that suppresses transitions, for a CSP that requires a nonce on inline styles. `<ThemeScript nonce>` sets it for the script. |
+
+`ThemeProvider` also takes `target`, a ref to the element to theme. That element must be
+mounted when the first `useTheme()` under the provider mounts; until it is, nothing is written
+(never `html` instead). Outside React, use the
+store directly: `createThemeStore(config)` returns `getSnapshot`, `subscribe`, `setTheme` and
+`setContrast`, and `defaultThemeStore` is the one `useTheme()` uses without a provider.
+`isThemePreference` and `isContrastPreference` validate a value you read from somewhere else.
+
+## Using your own selector
+
+`styles.css` is two parts: `styles/core.css`, which holds every value with no selector attached,
+and a few lines that apply those values to `:root` and `[data-theme]`. To theme with a selector
+of your own, import the core and write those lines yourself:
+
+```css
+@import "tailwindcss";
+@import "@tilli.dev/ui-atoms/styles/core.css";
+@source "../node_modules/@tilli.dev/ui-atoms/dist";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  @apply theme-neutral-light theme-mode-light;
+}
+.dark {
+  @apply theme-neutral-dark theme-mode-dark;
+}
+```
+
+Then tell the runtime to write a class instead of `data-theme`. A value may be an empty string
+for a state that should have no class (`light: ""`):
+
+```ts
+const themeConfig = defineThemeConfig({
+  attribute: "class",
+  values: { light: "light", dark: "dark", "system-light": "light", "system-dark": "dark" },
+});
+```
+
+The token sets are ordinary Tailwind utilities, so each also works as a class. That is how you
+theme one subtree without any selector of your own:
+
+```tsx
+<aside className="theme-neutral-dark theme-mode-dark bg-background text-foreground">…</aside>
+```
+
+One limit: `dark:` utilities follow the `dark` variant, not the tokens. Inside a
+`theme-neutral-dark` subtree on a light page they stay off unless the subtree also matches the
+variant (with the default sheet, add `data-theme="dark"` to it). And a light subtree inside a
+dark one gets light tokens, but `dark:` utilities inside it still apply.
+
+## More themes: @tilli.dev/themes
+
+The default theme is neutral: greys, with blue only in the brand tokens. Two more themes ship
+in a separate package, `@tilli.dev/themes`:
+
+```bash
+pnpm add @tilli.dev/themes
+```
+
+Each is one stylesheet you import **instead of** `@tilli.dev/ui-atoms/styles.css`:
+
+```css
+@import "tailwindcss";
+@import "@tilli.dev/themes/tilli.css"; /* or "@tilli.dev/themes/beacon.css" */
+@source "../node_modules/@tilli.dev/ui-atoms/dist";
+```
+
+Both respond to the same `data-theme` and `data-contrast` values, so the runtime above works
+unchanged. The Theme control in this Storybook's toolbar switches every story between the
+built-in themes; Mode and Contrast work with any of them.
+
+With your own selector, import ui-atoms' core sheet and the theme's token sets, then apply them
+the way the recipe above applies the neutral ones:
+
+```css
+@import "@tilli.dev/ui-atoms/styles/core.css";
+@import "@tilli.dev/themes/tilli/tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+:root { @apply theme-tilli-light theme-mode-light; }
+.dark { @apply theme-tilli-dark theme-mode-dark; }
+```
+
+### tilli
+
+The brand's own palette. One blue carries actions and information, the greys carry a faint blue
+cast so they sit in the same family as the wordmark, and the focus ring is blue. Token sets:
+`theme-tilli-light`, `theme-tilli-dark`, `theme-tilli-contrast-light`, `theme-tilli-contrast-dark`.
+
+### beacon
+
+The tilli theme plus a six-colour spectrum, for applications with several sections that need
+telling apart at a glance (a rail of modules, for example). Token sets: `theme-beacon-light`,
+`theme-beacon-dark` and their `-contrast-` pairs.
+
+The spectrum is six hues (violet, pink, orange, yellow, green, cyan) and slate, a grey from the
+theme's own neutrals for a section that belongs to none of them, such as a cross-cutting
+"everything" view. Each has four tokens:
+
+| Token | Use | Class |
+|---|---|---|
+| `--spectrum-green` | The fill. | `bg-spectrum-green`, `from-spectrum-green`, `bg-spectrum-green/10` |
+| `--spectrum-green-to` | The far end of its gradient. | `to-spectrum-green-to` |
+| `--spectrum-green-contrast` | Text and icons on the fill or the gradient. | `text-spectrum-green-contrast` |
+| `--spectrum-green-foreground` | The colour as text on a page, card or sidebar. Lighter in dark. | `text-spectrum-green-foreground` |
+
+Three rules:
+
+- **Use the contrast token on a fill, not white.** Yellow, green, orange and cyan are light
+  fills and take dark text; violet, pink and slate take white. The token is whichever reads at 4.5:1
+  across the whole gradient.
+- **The spectrum is for identity, never state.** Success, warning and error have their own
+  tokens. A green section is not "ok".
+- **Blue is not in the spectrum.** Every hue stays clear of the brand blue, so no section is
+  mistaken for the main action.
+
+A foreground is the name's colour family made readable, not the fill itself: on a light surface
+`text-spectrum-yellow-foreground` is a dark olive. The Spectrum story shows all seven in light and
+dark. These tokens exist only in the beacon theme; `THEME_TOKENS` and the token override helpers
+cover the tokens every theme shares.
+
+## Brand colour
+
+Every theme carries three brand tokens, separate from `--primary`, which stays neutral:
+
+| Token | Use | Class |
+|---|---|---|
+| `--brand` | Solid fills and tints. The same blue in light and dark. | `bg-brand`, `bg-brand/10` |
+| `--brand-foreground` | Brand-coloured text and icons on a surface. Lighter in dark. | `text-brand-foreground` |
+| `--brand-illustration` | Illustration and gradients only. Never behind text, and too faint for text or icons on light. | `fill-brand-illustration` |
+
+`<Button variant="brand">` is the one component that uses them: a solid brand fill with white
+text. Keep it to one per view.
+
+## Colour values
+
+Every token is written as `oklch(L C H)` with at most four decimals of lightness and chroma and
+two of hue, and every value is inside sRGB, so it has an exact hex equivalent.
+
+## High contrast
+
+`data-contrast="high"` raises three tokens per theme: muted text takes the foreground colour,
+and borders and inputs take the muted-text colour. `data-contrast="system"` does the same when
+the OS asks for more contrast (`prefers-contrast: more`). The `high-contrast:` variant lets your
+own classes respond:
+
+```tsx
+<p className="text-muted-foreground high-contrast:underline">…</p>
+```
+
+With your own selector, apply `theme-neutral-contrast-light` and `theme-neutral-contrast-dark` the
+way you apply the theme utilities, after them.
+
+## Runtime token overrides
+
+To change tokens at runtime, for example from a setting stored per customer:
+
+```tsx
+import { applyThemeTokens, useCustomTheme } from "@tilli.dev/ui-atoms/theme";
+
+// In a component: applied while it is mounted, restored when it unmounts.
+useCustomTheme({ primary: "oklch(0.5 0.2 260)", ring: "oklch(0.5 0.2 260)" });
+
+// Outside React: returns a function that restores exactly what was there.
+const restore = applyThemeTokens({ primary: "oklch(0.5 0.2 260)" }, element);
+```
+
+Keys are the token names in camelCase (`mutedForeground`, `chart1`); `THEME_TOKENS` lists them
+all and `tokenToCssVariable("mutedForeground")` gives `--muted-foreground`. Overrides of the same token on the same element stack: the latest shows, and ending one reveals
+the one beneath, in any order. An override is an inline style, so it applies in both light and
+dark. For a value per mode, write CSS instead.
+
+## Seeded themes
+
+`theme-seeded` derives every colour token from two colours, with `color-mix()`:
+
+```tsx
+<div
+  className="theme-mode-dark theme-seeded bg-background text-foreground"
+  style={{ "--seed-primary": "oklch(94% 0.03 90)", "--seed-background": "oklch(22% 0.04 300)" }}
+>
+  …
+</div>
+```
+
+`--seed-primary` is the colour of text and solid controls; `--seed-background` is the page.
+Cards, popovers, muted surfaces, borders, inputs, rings and the sidebar are mixes of the two.
+Status colours (destructive, info, success, warning) and chart colours cannot be derived from
+two seeds and keep the default theme's values. `applyThemeSeeds({ primary, background }, element)`
+sets the seeds from code and returns a function that restores them. See the SeededTheme story.
+
+Three things to know:
+
+- **Apply `theme-seeded` wherever the mode or a seed changes.** A derived token is computed on
+  the element that declares it. Declaring it once on `:root` and changing the mode on a child
+  does not recompute it.
+- **It needs a mode.** `theme-mode-light` or `theme-mode-dark` must apply to the same element or
+  an ancestor. `styles.css` applies them with the default selectors; with your own selector you
+  apply them yourself, as in the recipe above.
+- **Borders and inputs are translucent**, so one formula works on any background. The default
+  theme's are solid.
+
+### The mode toggles
+
+`theme-mode-light` and `theme-mode-dark` set `color-scheme` and a pair of custom properties,
+`--theme-light` and `--theme-dark`, that you can use to pick a value per mode in your own CSS:
+
+```css
+.panel {
+  background: color-mix(
+    in oklch,
+    var(--background) var(--theme-light, 97%) var(--theme-dark, 90%),
+    var(--primary)
+  );
+}
+```
+
+That is `97%` in light and `90%` in dark. It works for any kind of value, where the CSS
+`light-dark()` function accepts colours only, and it follows your theming selector, where
+`light-dark()` follows `color-scheme`.

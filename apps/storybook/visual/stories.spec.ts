@@ -44,10 +44,61 @@ const ids = Object.values(index.entries)
   .map((e) => e.id)
   .sort();
 
-test("the built index has stories and every excluded id exists", () => {
+/**
+ * Every story above is captured in the neutral theme. The themes in @tilli.dev/themes are
+ * captured on a subset: enough to catch a component that breaks on tinted surfaces or a
+ * blue focus ring, without tripling the job. Beacon is the tilli theme plus the spectrum,
+ * so it only needs the stories that show the spectrum or the sidebar it is meant for.
+ */
+const THEMED: Record<string, readonly string[]> = {
+  tilli: [
+    "components-alert--all-variants",
+    "components-alert--with-action",
+    "components-badge--all-variants",
+    "components-badge--sizes",
+    "components-button--all-variants",
+    "components-button--disabled-variants",
+    "components-button--loading",
+    "components-card--default",
+    "components-card--long-content",
+    "components-card--with-form",
+    "components-checkbox--indeterminate",
+    "components-checkbox--with-description",
+    "components-field--with-error",
+    "components-input--all-variants",
+    "components-input--with-icons",
+    "components-input--with-label",
+    "components-inputgroup--with-button",
+    "components-progress--values",
+    "components-radiogroup--default",
+    "components-select--sizes",
+    "components-sidebar--default",
+    "components-sidebar--with-active-item",
+    "components-switch--with-label",
+    "components-table--default",
+    "components-table--with-selection",
+    "components-tabs--default",
+    "components-tabs--underline",
+    "components-textarea--sizes",
+    "components-toast--variants",
+  ],
+  beacon: [
+    "components-sidebar--with-active-item",
+    "components-spectrum--light-and-dark",
+  ],
+};
+
+test("the built index has stories and every excluded or themed id exists", () => {
   expect(ids.length).toBeGreaterThan(60);
   for (const id of EXCLUDED)
     expect(index.entries, `excluded id ${id} must exist`).toHaveProperty(id);
+  for (const [palette, themed] of Object.entries(THEMED))
+    for (const id of themed) {
+      expect(index.entries, `${palette} id ${id} must exist`).toHaveProperty(
+        id,
+      );
+      expect(EXCLUDED.has(id), `${palette} id ${id} is excluded`).toBe(false);
+    }
 });
 
 test("the built index has the docs pages and one autodocs page per component", () => {
@@ -83,5 +134,30 @@ for (const id of ids) {
         fullPage: true,
       });
     });
+  }
+}
+
+for (const [palette, themed] of Object.entries(THEMED)) {
+  for (const id of themed) {
+    for (const theme of THEMES) {
+      test(`${id} [${palette} ${theme}]`, async ({ page }) => {
+        await page.goto(
+          `/iframe.html?id=${id}&viewMode=story&globals=palette:${palette}`,
+        );
+        await page.waitForSelector("#storybook-root:not(:empty)");
+        // The toolbar global adds the theme's stylesheet after the neutral one.
+        await page.waitForSelector(`style[data-palette="${palette}"]`, {
+          state: "attached",
+        });
+        await page.evaluate((t) => {
+          if (t === "dark") document.documentElement.dataset.theme = "dark";
+          else delete document.documentElement.dataset.theme;
+        }, theme);
+        await page.waitForTimeout(150);
+        await expect(page).toHaveScreenshot(`${id}-${palette}-${theme}.png`, {
+          fullPage: true,
+        });
+      });
+    }
   }
 }

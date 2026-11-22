@@ -3,7 +3,7 @@
     "slug": "enterprise-ui-ux",
     "title": "Enterprise UI/UX",
     "description": "A ground-up redesign of the authenticated Enterprise UI/UX: an icon rail for Network, Engage, Sales, Finance, Operations and Support with an Enterprise brand square for cross-cutting views, beside a menu panel for the active module, built by nesting Sidebar parts; the inset sidebar variant can be toggled from the control panel. Each module's root route is a dashboard mock and every menu item opens a list mock, composed from ui-atoms and fed by seeded mock data. A persona control (utilities, financial, government federal) reshapes the data and copy. The rail's icons are chosen from the control panel (Cmd/Ctrl+K).",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "components": [
       "alert",
       "avatar",
@@ -50,6 +50,35 @@
         "version": "1.3.0",
         "date": "2026-11-12",
         "changes": "Add contact and organization profiles reached from the Network lists: a shared detail contract and view with header, summary strip, cards, and Activity, Billing, Support and Relationships tabs, fed by a per-party generator shaped on the QA database; two new gap ids (ai-insights, mailbox)."
+      },
+      {
+        "version": "1.4.0",
+        "date": "2026-11-22",
+        "changes": "Wear the beacon theme from ui-atoms: the rail's section gradients now come from the theme's six-colour spectrum instead of hand-picked hex placeholders, an icon on a full gradient takes the section's contrast colour (dark on yellow, green, orange and cyan) instead of always white, and surfaces follow the tilli palette. The hover menus' border and heading take the section's foreground colour. Gradient stops are still editable from the control panel, under new control keys so stops saved from the placeholders no longer apply."
+      }
+    ]
+  },
+  {
+    "slug": "tilli-color-guide",
+    "title": "tilli color guide",
+    "description": "A proposed colour standard for the tilli brand, drawn in the palette it describes. OKLCH is the source of truth and hex is derived from it in the page: a blue ramp at the hue of the U mark, greys tinted to match the wordmark, and cyan kept for illustration and the brand gradient. Shows the ramps, the semantic tokens for light and dark, contrast-checked pairings to use and to avoid, the mark with the Sora wordmark, and ui-atoms parts wearing the tokens. Follows the theme chosen in the control panel.",
+    "version": "1.0.0",
+    "components": [
+      "alert",
+      "badge",
+      "button",
+      "card",
+      "checkbox",
+      "input",
+      "label",
+      "switch",
+      "tabs"
+    ],
+    "changelog": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-22",
+        "changes": "Initial recipe."
       }
     ]
   }

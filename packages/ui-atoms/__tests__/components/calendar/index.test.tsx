@@ -53,6 +53,9 @@ describe("Calendar (DayPicker swap)", () => {
 // a word. The day picker's default English name is "Sunday, November 1st, 2026".
 describe("Calendar day-button names contain the visible day number", () => {
   const NOVEMBER = new Date(2026, 10, 15);
+  // Without a fixed `today` the day picker prefixes the real current day with "Today, ",
+  // so these names changed on whichever November 2026 day the suite ran.
+  const TODAY = new Date(2026, 5, 1);
   const dayButton = (text: string) =>
     screen
       .getAllByText(text)
@@ -60,7 +63,7 @@ describe("Calendar day-button names contain the visible day number", () => {
       .find((b) => b?.closest("[data-outside]") === null);
 
   it("drops the English ordinal: the 1st, 2nd, 3rd and 22nd are named 1, 2, 3 and 22", () => {
-    render(<Calendar defaultMonth={NOVEMBER} mode="single" />);
+    render(<Calendar defaultMonth={NOVEMBER} mode="single" today={TODAY} />);
     expect(dayButton("1")?.getAttribute("aria-label")).toBe(
       "Sunday, November 1, 2026",
     );
@@ -81,6 +84,7 @@ describe("Calendar day-button names contain the visible day number", () => {
         defaultMonth={NOVEMBER}
         mode="single"
         selected={new Date(2026, 10, 4)}
+        today={TODAY}
       />,
     );
     expect(dayButton("4")?.getAttribute("aria-label")).toBe(
@@ -92,6 +96,7 @@ describe("Calendar day-button names contain the visible day number", () => {
         defaultMonth={NOVEMBER}
         labels={{ labelDayButton: (date) => `Day ${date.getDate()}` }}
         mode="single"
+        today={TODAY}
       />,
     );
     expect(dayButton("4")?.getAttribute("aria-label")).toBe("Day 4");
@@ -100,14 +105,26 @@ describe("Calendar day-button names contain the visible day number", () => {
   it("leaves a locale alone when its long date already has the number as a word", async () => {
     const { de, fr } = await import("@daypicker/react/locale");
     const { unmount } = render(
-      <Calendar defaultMonth={NOVEMBER} locale={de} mode="single" />,
+      <Calendar
+        defaultMonth={NOVEMBER}
+        locale={de}
+        mode="single"
+        today={TODAY}
+      />,
     );
     // German writes "1." — the number is already a word of its own.
     expect(dayButton("1")?.getAttribute("aria-label")).toBe(
       "Sonntag, 1. November 2026",
     );
     unmount();
-    render(<Calendar defaultMonth={NOVEMBER} locale={fr} mode="single" />);
+    render(
+      <Calendar
+        defaultMonth={NOVEMBER}
+        locale={fr}
+        mode="single"
+        today={TODAY}
+      />,
+    );
     // French already uses the plain number too.
     expect(dayButton("1")?.getAttribute("aria-label")).toBe(
       "dimanche 1 novembre 2026",

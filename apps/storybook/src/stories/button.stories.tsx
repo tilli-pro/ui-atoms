@@ -5,6 +5,7 @@ import { VariantMatrix } from "../helpers/variant-matrix";
 
 const VARIANTS = [
   "default",
+  "brand",
   "outline",
   "secondary",
   "destructive",
@@ -101,6 +102,18 @@ export const Outline: Story = {
 
 export const Secondary: Story = {
   args: { variant: "secondary", children: "Secondary" },
+};
+
+export const Brand: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The one brand-coloured action in a view. It fills with `--brand`, not `--primary`, so every other control stays neutral.",
+      },
+    },
+  },
+  args: { variant: "brand", children: "Pay now" },
 };
 
 export const Destructive: Story = {
