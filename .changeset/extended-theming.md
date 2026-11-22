@@ -49,3 +49,8 @@ values. `theme-mode-light` and `theme-mode-dark` set `color-scheme` and the `--t
 For existing consumers of `styles.css`, no token value changes. The light and dark rules gain
 the two toggle properties and `color-scheme`, so in the dark theme native scrollbars and
 unstyled native form controls now render dark.
+
+`--radius` is now declared on `:root` only. In 1.1.0 it was also re-declared on
+`[data-theme="light"]` and `[data-theme="system-light"]`, so a light scope reset a `--radius`
+overridden on an ancestor back to the default. It now inherits the ancestor's value like any
+other custom property. If you relied on the reset, set `--radius` on the light scope yourself.
