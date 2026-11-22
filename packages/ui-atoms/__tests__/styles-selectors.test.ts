@@ -41,8 +41,8 @@ describe("stylesheet selectors", () => {
     const out = await compileCss(
       `${CORE}
 @custom-variant dark (&:where(.dark, .dark *));
-:root { @apply theme-tilli-light; }
-.dark { @apply theme-tilli-dark; }`,
+:root { @apply theme-neutral-light; }
+.dark { @apply theme-neutral-dark; }`,
       ["dark:block"],
     );
     expect(declarationsFor(out, ".dark")["--background"]).toBe(
@@ -52,22 +52,22 @@ describe("stylesheet selectors", () => {
     expect(out).not.toContain("data-theme");
   });
   it("a token utility scopes a subtree when used as a class", async () => {
-    const out = await compileCss(CORE, ["theme-tilli-dark"]);
-    expect(declarationsFor(out, ".theme-tilli-dark")["--foreground"]).toBe(
+    const out = await compileCss(CORE, ["theme-neutral-dark"]);
+    expect(declarationsFor(out, ".theme-neutral-dark")["--foreground"]).toBe(
       "oklch(0.985 0 0)",
     );
   });
   it("high contrast raises three tokens and nothing else", async () => {
     const out = await compileCss(CORE, [
-      "theme-tilli-contrast-light",
-      "theme-tilli-contrast-dark",
-      "theme-tilli-light",
-      "theme-tilli-dark",
+      "theme-neutral-contrast-light",
+      "theme-neutral-contrast-dark",
+      "theme-neutral-light",
+      "theme-neutral-dark",
     ]);
-    const light = declarationsFor(out, ".theme-tilli-light");
-    const dark = declarationsFor(out, ".theme-tilli-dark");
-    const hcLight = declarationsFor(out, ".theme-tilli-contrast-light");
-    const hcDark = declarationsFor(out, ".theme-tilli-contrast-dark");
+    const light = declarationsFor(out, ".theme-neutral-light");
+    const dark = declarationsFor(out, ".theme-neutral-dark");
+    const hcLight = declarationsFor(out, ".theme-neutral-contrast-light");
+    const hcDark = declarationsFor(out, ".theme-neutral-contrast-dark");
     expect(light["--foreground"]).toBeDefined();
     expect(Object.keys(hcLight).sort()).toEqual([
       "--border",

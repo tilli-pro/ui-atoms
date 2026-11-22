@@ -95,6 +95,9 @@
   --color-success: var(--success);
   --color-info-foreground: var(--info-foreground);
   --color-info: var(--info);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-illustration: var(--brand-illustration);
   /*
    * TST-4 replay animations. coss's toast drives them through
    * `upsertReplayClassName()` but keeps the keyframes outside the registry, so
@@ -175,11 +178,11 @@
 }
 
 /*
- * The tilli brand tokens, as utilities with no selector of their own. `styles.css` applies
+ * The neutral default tokens, as utilities with no selector of their own. `styles.css` applies
  * them to :root and [data-theme]; a consumer with a different theming selector imports
  * this file instead and writes, for example:
- *   :root { @apply theme-tilli-light; }
- *   .dark { @apply theme-tilli-dark; }
+ *   :root { @apply theme-neutral-light; }
+ *   .dark { @apply theme-neutral-dark; }
  * Each is also usable as a class, to theme a subtree.
  * This file is the canonical home of these values; override any of them after importing it.
  */
@@ -187,7 +190,7 @@
   --radius: 0.625rem;
 }
 
-@utility theme-tilli-light {
+@utility theme-neutral-light {
   --background: oklch(1 0 0);
   --background-secondary: oklch(0.97 0 0);
   --foreground: oklch(0.145 0 0);
@@ -200,27 +203,19 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  /* a11y: 0.556 → 4.35:1 on #f5f5f5 (bg-muted), below the 4.5:1 AA
-   * text threshold — kbd, frame and alert-description all render on a
-   * near-white but non-pure-white surface. 0.5 clears every surface this
-   * token is used against (badge/kbd/frame/alert tints included) with margin. */
   --muted-foreground: oklch(0.5 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  /* a11y: equal to --destructive (4.15:1 on badge's bg-destructive/8
-   * tint), below the 4.5:1 AA text threshold. --destructive itself is left
-   * alone (icon fills only, not checked by axe); only the token meant for
-   * readable destructive-colored text is darkened. */
-  --destructive-foreground: oklch(0.5 0.245 27.325);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.5 0.204 27.32);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --chart-1: oklch(0.646 0.198 41.12);
+  --chart-2: oklch(0.6 0.105 184.7);
+  --chart-3: oklch(0.398 0.07 227.39);
+  --chart-4: oklch(0.828 0.169 84.43);
+  --chart-5: oklch(0.769 0.166 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -229,16 +224,20 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --info: oklch(0.623 0.214 259.815);
-  --info-foreground: oklch(0.488 0.243 264.376);
-  --success: oklch(0.696 0.17 162.48);
-  --success-foreground: oklch(0.508 0.118 165.612);
-  --warning: oklch(0.769 0.188 70.08);
-  --warning-foreground: oklch(0.555 0.163 48.998);
+  --info: oklch(0.623 0.203 259.81);
+  --info-foreground: oklch(0.488 0.243 264.38);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.508 0.106 165.61);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.555 0.149 49);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.5502 0.2319 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
 }
 
-@utility theme-tilli-dark {
+@utility theme-neutral-dark {
   --background: oklch(0.145 0 0);
+  --background-secondary: oklch(0.269 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -252,30 +251,33 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --destructive: oklch(0.396 0.141 25.72);
+  --destructive-foreground: oklch(0.637 0.237 25.33);
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
   --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --chart-1: oklch(0.488 0.243 264.38);
+  --chart-2: oklch(0.696 0.151 162.48);
+  --chart-3: oklch(0.769 0.166 70.08);
+  --chart-4: oklch(0.627 0.249 303.9);
+  --chart-5: oklch(0.645 0.243 16.44);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: oklch(0.488 0.243 264.38);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
-  --info: oklch(0.623 0.214 259.815);
-  --info-foreground: oklch(0.707 0.165 254.624);
-  --success: oklch(0.696 0.17 162.48);
-  --success-foreground: oklch(0.765 0.177 163.223);
-  --warning: oklch(0.769 0.188 70.08);
-  --warning-foreground: oklch(0.828 0.189 84.429);
+  --info: oklch(0.623 0.203 259.81);
+  --info-foreground: oklch(0.707 0.155 254.62);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.765 0.164 163.22);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.828 0.169 84.43);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.68 0.166 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
 }
 
 /*
@@ -283,16 +285,125 @@
  * muted text takes the foreground value, and borders and inputs take the muted-text value.
  * The values are literals because a custom property cannot refer to its own inherited value.
  */
-@utility theme-tilli-contrast-light {
+@utility theme-neutral-contrast-light {
   --muted-foreground: oklch(0.145 0 0);
   --border: oklch(0.5 0 0);
   --input: oklch(0.5 0 0);
 }
 
-@utility theme-tilli-contrast-dark {
+@utility theme-neutral-contrast-dark {
   --muted-foreground: oklch(0.985 0 0);
   --border: oklch(0.708 0 0);
   --input: oklch(0.708 0 0);
+}
+
+/*
+ * The tilli theme: the brand's own palette. One blue (hue 266.12, the U mark's blue stroke)
+ * carries actions and information, greys carry a faint blue cast (hue 258) so they sit in
+ * the same family as the wordmark, and cyan is kept for illustration. It declares exactly
+ * the tokens the neutral theme does. `styles/tilli.css` wires it to the default selectors;
+ * with your own selector, apply these the way you would the neutral sets.
+ */
+@utility theme-tilli-light {
+  --background: oklch(0.985 0.004 258);
+  --background-secondary: oklch(0.965 0.007 258);
+  --foreground: oklch(0.145 0.012 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.012 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.012 258);
+  --primary: oklch(0.19 0.014 258);
+  --primary-foreground: oklch(0.985 0.004 258);
+  --secondary: oklch(0.965 0.007 258);
+  --secondary-foreground: oklch(0.19 0.014 258);
+  --muted: oklch(0.965 0.007 258);
+  --muted-foreground: oklch(0.53 0.018 258);
+  --accent: oklch(0.965 0.007 258);
+  --accent-foreground: oklch(0.19 0.014 258);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.5 0.204 27.32);
+  --border: oklch(0.925 0.012 258);
+  --input: oklch(0.925 0.012 258);
+  --ring: oklch(0.5502 0.2319 266.12);
+  --chart-1: oklch(0.5502 0.2319 266.12);
+  --chart-2: oklch(0.7232 0.1623 238.87);
+  --chart-3: oklch(0.32 0.15 266.12);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.696 0.151 162.48);
+  --sidebar: oklch(0.965 0.007 258);
+  --sidebar-foreground: oklch(0.145 0.012 258);
+  --sidebar-primary: oklch(0.19 0.014 258);
+  --sidebar-primary-foreground: oklch(0.985 0.004 258);
+  --sidebar-accent: oklch(0.925 0.012 258);
+  --sidebar-accent-foreground: oklch(0.19 0.014 258);
+  --sidebar-border: oklch(0.925 0.012 258);
+  --sidebar-ring: oklch(0.5502 0.2319 266.12);
+  --info: oklch(0.5502 0.2319 266.12);
+  --info-foreground: oklch(0.47 0.22 266.12);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.508 0.106 165.61);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.555 0.149 49);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.5502 0.2319 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
+}
+
+@utility theme-tilli-dark {
+  --background: oklch(0.145 0.012 258);
+  --background-secondary: oklch(0.19 0.014 258);
+  --foreground: oklch(0.965 0.007 258);
+  --card: oklch(0.19 0.014 258);
+  --card-foreground: oklch(0.965 0.007 258);
+  --popover: oklch(0.19 0.014 258);
+  --popover-foreground: oklch(0.965 0.007 258);
+  --primary: oklch(0.965 0.007 258);
+  --primary-foreground: oklch(0.19 0.014 258);
+  --secondary: oklch(0.26 0.016 258);
+  --secondary-foreground: oklch(0.965 0.007 258);
+  --muted: oklch(0.26 0.016 258);
+  --muted-foreground: oklch(0.72 0.016 258);
+  --accent: oklch(0.26 0.016 258);
+  --accent-foreground: oklch(0.965 0.007 258);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.7 0.18 25.33);
+  --border: oklch(0.26 0.016 258);
+  --input: oklch(0.26 0.016 258);
+  --ring: oklch(0.68 0.166 266.12);
+  --chart-1: oklch(0.68 0.166 266.12);
+  --chart-2: oklch(0.7232 0.1623 238.87);
+  --chart-3: oklch(0.87 0.062 266.12);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.696 0.151 162.48);
+  --sidebar: oklch(0.19 0.014 258);
+  --sidebar-foreground: oklch(0.965 0.007 258);
+  --sidebar-primary: oklch(0.965 0.007 258);
+  --sidebar-primary-foreground: oklch(0.19 0.014 258);
+  --sidebar-accent: oklch(0.26 0.016 258);
+  --sidebar-accent-foreground: oklch(0.965 0.007 258);
+  --sidebar-border: oklch(0.26 0.016 258);
+  --sidebar-ring: oklch(0.68 0.166 266.12);
+  --info: oklch(0.5502 0.2319 266.12);
+  --info-foreground: oklch(0.79 0.104 266.12);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.765 0.164 163.22);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.828 0.169 84.43);
+  --brand: oklch(0.5502 0.2319 266.12);
+  --brand-foreground: oklch(0.68 0.166 266.12);
+  --brand-illustration: oklch(0.7232 0.1623 238.87);
+}
+
+@utility theme-tilli-contrast-light {
+  --muted-foreground: oklch(0.145 0.012 258);
+  --border: oklch(0.53 0.018 258);
+  --input: oklch(0.53 0.018 258);
+}
+
+@utility theme-tilli-contrast-dark {
+  --muted-foreground: oklch(0.965 0.007 258);
+  --border: oklch(0.72 0.016 258);
+  --input: oklch(0.72 0.016 258);
 }
 
 /*
@@ -365,10 +476,10 @@
   );
   --accent: color-mix(in oklch, var(--seed-primary) 4%, transparent);
   --accent-foreground: var(--seed-primary);
-  --destructive: var(--theme-light, oklch(0.577 0.245 27.325))
-    var(--theme-dark, oklch(0.396 0.141 25.723));
-  --destructive-foreground: var(--theme-light, oklch(0.5 0.245 27.325))
-    var(--theme-dark, oklch(0.637 0.237 25.331));
+  --destructive: var(--theme-light, oklch(0.577 0.235 27.32))
+    var(--theme-dark, oklch(0.396 0.141 25.72));
+  --destructive-foreground: var(--theme-light, oklch(0.5 0.204 27.32))
+    var(--theme-dark, oklch(0.637 0.237 25.33));
   --border: color-mix(
     in oklch,
     var(--seed-primary) var(--theme-light, 12%) var(--theme-dark, 10%),
@@ -384,16 +495,16 @@
     var(--seed-primary) var(--theme-light, 45%) var(--theme-dark, 35%),
     var(--seed-background)
   );
-  --chart-1: var(--theme-light, oklch(0.646 0.222 41.116))
-    var(--theme-dark, oklch(0.488 0.243 264.376));
-  --chart-2: var(--theme-light, oklch(0.6 0.118 184.704))
-    var(--theme-dark, oklch(0.696 0.17 162.48));
-  --chart-3: var(--theme-light, oklch(0.398 0.07 227.392))
-    var(--theme-dark, oklch(0.769 0.188 70.08));
-  --chart-4: var(--theme-light, oklch(0.828 0.189 84.429))
-    var(--theme-dark, oklch(0.627 0.265 303.9));
-  --chart-5: var(--theme-light, oklch(0.769 0.188 70.08))
-    var(--theme-dark, oklch(0.645 0.246 16.439));
+  --chart-1: var(--theme-light, oklch(0.646 0.198 41.12))
+    var(--theme-dark, oklch(0.488 0.243 264.38));
+  --chart-2: var(--theme-light, oklch(0.6 0.105 184.7))
+    var(--theme-dark, oklch(0.696 0.151 162.48));
+  --chart-3: var(--theme-light, oklch(0.398 0.07 227.39))
+    var(--theme-dark, oklch(0.769 0.166 70.08));
+  --chart-4: var(--theme-light, oklch(0.828 0.169 84.43))
+    var(--theme-dark, oklch(0.627 0.249 303.9));
+  --chart-5: var(--theme-light, oklch(0.769 0.166 70.08))
+    var(--theme-dark, oklch(0.645 0.243 16.44));
   --sidebar: color-mix(
     in oklch,
     var(--seed-background) var(--theme-light, 94%) var(--theme-dark, 92%),
@@ -422,18 +533,21 @@
     var(--seed-primary) var(--theme-light, 45%) var(--theme-dark, 35%),
     var(--seed-background)
   );
-  --info: var(--theme-light, oklch(0.623 0.214 259.815))
-    var(--theme-dark, oklch(0.623 0.214 259.815));
-  --info-foreground: var(--theme-light, oklch(0.488 0.243 264.376))
-    var(--theme-dark, oklch(0.707 0.165 254.624));
-  --success: var(--theme-light, oklch(0.696 0.17 162.48))
-    var(--theme-dark, oklch(0.696 0.17 162.48));
-  --success-foreground: var(--theme-light, oklch(0.508 0.118 165.612))
-    var(--theme-dark, oklch(0.765 0.177 163.223));
-  --warning: var(--theme-light, oklch(0.769 0.188 70.08))
-    var(--theme-dark, oklch(0.769 0.188 70.08));
-  --warning-foreground: var(--theme-light, oklch(0.555 0.163 48.998))
-    var(--theme-dark, oklch(0.828 0.189 84.429));
+  --info: var(--theme-light, oklch(0.623 0.203 259.81))
+    var(--theme-dark, oklch(0.623 0.203 259.81));
+  --info-foreground: var(--theme-light, oklch(0.488 0.243 264.38))
+    var(--theme-dark, oklch(0.707 0.155 254.62));
+  --success: var(--theme-light, oklch(0.696 0.151 162.48))
+    var(--theme-dark, oklch(0.696 0.151 162.48));
+  --success-foreground: var(--theme-light, oklch(0.508 0.106 165.61))
+    var(--theme-dark, oklch(0.765 0.164 163.22));
+  --warning: var(--theme-light, oklch(0.769 0.166 70.08))
+    var(--theme-dark, oklch(0.769 0.166 70.08));
+  --warning-foreground: var(--theme-light, oklch(0.555 0.149 49))
+    var(--theme-dark, oklch(0.828 0.169 84.43));
+  --brand: var(--seed-primary);
+  --brand-foreground: var(--seed-primary);
+  --brand-illustration: var(--seed-primary);
 }
 
 @layer base {

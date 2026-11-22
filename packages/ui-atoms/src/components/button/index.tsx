@@ -24,6 +24,11 @@ const buttonVariants = cva({
       xs: "h-6 gap-1 rounded-md px-[calc(--spacing(2)-1px)] text-xs before:rounded-[calc(var(--radius-md)-1px)] [&_svg:not([class*='size-'])]:size-3.5",
     },
     variant: {
+      // BTN-5 (ours, not in the base): the one brand-coloured action in a view. Built like
+      // `destructive`: a solid fill from its own token with white text, so it never
+      // depends on `--primary`, which stays neutral.
+      brand:
+        "not-disabled:inset-shadow-[0_1px_--theme(--color-white/16%)] border-brand bg-brand text-white shadow-brand/24 shadow-xs hover:bg-brand/90 data-pressed:bg-brand/90 *:data-[slot=button-loading-indicator]:text-white [:active,[data-pressed]]:inset-shadow-[0_1px_--theme(--color-black/8%)] [:disabled,:active,[data-pressed]]:shadow-none",
       default:
         "not-disabled:inset-shadow-[0_1px_--theme(--color-white/16%)] border-primary bg-primary text-primary-foreground shadow-primary/24 shadow-xs hover:bg-primary/90 data-pressed:bg-primary/90 *:data-[slot=button-loading-indicator]:text-primary-foreground [:active,[data-pressed]]:inset-shadow-[0_1px_--theme(--color-black/8%)] [:disabled,:active,[data-pressed]]:shadow-none",
       destructive:

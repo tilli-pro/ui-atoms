@@ -156,7 +156,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     leads: ["the a06749b02 separator role=presentation removal"],
   }),
   coss("button", "merge-selectively", 5, {
-    reapply: ["BTN-3"],
+    reapply: ["BTN-3", "BTN-5"],
     note: "sequence after spinner",
   }),
   coss("calendar", "adopt", 10, {
@@ -424,6 +424,10 @@ export const LIVE_IDS: Readonly<Record<string, LiveId>> = {
   "BTN-3": {
     resolution: "re-apply the ButtonPrimitive / Button / buttonVariants split",
     why: "the audit recommended collapsing to coss's flat Button, but the triple (styled part, primitive, variants) is required for every previously-forked part and button is forked three ways. This is the one place the port knowingly departs from that recommendation.",
+  },
+  "BTN-5": {
+    resolution: "re-apply the `brand` variant",
+    why: "the brand blue must be able to fill an action without becoming `--primary`, which 22 components use and which stays neutral. The base has no such variant; ours is a copy of its `destructive` variant on the `--brand` token.",
   },
   "TIP-1": {
     resolution:

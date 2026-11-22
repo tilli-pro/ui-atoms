@@ -23,11 +23,11 @@ afterEach(() => {
 });
 
 describe("theme tokens", () => {
-  it("THEME_TOKENS is exactly the custom properties of theme-tilli-light", async () => {
+  it("THEME_TOKENS is exactly the custom properties of theme-neutral-light", async () => {
     const out = await compileCss('@import "./styles/core.css";', [
-      "theme-tilli-light",
+      "theme-neutral-light",
     ]);
-    const declared = Object.keys(declarationsFor(out, ".theme-tilli-light"));
+    const declared = Object.keys(declarationsFor(out, ".theme-neutral-light"));
     expect(declared.length).toBeGreaterThan(30);
     expect(THEME_TOKENS.map(tokenToCssVariable).sort()).toEqual(
       declared.sort(),

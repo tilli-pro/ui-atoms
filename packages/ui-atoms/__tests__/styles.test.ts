@@ -61,6 +61,9 @@ const THEME_KEYS = [
   "--color-success",
   "--color-info-foreground",
   "--color-info",
+  "--color-brand",
+  "--color-brand-foreground",
+  "--color-brand-illustration",
 ];
 
 function block(selector: string): string {
@@ -92,19 +95,19 @@ describe("styles.css — canonical token sheet", () => {
     expect(wiring).toMatch(/^@import "\.\/styles\/core\.css";/);
     // `light` and `system-light` beside `:root` let a light subtree sit inside a dark one.
     expect(wiring).toMatch(
-      /\n:root,\n\[data-theme="light"\],\n\[data-theme="system-light"\] \{\n {2}@apply theme-tilli-light theme-mode-light;/,
+      /\n:root,\n\[data-theme="light"\],\n\[data-theme="system-light"\] \{\n {2}@apply theme-neutral-light theme-mode-light;/,
     );
     // A theme script writes `system-dark` when the OS is dark and nothing is stored; it
     // must get the dark tokens, not just the `dark:` variant.
     expect(wiring).toMatch(
-      /\n\[data-theme="dark"\],\n\[data-theme="system-dark"\] \{\n {2}@apply theme-tilli-dark theme-mode-dark;/,
+      /\n\[data-theme="dark"\],\n\[data-theme="system-dark"\] \{\n {2}@apply theme-neutral-dark theme-mode-dark;/,
     );
   });
   it("maps exactly the v2 @theme inline keys", () => {
     const theme = block("@theme inline");
     const keys = [...theme.matchAll(/^\s*(--[a-z0-9-]+):/gm)].map((m) => m[1]);
     expect(keys.sort()).toEqual([...THEME_KEYS].sort());
-    expect(keys).toHaveLength(52);
+    expect(keys).toHaveLength(55);
   });
   it("declares the four TST-4 toast replay keyframes coss keeps out of the registry", () => {
     expect(css).toMatch(/@keyframes toast-success-odd/);
@@ -113,35 +116,34 @@ describe("styles.css — canonical token sheet", () => {
     expect(css).toMatch(/@keyframes toast-error-even/);
   });
   it("carries the 40 tilli values as :root defaults and 38 dark overrides, with NO tenant selectors", () => {
-    // 39 themed values in the light utility, plus --radius, which no theme changes.
-    const root = block("@utility theme-tilli-light {");
-    expect([...root.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(39);
+    // 42 themed values in the light utility (39 from 1.1.0 plus the three brand tokens), and
+    // --radius, which no theme changes.
+    const root = block("@utility theme-neutral-light {");
+    expect([...root.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(42);
     expect(root).toContain("--primary: oklch(0.205 0 0);");
     expect(block("\n:root {").trim()).toBe("--radius: 0.625rem;");
-    const dark = block("@utility theme-tilli-dark {");
-    expect([...dark.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(38);
+    const dark = block("@utility theme-neutral-dark {");
+    expect([...dark.matchAll(/^\s*(--[a-z0-9-]+):/gm)]).toHaveLength(42);
     expect(dark).toContain("--background: oklch(0.145 0 0);");
     expect(dark).toContain("--foreground: oklch(0.985 0 0);");
     expect(css).not.toMatch(/data-tenant/);
   });
   it("a11y: light-theme --muted-foreground and --destructive-foreground are darkened off the v2-pinned values — both failed axe color-contrast at 0.556/0.577 against the near-white surfaces (bg-muted, badge/alert tints) they render text on; dark theme is untouched (not exercised by the failing-axe suite)", () => {
-    const root = block("@utility theme-tilli-light {");
+    const root = block("@utility theme-neutral-light {");
     expect(root).not.toContain("--muted-foreground: oklch(0.556 0 0);");
     expect(root).toContain("--muted-foreground: oklch(0.5 0 0);");
     expect(root).not.toContain(
       "--destructive-foreground: oklch(0.577 0.245 27.325);",
     );
-    expect(root).toContain(
-      "--destructive-foreground: oklch(0.5 0.245 27.325);",
-    );
+    expect(root).toContain("--destructive-foreground: oklch(0.5 0.204 27.32);");
     // --destructive itself is unchanged: only used as an icon fill/solid
     // background in the components this token reaches, never as text axe
     // checks for contrast.
-    expect(root).toContain("--destructive: oklch(0.577 0.245 27.325);");
-    const dark = block("@utility theme-tilli-dark {");
+    expect(root).toContain("--destructive: oklch(0.577 0.235 27.32);");
+    const dark = block("@utility theme-neutral-dark {");
     expect(dark).toContain("--muted-foreground: oklch(0.708 0 0);");
     expect(dark).toContain(
-      "--destructive-foreground: oklch(0.637 0.237 25.331);",
+      "--destructive-foreground: oklch(0.637 0.237 25.33);",
     );
   });
 });

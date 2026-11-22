@@ -21,11 +21,11 @@ describe("seeded themes", () => {
     expect(out).toMatch(MODE_DARK);
   });
   it("theme-seeded declares every colour token the default theme does, and no other", async () => {
-    const out = await compileCss(CORE, ["theme-seeded", "theme-tilli-light"]);
+    const out = await compileCss(CORE, ["theme-seeded", "theme-neutral-light"]);
     const seeded = Object.keys(declarationsFor(out, ".theme-seeded"));
     expect(seeded.length).toBeGreaterThan(30);
     expect(seeded.sort()).toEqual(
-      Object.keys(declarationsFor(out, ".theme-tilli-light")).sort(),
+      Object.keys(declarationsFor(out, ".theme-neutral-light")).sort(),
     );
   });
   it("every derived token reads only the seeds and the toggles", async () => {
@@ -48,12 +48,12 @@ describe("seeded themes", () => {
   it("keeps the default theme's status and chart colours, per mode", async () => {
     const out = await compileCss(CORE, [
       "theme-seeded",
-      "theme-tilli-light",
-      "theme-tilli-dark",
+      "theme-neutral-light",
+      "theme-neutral-dark",
     ]);
     const seeded = declarationsFor(out, ".theme-seeded");
-    const light = declarationsFor(out, ".theme-tilli-light");
-    const dark = declarationsFor(out, ".theme-tilli-dark");
+    const light = declarationsFor(out, ".theme-neutral-light");
+    const dark = declarationsFor(out, ".theme-neutral-dark");
     for (const token of [
       "--destructive",
       "--destructive-foreground",
@@ -89,8 +89,8 @@ describe("seeded themes", () => {
   });
   it("styles.css changes no token value by gaining the toggles", async () => {
     const out = await compileCss('@import "./styles.css";', [
-      "theme-tilli-light",
-      "theme-tilli-dark",
+      "theme-neutral-light",
+      "theme-neutral-dark",
     ]);
     const {
       "--theme-light": _l,
@@ -102,7 +102,7 @@ describe("seeded themes", () => {
       "--theme-dark": _d2,
       ...dark
     } = declarationsFor(out, DARK);
-    expect(light).toEqual(declarationsFor(out, ".theme-tilli-light"));
-    expect(dark).toEqual(declarationsFor(out, ".theme-tilli-dark"));
+    expect(light).toEqual(declarationsFor(out, ".theme-neutral-light"));
+    expect(dark).toEqual(declarationsFor(out, ".theme-neutral-dark"));
   });
 });

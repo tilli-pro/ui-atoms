@@ -27,6 +27,19 @@ describe("Button (coss base + the BTN-3 triple)", () => {
     expect(el.className).toContain("p-9");
     expect(el.className).not.toContain("bg-primary");
   });
+  it("BTN-5: the brand variant fills with the brand colour and carries white text", () => {
+    render(<Button variant="brand">Pay now</Button>);
+    const el = screen.getByRole("button", { name: "Pay now" });
+    for (const name of [
+      "border-brand",
+      "bg-brand",
+      "text-white",
+      "hover:bg-brand/90",
+    ])
+      expect(el.className.split(" "), name).toContain(name);
+    // It never borrows the neutral primary.
+    expect(el.className).not.toContain("bg-primary");
+  });
   it("render prop composes another element and drops the implicit type", () => {
     render(<Button render={<a href="#x" />}>Link</Button>);
     const a = screen.getByRole("link", { name: "Link" });

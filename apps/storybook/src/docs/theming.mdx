@@ -118,10 +118,10 @@ of your own, import the core and write those lines yourself:
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  @apply theme-tilli-light theme-mode-light;
+  @apply theme-neutral-light theme-mode-light;
 }
 .dark {
-  @apply theme-tilli-dark theme-mode-dark;
+  @apply theme-neutral-dark theme-mode-dark;
 }
 ```
 
@@ -139,13 +139,49 @@ The token sets are ordinary Tailwind utilities, so each also works as a class. T
 theme one subtree without any selector of your own:
 
 ```tsx
-<aside className="theme-tilli-dark theme-mode-dark bg-background text-foreground">…</aside>
+<aside className="theme-neutral-dark theme-mode-dark bg-background text-foreground">…</aside>
 ```
 
 One limit: `dark:` utilities follow the `dark` variant, not the tokens. Inside a
-`theme-tilli-dark` subtree on a light page they stay off unless the subtree also matches the
+`theme-neutral-dark` subtree on a light page they stay off unless the subtree also matches the
 variant (with the default sheet, add `data-theme="dark"` to it). And a light subtree inside a
 dark one gets light tokens, but `dark:` utilities inside it still apply.
+
+## The tilli theme
+
+The default theme is neutral: greys, with blue only in the brand tokens. The tilli theme is the
+brand's own palette. One blue carries actions and information, the greys carry a faint blue cast
+so they sit in the same family as the wordmark, and the focus ring is blue. To use it, import
+its stylesheet instead of `styles.css`:
+
+```css
+@import "tailwindcss";
+@import "@tilli.dev/ui-atoms/styles/tilli.css";
+@source "../node_modules/@tilli.dev/ui-atoms/dist";
+```
+
+It responds to the same `data-theme` and `data-contrast` values, so the runtime above works
+unchanged. With your own selector, apply `theme-tilli-light` and `theme-tilli-dark` (and
+`theme-tilli-contrast-light` / `theme-tilli-contrast-dark`) the way the recipe above applies the
+neutral sets.
+
+## Brand colour
+
+Both themes carry three brand tokens, separate from `--primary`, which stays neutral:
+
+| Token | Use | Class |
+|---|---|---|
+| `--brand` | Solid fills and tints. The same blue in light and dark. | `bg-brand`, `bg-brand/10` |
+| `--brand-foreground` | Brand-coloured text and icons on a surface. Lighter in dark. | `text-brand-foreground` |
+| `--brand-illustration` | Illustration and gradients only. Never behind text, and too faint for text or icons on light. | `fill-brand-illustration` |
+
+`<Button variant="brand">` is the one component that uses them: a solid brand fill with white
+text. Keep it to one per view.
+
+## Colour values
+
+Every token is written as `oklch(L C H)` with at most four decimals of lightness and chroma and
+two of hue, and every value is inside sRGB, so it has an exact hex equivalent.
 
 ## High contrast
 
@@ -158,7 +194,7 @@ own classes respond:
 <p className="text-muted-foreground high-contrast:underline">…</p>
 ```
 
-With your own selector, apply `theme-tilli-contrast-light` and `theme-tilli-contrast-dark` the
+With your own selector, apply `theme-neutral-contrast-light` and `theme-neutral-contrast-dark` the
 way you apply the theme utilities, after them.
 
 ## Runtime token overrides

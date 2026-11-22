@@ -134,8 +134,8 @@ describe("COSS_LIBS", () => {
 });
 
 describe("LIVE_IDS", () => {
-  it("is exactly the 40 ids that stay live, each with a resolution", () => {
-    expect(Object.keys(LIVE_IDS)).toHaveLength(40);
+  it("is exactly the 41 ids that stay live, each with a resolution", () => {
+    expect(Object.keys(LIVE_IDS)).toHaveLength(41);
     for (const [id, r] of Object.entries(LIVE_IDS)) {
       expect(id, id).toMatch(/^[A-Z]{2,4}-\d$/);
       expect(r.resolution, id).toMatch(

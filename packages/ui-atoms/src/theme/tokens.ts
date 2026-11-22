@@ -1,6 +1,6 @@
 /**
  * The themeable colour tokens, by their camelCase names. `__tests__/theme/tokens.test.tsx`
- * compares this list with the custom properties of `theme-tilli-light` in
+ * compares this list with the custom properties of `theme-neutral-light` in
  * `styles/core.css`, so a token added to the sheet fails that test until it is added here.
  */
 export const THEME_TOKENS = [
@@ -43,6 +43,9 @@ export const THEME_TOKENS = [
   "successForeground",
   "warning",
   "warningForeground",
+  "brand",
+  "brandForeground",
+  "brandIllustration",
 ] as const;
 
 export type ThemeToken = (typeof THEME_TOKENS)[number];

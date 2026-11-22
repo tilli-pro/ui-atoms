@@ -91,10 +91,10 @@ describe("the Storybook is the documentation site", () => {
     expect(names.length).toBeGreaterThan(10);
     for (const name of names) expect(guide, name).toContain(name);
     for (const utility of [
-      "theme-tilli-light",
-      "theme-tilli-dark",
-      "theme-tilli-contrast-light",
-      "theme-tilli-contrast-dark",
+      "theme-neutral-light",
+      "theme-neutral-dark",
+      "theme-neutral-contrast-light",
+      "theme-neutral-contrast-dark",
       "theme-mode-light",
       "theme-mode-dark",
       "theme-seeded",

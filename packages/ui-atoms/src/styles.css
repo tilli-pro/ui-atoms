@@ -9,17 +9,17 @@
 :root,
 [data-theme="light"],
 [data-theme="system-light"] {
-  @apply theme-tilli-light theme-mode-light;
+  @apply theme-neutral-light theme-mode-light;
 }
 
 [data-theme="dark"],
 [data-theme="system-dark"] {
-  @apply theme-tilli-dark theme-mode-dark;
+  @apply theme-neutral-dark theme-mode-dark;
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="system"] {
-    @apply theme-tilli-dark theme-mode-dark;
+    @apply theme-neutral-dark theme-mode-dark;
   }
 }
 
@@ -43,14 +43,14 @@
 :is([data-contrast="high"], [data-contrast="system-high"]),
 :is([data-contrast="high"], [data-contrast="system-high"])
   :is([data-theme="light"], [data-theme="system-light"]) {
-  @apply theme-tilli-contrast-light;
+  @apply theme-neutral-contrast-light;
 }
 
 @media (prefers-contrast: more) {
   [data-contrast="system"],
   [data-contrast="system"]
     :is([data-theme="light"], [data-theme="system-light"]) {
-    @apply theme-tilli-contrast-light;
+    @apply theme-neutral-contrast-light;
   }
 }
 
@@ -59,7 +59,7 @@
 :is([data-contrast="high"], [data-contrast="system-high"]),
 :is([data-contrast="high"], [data-contrast="system-high"])
   :is([data-theme="dark"], [data-theme="system-dark"]) {
-  @apply theme-tilli-contrast-dark;
+  @apply theme-neutral-contrast-dark;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -67,7 +67,7 @@
     :is([data-contrast="high"], [data-contrast="system-high"]),
   :is([data-contrast="high"], [data-contrast="system-high"])
     [data-theme="system"] {
-    @apply theme-tilli-contrast-dark;
+    @apply theme-neutral-contrast-dark;
   }
 }
 
@@ -75,14 +75,14 @@
   :is([data-theme="dark"], [data-theme="system-dark"]) [data-contrast="system"],
   [data-contrast="system"]
     :is([data-theme="dark"], [data-theme="system-dark"]) {
-    @apply theme-tilli-contrast-dark;
+    @apply theme-neutral-contrast-dark;
   }
 }
 
 @media (prefers-color-scheme: dark) and (prefers-contrast: more) {
   [data-theme="system"] [data-contrast="system"],
   [data-contrast="system"] [data-theme="system"] {
-    @apply theme-tilli-contrast-dark;
+    @apply theme-neutral-contrast-dark;
   }
 }
 
@@ -90,14 +90,14 @@
 :is([data-theme="dark"], [data-theme="system-dark"])
   :is([data-theme="light"], [data-theme="system-light"])
   :is([data-contrast="high"], [data-contrast="system-high"]) {
-  @apply theme-tilli-contrast-light;
+  @apply theme-neutral-contrast-light;
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="system"]
     :is([data-theme="light"], [data-theme="system-light"])
     :is([data-contrast="high"], [data-contrast="system-high"]) {
-    @apply theme-tilli-contrast-light;
+    @apply theme-neutral-contrast-light;
   }
 }
 
@@ -105,7 +105,7 @@
   :is([data-theme="dark"], [data-theme="system-dark"])
     :is([data-theme="light"], [data-theme="system-light"])
     [data-contrast="system"] {
-    @apply theme-tilli-contrast-light;
+    @apply theme-neutral-contrast-light;
   }
 }
 
@@ -113,7 +113,7 @@
   [data-theme="system"]
     :is([data-theme="light"], [data-theme="system-light"])
     [data-contrast="system"] {
-    @apply theme-tilli-contrast-light;
+    @apply theme-neutral-contrast-light;
   }
 }
 
@@ -122,14 +122,14 @@
   [data-contrast="high"],
   [data-contrast="system-high"]
 ) {
-  @apply theme-tilli-contrast-light;
+  @apply theme-neutral-contrast-light;
 }
 
 @media (prefers-contrast: more) {
   [data-theme]:is([data-theme="light"], [data-theme="system-light"]):is(
     [data-contrast="system"]
   ) {
-    @apply theme-tilli-contrast-light;
+    @apply theme-neutral-contrast-light;
   }
 }
 
@@ -137,7 +137,7 @@
   [data-contrast="high"],
   [data-contrast="system-high"]
 ) {
-  @apply theme-tilli-contrast-dark;
+  @apply theme-neutral-contrast-dark;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -145,7 +145,7 @@
     [data-contrast="high"],
     [data-contrast="system-high"]
   ) {
-    @apply theme-tilli-contrast-dark;
+    @apply theme-neutral-contrast-dark;
   }
 }
 
@@ -153,12 +153,12 @@
   [data-theme]:is([data-theme="dark"], [data-theme="system-dark"]):is(
     [data-contrast="system"]
   ) {
-    @apply theme-tilli-contrast-dark;
+    @apply theme-neutral-contrast-dark;
   }
 }
 
 @media (prefers-color-scheme: dark) and (prefers-contrast: more) {
   [data-theme]:is([data-theme="system"]):is([data-contrast="system"]) {
-    @apply theme-tilli-contrast-dark;
+    @apply theme-neutral-contrast-dark;
   }
 }
