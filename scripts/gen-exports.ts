@@ -40,8 +40,6 @@ export function generateExports(
     "./package.json": "./package.json",
     "./styles.css": "./dist/styles.css",
     "./styles/core.css": "./dist/styles/core.css",
-    "./styles/beacon.css": "./dist/styles/beacon.css",
-    "./styles/tilli.css": "./dist/styles/tilli.css",
     "./utils": entry("utils"),
     "./formatters": entry("formatters"),
     "./hooks": entry("hooks/index"),

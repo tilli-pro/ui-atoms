@@ -1,0 +1,23 @@
+// Standalone config (see packages/ui-atoms/tsconfig.json in this repo) — no shared
+// `@tilli-pro/tsconfig` base.
+// No `jsx` setting: this package ships stylesheets; the only TypeScript is its tests.
+{
+  "compilerOptions": {
+    "strict": true,
+    // No `rootDir`: the tests import ui-atoms' stylesheet test helpers from the sibling package.
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": true,
+    "types": ["node", "vitest/globals"],
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "${configDir}/.cache/typecheck.tsbuildinfo"
+  },
+  "include": ["__tests__"]
+}

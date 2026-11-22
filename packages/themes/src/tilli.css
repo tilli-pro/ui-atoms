@@ -1,9 +1,10 @@
-@import "./core.css";
+@import "@tilli.dev/ui-atoms/styles/core.css";
+@import "./tilli/tokens.css";
 
 /*
- * The tilli theme on the default selectors: the same wiring as ../styles.css, with the
- * tilli token sets in place of the neutral ones. Import this file instead of styles.css.
- * __tests__/styles-colors.test.ts keeps the two in step.
+ * The tilli theme on ui-atoms' default selectors: the same wiring as
+ * "@tilli.dev/ui-atoms/styles.css", with this theme's token sets in place of the neutral
+ * ones. Import this file instead of that one. __tests__/themes.test.ts keeps the two in step.
  */
 :root,
 [data-theme="light"],

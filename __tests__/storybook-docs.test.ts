@@ -106,16 +106,16 @@ describe("the Storybook is the documentation site", () => {
 
   it("lets a visitor switch between the built-in themes", () => {
     const preview = read("apps/storybook/.storybook/preview.tsx");
-    // The neutral sheet is always loaded; the tilli sheet is the package's own entry point,
-    // added on top when the toolbar asks for it.
+    // The neutral sheet is always loaded; the others are @tilli.dev/themes' own entry points,
+    // added on top when the toolbar asks for them.
     expect(read("apps/storybook/src/styles/globals.css")).toContain(
       '@import "@tilli.dev/ui-atoms/styles.css";',
     );
     expect(read("apps/storybook/src/styles/tilli.css")).toContain(
-      '@import "@tilli.dev/ui-atoms/styles/tilli.css";',
+      '@import "@tilli.dev/themes/tilli.css";',
     );
     expect(read("apps/storybook/src/styles/beacon.css")).toContain(
-      '@import "@tilli.dev/ui-atoms/styles/beacon.css";',
+      '@import "@tilli.dev/themes/beacon.css";',
     );
     expect(preview).toContain('"../src/styles/tilli.css?inline"');
     expect(preview).toContain('"../src/styles/beacon.css?inline"');

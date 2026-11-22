@@ -1,0 +1,42 @@
+{
+  "name": "@tilli.dev/themes",
+  "version": "0.0.0",
+  "description": "Themes for @tilli.dev/ui-atoms: the tilli brand palette, and beacon, which adds a six-colour spectrum for telling an application's sections apart",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://tilli-pro.github.io/ui-atoms/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tilli-pro/ui-atoms.git",
+    "directory": "packages/themes"
+  },
+  "publishConfig": { "access": "public", "provenance": true },
+  "sideEffects": ["**/*.css"],
+  "files": ["dist", "README.md", "LICENSE"],
+  "exports": {
+    "./package.json": "./package.json",
+    "./tilli.css": "./dist/tilli.css",
+    "./tilli/tokens.css": "./dist/tilli/tokens.css",
+    "./beacon.css": "./dist/beacon.css",
+    "./beacon/tokens.css": "./dist/beacon/tokens.css"
+  },
+  "scripts": {
+    "build": "rm -rf dist && cp -R src dist && cp ../../LICENSE .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "biome check .",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@tilli.dev/ui-atoms": "workspace:^",
+    "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/node": "catalog:",
+    "@tilli.dev/ui-atoms": "workspace:^",
+    "@types/node": "catalog:",
+    "publint": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -31,8 +31,6 @@ describe("pack-smoke", () => {
   it("asserts the selector-free core sheet ships beside the default one", () => {
     // `styles.css` is only an `@import` of it: a tarball without it is a broken package.
     expect(required).toContain("package/dist/styles/core.css");
-    expect(required).toContain("package/dist/styles/tilli.css");
-    expect(required).toContain("package/dist/styles/beacon.css");
   });
 
   it("reads the tarball listing from a file, not from a pipe into grep", () => {

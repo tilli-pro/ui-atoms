@@ -6,15 +6,16 @@ const BASE = join(import.meta.dirname, "..", "..", "src");
 /**
  * Compiles a stylesheet the way a consumer's Tailwind build would, resolving `@import`s
  * from `packages/ui-atoms/src`. `candidates` are the class names "found in markup".
- * `optimize` also runs Tailwind's production pass (Lightning CSS, minified).
+ * `optimize` also runs Tailwind's production pass (Lightning CSS, minified). `base` is the
+ * directory relative `@import`s resolve from, for another package's stylesheets.
  */
 export async function compileCss(
   css: string,
   candidates: string[] = [],
-  options: { optimize?: boolean } = {},
+  options: { optimize?: boolean; base?: string } = {},
 ): Promise<string> {
   const compiler = await compile(css, {
-    base: BASE,
+    base: options.base ?? BASE,
     onDependency: () => undefined,
   });
   const built = compiler.build(candidates);

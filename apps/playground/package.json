@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@base-ui/react": "catalog:",
+    "@tilli.dev/themes": "workspace:^",
     "@tilli.dev/ui-atoms": "workspace:^",
     "fast-is-equal": "catalog:",
     "lucide-react": "catalog:",

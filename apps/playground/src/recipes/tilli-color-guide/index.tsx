@@ -33,10 +33,10 @@ import { Chip, Ramp, Ratio } from "./swatch.js";
 
 /**
  * The guide renders in the palette it describes: its root carries the tilli theme's token
- * utilities from ui-atoms for the current mode, so the parts below are the real components
+ * utilities from @tilli.dev/themes for the current mode, so the parts below are the real components
  * in the real theme. Switch the theme from the control panel. The values listed on the
  * page come from ./palette.js, which mirrors `theme-tilli-light` / `theme-tilli-dark` in
- * packages/ui-atoms/src/styles/core.css; change both together.
+ * packages/themes/src/tilli/tokens.css; change both together.
  */
 const THEME: Record<Mode, string> = {
   light: "theme-tilli-light theme-mode-light",

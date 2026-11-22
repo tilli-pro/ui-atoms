@@ -1,4 +1,7 @@
 @import "@tilli.dev/ui-atoms/styles.css";
+/* Token sets only, no wiring: the colour guide and the enterprise recipe wear a theme by class. */
+@import "@tilli.dev/themes/tilli/tokens.css";
+@import "@tilli.dev/themes/beacon/tokens.css";
 @source "../node_modules/@tilli.dev/ui-atoms/dist";
 
 /* Families behind the ui-atoms font tokens; the faces are loaded from Google Fonts in index.html. */

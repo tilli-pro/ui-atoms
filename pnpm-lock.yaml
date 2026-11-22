@@ -255,6 +255,9 @@ importers:
       '@base-ui/react':
         specifier: 'catalog:'
         version: 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@tilli.dev/themes':
+        specifier: workspace:^
+        version: link:../../packages/themes
       '@tilli.dev/ui-atoms':
         specifier: workspace:^
         version: link:../../packages/ui-atoms
@@ -334,6 +337,9 @@ importers:
 
   apps/storybook:
     dependencies:
+      '@tilli.dev/themes':
+        specifier: workspace:^
+        version: link:../../packages/themes
       '@tilli.dev/ui-atoms':
         specifier: workspace:^
         version: link:../../packages/ui-atoms
@@ -428,6 +434,30 @@ importers:
       tsup:
         specifier: 'catalog:'
         version: 9.0.0(jiti@2.7.0)(postcss@8.5.33)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.1(@types/node@26.6.6)(@vitest/browser-playwright@5.1.1)(@vitest/ui@5.1.1)(jsdom@31.0.1)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/themes:
+    devDependencies:
+      '@tailwindcss/node':
+        specifier: 'catalog:'
+        version: 4.3.5
+      '@tilli.dev/ui-atoms':
+        specifier: workspace:^
+        version: link:../ui-atoms
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      publint:
+        specifier: 'catalog:'
+        version: 0.3.25
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.3.5
       typescript:
         specifier: 'catalog:'
         version: 7.0.2

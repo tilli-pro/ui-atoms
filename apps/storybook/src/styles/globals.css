@@ -1,3 +1,6 @@
 @import "@tilli.dev/ui-atoms/styles.css";
+/* Token sets only, no wiring: so a story can wear a theme on one element (the Spectrum story). */
+@import "@tilli.dev/themes/tilli/tokens.css";
+@import "@tilli.dev/themes/beacon/tokens.css";
 @source "../../../../packages/ui-atoms/src";
 @source "../stories";

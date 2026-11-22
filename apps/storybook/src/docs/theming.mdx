@@ -147,40 +147,59 @@ One limit: `dark:` utilities follow the `dark` variant, not the tokens. Inside a
 variant (with the default sheet, add `data-theme="dark"` to it). And a light subtree inside a
 dark one gets light tokens, but `dark:` utilities inside it still apply.
 
-## The tilli theme
+## More themes: @tilli.dev/themes
 
-The default theme is neutral: greys, with blue only in the brand tokens. The tilli theme is the
-brand's own palette. One blue carries actions and information, the greys carry a faint blue cast
-so they sit in the same family as the wordmark, and the focus ring is blue. To use it, import
-its stylesheet instead of `styles.css`:
+The default theme is neutral: greys, with blue only in the brand tokens. Two more themes ship
+in a separate package, `@tilli.dev/themes`:
+
+```bash
+pnpm add @tilli.dev/themes
+```
+
+Each is one stylesheet you import **instead of** `@tilli.dev/ui-atoms/styles.css`:
 
 ```css
 @import "tailwindcss";
-@import "@tilli.dev/ui-atoms/styles/tilli.css";
+@import "@tilli.dev/themes/tilli.css"; /* or "@tilli.dev/themes/beacon.css" */
 @source "../node_modules/@tilli.dev/ui-atoms/dist";
 ```
 
-It responds to the same `data-theme` and `data-contrast` values, so the runtime above works
+Both respond to the same `data-theme` and `data-contrast` values, so the runtime above works
 unchanged. The Theme control in this Storybook's toolbar switches every story between the
-built-in themes; Mode and Contrast work with either. With your own selector, apply `theme-tilli-light` and `theme-tilli-dark` (and
-`theme-tilli-contrast-light` / `theme-tilli-contrast-dark`) the way the recipe above applies the
-neutral sets.
+built-in themes; Mode and Contrast work with any of them.
 
-## The beacon theme
+With your own selector, import ui-atoms' core sheet and the theme's token sets, then apply them
+the way the recipe above applies the neutral ones:
 
-The beacon theme is the tilli theme plus a six-colour spectrum, for applications with several
-sections that need telling apart at a glance (a rail of modules, for example). Import
-`@tilli.dev/ui-atoms/styles/beacon.css` instead of `styles.css`, or apply `theme-beacon-light` /
-`theme-beacon-dark` with your own selector.
+```css
+@import "@tilli.dev/ui-atoms/styles/core.css";
+@import "@tilli.dev/themes/tilli/tokens.css";
 
-Each of the six colours (1 violet, 2 pink, 3 orange, 4 yellow, 5 green, 6 cyan) has four tokens:
+@custom-variant dark (&:where(.dark, .dark *));
+:root { @apply theme-tilli-light theme-mode-light; }
+.dark { @apply theme-tilli-dark theme-mode-dark; }
+```
+
+### tilli
+
+The brand's own palette. One blue carries actions and information, the greys carry a faint blue
+cast so they sit in the same family as the wordmark, and the focus ring is blue. Token sets:
+`theme-tilli-light`, `theme-tilli-dark`, `theme-tilli-contrast-light`, `theme-tilli-contrast-dark`.
+
+### beacon
+
+The tilli theme plus a six-colour spectrum, for applications with several sections that need
+telling apart at a glance (a rail of modules, for example). Token sets: `theme-beacon-light`,
+`theme-beacon-dark` and their `-contrast-` pairs.
+
+The six colours are violet, pink, orange, yellow, green and cyan. Each has four tokens:
 
 | Token | Use | Class |
 |---|---|---|
-| `--spectrum-N` | The fill. | `bg-spectrum-1`, `from-spectrum-1`, `bg-spectrum-1/10` |
-| `--spectrum-N-to` | The far end of its gradient. | `to-spectrum-1-to` |
-| `--spectrum-N-contrast` | Text and icons on the fill or the gradient. | `text-spectrum-1-contrast` |
-| `--spectrum-N-foreground` | The colour as text on a page, card or sidebar. Lighter in dark. | `text-spectrum-1-foreground` |
+| `--spectrum-green` | The fill. | `bg-spectrum-green`, `from-spectrum-green`, `bg-spectrum-green/10` |
+| `--spectrum-green-to` | The far end of its gradient. | `to-spectrum-green-to` |
+| `--spectrum-green-contrast` | Text and icons on the fill or the gradient. | `text-spectrum-green-contrast` |
+| `--spectrum-green-foreground` | The colour as text on a page, card or sidebar. Lighter in dark. | `text-spectrum-green-foreground` |
 
 Three rules:
 
@@ -192,12 +211,14 @@ Three rules:
 - **Blue is not in the spectrum.** Every hue stays clear of the brand blue, so no section is
   mistaken for the main action.
 
-The Spectrum story shows all six in light and dark. The tokens exist only in the beacon theme;
-`THEME_TOKENS` and the token override helpers cover the tokens every theme shares.
+A foreground is the name's colour family made readable, not the fill itself: on a light surface
+`text-spectrum-yellow-foreground` is a dark olive. The Spectrum story shows all six in light and
+dark. These tokens exist only in the beacon theme; `THEME_TOKENS` and the token override helpers
+cover the tokens every theme shares.
 
 ## Brand colour
 
-Both themes carry three brand tokens, separate from `--primary`, which stays neutral:
+Every theme carries three brand tokens, separate from `--primary`, which stays neutral:
 
 | Token | Use | Class |
 |---|---|---|

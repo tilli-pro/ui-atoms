@@ -12,17 +12,25 @@ export type Gradient = { from: string; to: string };
 
 /**
  * Which colour of the beacon theme's spectrum each section wears. The spectrum lives in
- * ui-atoms (`theme-beacon-light` / `theme-beacon-dark`): six hues at least 40 degrees
+ * @tilli.dev/themes (`theme-beacon-light` / `theme-beacon-dark`): six hues at least 40 degrees
  * apart, clear of the brand blue, each with a fill, a gradient end, a contrast colour for
  * what sits on the fill, and a foreground for text.
  */
-export const sectionSpectrum: Record<SectionKey, 1 | 2 | 3 | 4 | 5 | 6> = {
-  network: 6, // cyan
-  engage: 2, // pink
-  sales: 3, // orange
-  finance: 5, // green
-  operations: 1, // violet
-  support: 4, // yellow
+export type SpectrumColor =
+  | "violet"
+  | "pink"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "cyan";
+
+export const sectionSpectrum: Record<SectionKey, SpectrumColor> = {
+  network: "cyan",
+  engage: "pink",
+  sales: "orange",
+  finance: "green",
+  operations: "violet",
+  support: "yellow",
 };
 
 /**
@@ -30,9 +38,9 @@ export const sectionSpectrum: Record<SectionKey, 1 | 2 | 3 | 4 | 5 | 6> = {
  * end. Any CSS color string works here and in the control panel.
  */
 export const defaultGradients = Object.fromEntries(
-  Object.entries(sectionSpectrum).map(([key, n]) => [
+  Object.entries(sectionSpectrum).map(([key, name]) => [
     key,
-    { from: `var(--spectrum-${n})`, to: `var(--spectrum-${n}-to)` },
+    { from: `var(--spectrum-${name})`, to: `var(--spectrum-${name}-to)` },
   ]),
 ) as Record<SectionKey, Gradient>;
 
