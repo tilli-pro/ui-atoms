@@ -48,6 +48,9 @@ catalogs:
     '@storybook/react-vite':
       specifier: 10.6.8
       version: 10.6.8
+    '@tailwindcss/node':
+      specifier: 4.3.5
+      version: 4.3.5
     '@tailwindcss/vite':
       specifier: 4.3.5
       version: 4.3.5
@@ -462,6 +465,9 @@ importers:
       '@headless-tree/core':
         specifier: 'catalog:'
         version: 1.8.0
+      '@tailwindcss/node':
+        specifier: 'catalog:'
+        version: 4.3.5
       '@testing-library/jest-dom':
         specifier: 'catalog:'
         version: 8.0.0(@testing-library/dom@10.4.2)(vitest@5.1.1)

@@ -19,6 +19,7 @@
   "exports": {
     "./package.json": "./package.json",
     "./styles.css": "./dist/styles.css",
+    "./styles/core.css": "./dist/styles/core.css",
     "./utils": {
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.js",
@@ -371,8 +372,8 @@
     }
   },
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css && cp ../../LICENSE ../../THIRD-PARTY-NOTICES.md .",
-    "dev": "tsup --watch --onSuccess \"cp src/styles.css dist/styles.css\"",
+    "build": "tsup && tsc -p tsconfig.build.json && cp src/styles.css dist/styles.css && rm -rf dist/styles && cp -R src/styles dist/styles && cp ../../LICENSE ../../THIRD-PARTY-NOTICES.md .",
+    "dev": "tsup --watch --onSuccess \"cp src/styles.css dist/styles.css && rm -rf dist/styles && cp -R src/styles dist/styles\"",
     "dev:types": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "biome check .",
@@ -421,6 +422,7 @@
     "@base-ui/react": "catalog:",
     "@daypicker/react": "catalog:",
     "@headless-tree/core": "catalog:",
+    "@tailwindcss/node": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@testing-library/user-event": "catalog:",

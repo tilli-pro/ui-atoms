@@ -21,6 +21,7 @@ describe("gen-exports", () => {
     expect(Object.keys(exp)).toEqual([
       "./package.json",
       "./styles.css",
+      "./styles/core.css",
       "./utils",
       "./formatters",
       "./hooks",
@@ -33,6 +34,7 @@ describe("gen-exports", () => {
       default: "./dist/components/button/index.js",
     });
     expect(exp["./styles.css"]).toBe("./dist/styles.css");
+    expect(exp["./styles/core.css"]).toBe("./dist/styles/core.css");
     expect(exp["./utils"]).toEqual({
       types: "./dist/utils.d.ts",
       import: "./dist/utils.js",
