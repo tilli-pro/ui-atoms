@@ -52,5 +52,29 @@
         "changes": "Add contact and organization profiles reached from the Network lists: a shared detail contract and view with header, summary strip, cards, and Activity, Billing, Support and Relationships tabs, fed by a per-party generator shaped on the QA database; two new gap ids (ai-insights, mailbox)."
       }
     ]
+  },
+  {
+    "slug": "tilli-color-guide",
+    "title": "tilli color guide",
+    "description": "A proposed colour standard for the tilli brand, drawn in the palette it describes. OKLCH is the source of truth and hex is derived from it in the page: a blue ramp at the hue of the U mark, greys tinted to match the wordmark, and cyan kept for illustration and the brand gradient. Shows the ramps, the semantic tokens for light and dark, contrast-checked pairings to use and to avoid, the mark with the Sora wordmark, and ui-atoms parts wearing the tokens. Follows the theme chosen in the control panel.",
+    "version": "1.0.0",
+    "components": [
+      "alert",
+      "badge",
+      "button",
+      "card",
+      "checkbox",
+      "input",
+      "label",
+      "switch",
+      "tabs"
+    ],
+    "changelog": [
+      {
+        "version": "1.0.0",
+        "date": "2026-11-22",
+        "changes": "Initial recipe."
+      }
+    ]
   }
 ]
