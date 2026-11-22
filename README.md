@@ -13,3 +13,16 @@ selectors, styled parts plus `*Primitive` parts and exported cva variants.
 - Trying an unreleased build: `pnpm pack:tarball` writes the package tarball to `.tarballs/`;
   install that file in your app with `pnpm add <path to the .tgz>`.
 - Contributing: see `CONTRIBUTING.md`.
+
+## Claude Code skills
+
+`.claude/` holds agents, commands and skills for working on this repository with Claude Code.
+
+- `skills/playground-recipes` is this repository's own: how to add and version a playground
+  recipe.
+- The design agents (`brand-architect`, `design-master`, `visual-historian`), commands
+  (`/brand-identity`, `/design-audit`, `/premium-landing`, `/style-guide`) and skills
+  (`brand-systems`, `design-masters`, `design-movements`, `design-principles`,
+  `premium-saas-design`) come from
+  [design-mastery-claude-code](https://github.com/HermeticOrmus/design-mastery-claude-code) by
+  Hermetic Ormus, under the MIT License. Its notice is in `.claude/THIRD-PARTY-NOTICES.md`.
