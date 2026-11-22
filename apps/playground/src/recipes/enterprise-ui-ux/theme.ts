@@ -11,18 +11,49 @@ export const classes = (...parts: (string | false | undefined)[]) =>
 export type Gradient = { from: string; to: string };
 
 /**
- * Default gradient per section: the hue's most saturated in-gamut color, running
- * to a stop 40–55° around the wheel, rotated away from the neighbouring section.
- * Any CSS color string works here and in the control panel.
+ * Which colour of the beacon theme's spectrum each section wears. The spectrum lives in
+ * ui-atoms (`theme-beacon-light` / `theme-beacon-dark`): six hues at least 40 degrees
+ * apart, clear of the brand blue, each with a fill, a gradient end, a contrast colour for
+ * what sits on the fill, and a foreground for text.
  */
-export const defaultGradients: Record<SectionKey, Gradient> = {
-  network: { from: "#0280f7", to: "#08c2ca" }, // h255 → h200
-  engage: { from: "#fd0797", to: "#f95801" }, // h355 → h40
-  sales: { from: "#fb8304", to: "#d0af07" }, // h55 → h95
-  finance: { from: "#04cfa2", to: "#a3c003" }, // h170 → h120
-  operations: { from: "#0a9fe0", to: "#5b5bf5" }, // h200 → h240
-  support: { from: "#740bfe", to: "#fb02b8" }, // h290 → h345
+export const sectionSpectrum: Record<SectionKey, 1 | 2 | 3 | 4 | 5 | 6> = {
+  network: 6, // cyan
+  engage: 2, // pink
+  sales: 3, // orange
+  finance: 5, // green
+  operations: 1, // violet
+  support: 4, // yellow
 };
+
+/**
+ * Default gradient per section: its spectrum colour running to that colour's gradient
+ * end. Any CSS color string works here and in the control panel.
+ */
+export const defaultGradients = Object.fromEntries(
+  Object.entries(sectionSpectrum).map(([key, n]) => [
+    key,
+    { from: `var(--spectrum-${n})`, to: `var(--spectrum-${n}-to)` },
+  ]),
+) as Record<SectionKey, Gradient>;
+
+/**
+ * The inline custom properties a colourful section element needs: its gradient stops, and
+ * `--on`, the colour for an icon on the full gradient. `--on` comes from the spectrum, so
+ * a light fill (yellow, green) gets a dark icon instead of an unreadable white one.
+ */
+export const sectionStyle = (
+  key: SectionKey,
+  gradient: Gradient,
+): Record<string, string> => ({
+  "--from": gradient.from,
+  "--to": gradient.to,
+  "--on": `var(--spectrum-${sectionSpectrum[key]}-contrast)`,
+  "--ink": sectionInk(key),
+});
+
+/** The section's colour as text or an icon stroke on a surface, readable in both modes. */
+export const sectionInk = (key: SectionKey): string =>
+  `var(--spectrum-${sectionSpectrum[key]}-foreground)`;
 
 /** True for anything the browser accepts as a color: hex, hsl(), oklch(), oklab(), names… */
 export const isCssColor = (value: string): boolean =>
@@ -31,28 +62,25 @@ export const isCssColor = (value: string): boolean =>
     : CSS.supports("color", value.trim());
 
 /**
- * Colorful rail items: a faint tint of the section gradient behind a stroke
- * darkened from its first stop (`--section-ink-mix` in styles.css keeps the
- * stroke undarkened in dark mode). The active item shows the full gradient
- * with a white stroke. `--from`/`--to` are set inline per item.
+ * Colorful rail items: a faint tint of the section gradient behind a stroke in the
+ * section's foreground colour (`--ink`, from the spectrum). The active item shows the full gradient
+ * with a stroke in the section's contrast colour (`--on`). `--from`/`--to` are set inline per item.
  */
 export const colorfulItemClassName = classes(
   "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--from)_20%,transparent),color-mix(in_oklab,var(--to)_8%,transparent))]",
-  "[&>svg]:text-[color-mix(in_oklab,var(--from)_var(--section-ink-mix),black)]",
-  "data-[active=true]:bg-[linear-gradient(135deg,var(--from),var(--to))] data-[active=true]:[&>svg]:text-white",
+  "[&>svg]:text-(--ink)",
+  "data-[active=true]:bg-[linear-gradient(135deg,var(--from),var(--to))] data-[active=true]:[&>svg]:text-(--on,white)",
 );
 
 /** Section menu header: the group label (already text-xs) in unselectable uppercase foreground text. */
 export const menuHeaderClassName = "select-none text-foreground uppercase";
 
 /**
- * Colorful header text: the section's first stop pulled toward the theme ink
- * (`--section-heading-mix` / `--section-heading-ink` in styles.css). Reads the
- * `--from` set inline on the popup, since the portaled popup inherits nothing
+ * Colorful header text: the section's foreground colour. Reads the
+ * `--ink` set inline on the popup, since the portaled popup inherits nothing
  * from the rail button.
  */
-export const colorfulMenuHeaderClassName =
-  "text-[color-mix(in_oklab,var(--from)_var(--section-heading-mix),var(--section-heading-ink))]";
+export const colorfulMenuHeaderClassName = "text-(--ink)";
 
 /**
  * Second-sidebar header for a colorful section: the same faint tint as its rail

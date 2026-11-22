@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarProvider,
   SidebarRail,
 } from "@tilli.dev/ui-atoms/sidebar";
+import { useTheme } from "@tilli.dev/ui-atoms/theme";
 import { cn } from "@tilli.dev/ui-atoms/utils";
 import { Command } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
@@ -60,6 +61,18 @@ export default function EnterpriseUiUx() {
   const setActive = (key: ModuleKey): void => go(hashFor(key));
   const ActiveIcon =
     active === "enterprise" ? Command : icons[selected[active]];
+  // The recipe wears the beacon theme. Its token utilities go on <body>, not on the
+  // recipe's own root, because menus and popups are portaled to <body> and must see the
+  // spectrum too; they come off again when the recipe unmounts.
+  const { resolvedTheme } = useTheme();
+  useEffect(() => {
+    const classes =
+      resolvedTheme === "dark"
+        ? ["theme-beacon-dark", "theme-mode-dark"]
+        : ["theme-beacon-light", "theme-mode-light"];
+    document.body.classList.add(...classes);
+    return () => document.body.classList.remove(...classes);
+  }, [resolvedTheme]);
   const [colorful, setColorful] = useState(true);
   const [inset, setInset] = useState(false);
   const [overview, setOverview] = useState(true);
@@ -128,7 +141,9 @@ export default function EnterpriseUiUx() {
   };
   for (const section of sections) {
     for (const stop of ["from", "to"] as const) {
-      gradientControls[`${section.key}-${stop}`] = {
+      // The key carries "spectrum" so values persisted under the old hex placeholders
+      // (`network-from`, …) no longer override the theme's colours.
+      gradientControls[`${section.key}-spectrum-${stop}`] = {
         type: "text",
         value: gradients[section.key][stop],
         persist: true,

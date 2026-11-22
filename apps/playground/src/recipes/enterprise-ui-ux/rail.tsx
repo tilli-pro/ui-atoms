@@ -44,6 +44,8 @@ import {
   type Gradient,
   menuHeaderClassName,
   monochromeItemClassName,
+  sectionInk,
+  sectionStyle,
 } from "./theme.js";
 
 /**
@@ -149,10 +151,10 @@ export function Rail({
                     colorful ? colorfulItemClassName : monochromeItemClassName,
                   ),
                   isActive,
-                  style: {
-                    "--from": gradients[section.key].from,
-                    "--to": gradients[section.key].to,
-                  } as React.CSSProperties,
+                  style: sectionStyle(
+                    section.key,
+                    gradients[section.key],
+                  ) as React.CSSProperties,
                 };
                 if (isActive && panelOpen) {
                   return (
@@ -190,8 +192,11 @@ export function Rail({
                         <Icon />
                         <span>{section.title}</span>
                       </MenuTrigger>
-                      {/* The popup is portaled, so the button's `--from`
-                          can't be inherited; pass the first stop directly. */}
+                      {/* The popup is portaled, so the button's custom properties
+                          can't be inherited; set them again here. Its border
+                          and heading share the section's foreground colour,
+                          which reads on the popup in both modes (the fill is
+                          too faint a line on light for yellow and green). */}
                       <MenuPopup
                         align="start"
                         className="w-56"
@@ -201,7 +206,8 @@ export function Rail({
                           colorful
                             ? ({
                                 "--from": gradients[section.key].from,
-                                borderColor: gradients[section.key].from,
+                                "--ink": sectionInk(section.key),
+                                borderColor: sectionInk(section.key),
                               } as React.CSSProperties)
                             : undefined
                         }
