@@ -27,7 +27,7 @@ jobs:
           version: 10.19.0
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "22"
+          node-version-file: .tool-versions
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # Live registry + committed bytes, both against the lock. When this fails, read the

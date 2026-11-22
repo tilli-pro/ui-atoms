@@ -76,6 +76,13 @@ One difference from coss: shadcn serves *generated* files (a style is built from
 the served bytes and the lock cannot verify them against the repository. The digest of the
 served bytes is the pin; the template's last commit is recorded as provenance only.
 
+## Setup
+
+Prerequisites: Node 24.22.2 and pnpm 10.19.0 (`packageManager`). The Node version is pinned in
+`.tool-versions`: run `mise install` in the repository after you
+[set up mise](https://mise.jdx.dev/getting-started.html). CI reads the same file, so local and
+CI runs use one Node version. Then `pnpm install`.
+
 ## Workflow
 
 Branch from `main`, conventional commits (`feat(button): …`), `pnpm lint:fix` before
