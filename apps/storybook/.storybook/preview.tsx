@@ -3,12 +3,14 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { defaultThemeStore } from "@tilli.dev/ui-atoms/theme";
 import "../src/styles/globals.css";
 import beaconStyles from "../src/styles/beacon.css?inline";
+import nudgeStyles from "../src/styles/nudge.css?inline";
 import tilliStyles from "../src/styles/tilli.css?inline";
 
 /** The built-in themes that are added on top of the neutral sheet, as stylesheet text. */
 const THEME_SHEETS: Record<string, string> = {
   tilli: tilliStyles,
   beacon: beaconStyles,
+  nudge: nudgeStyles,
 };
 
 /**
@@ -25,7 +27,7 @@ const withTheme: Decorator = (Story, context) => {
   useEffect(() => {
     defaultThemeStore.setContrast(contrast);
   }, [contrast]);
-  // Both built-in themes answer to the same data-theme / data-contrast values, so
+  // Every built-in theme answers to the same data-theme / data-contrast values, so
   // switching theme is switching stylesheet: the neutral one is always loaded, and the
   // others are added after it, where their rules win.
   useEffect(() => {
@@ -52,6 +54,7 @@ const preview: Preview = {
           { value: "neutral", title: "Neutral theme" },
           { value: "tilli", title: "tilli theme" },
           { value: "beacon", title: "Beacon theme" },
+          { value: "nudge", title: "Nudge theme" },
         ],
         dynamicTitle: true,
       },

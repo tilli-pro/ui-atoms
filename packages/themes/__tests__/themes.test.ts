@@ -18,7 +18,8 @@ const UI_ATOMS = join(import.meta.dirname, "..", "..", "ui-atoms", "src");
 // Token files are compiled against ui-atoms' source sheet, so these tests need no build.
 const SHEET = `@import "../../ui-atoms/src/styles/core.css";
 @import "./tilli/tokens.css";
-@import "./beacon/tokens.css";`;
+@import "./beacon/tokens.css";
+@import "./nudge/tokens.css";`;
 const SETS = [
   "theme-neutral-light",
   "theme-neutral-dark",
@@ -30,6 +31,10 @@ const SETS = [
   "theme-beacon-dark",
   "theme-beacon-contrast-light",
   "theme-beacon-contrast-dark",
+  "theme-nudge-light",
+  "theme-nudge-dark",
+  "theme-nudge-contrast-light",
+  "theme-nudge-contrast-dark",
 ];
 
 const compiled = compileCss(SHEET, SETS, { base: SRC });
@@ -61,6 +66,49 @@ const spectrumKeys = SPECTRUM_NAMES.flatMap((name) => [
   `--spectrum-${name}-contrast`,
   `--spectrum-${name}-foreground`,
 ]);
+
+/** Text on the surfaces it is used on, white on the brand fill, and the focus ring. */
+async function expectReadable(name: string) {
+  const t = await set(name);
+  const pairs: [string, string][] = [
+    ["--foreground", "--background"],
+    ["--card-foreground", "--card"],
+    ["--popover-foreground", "--popover"],
+    ["--muted-foreground", "--background"],
+    ["--muted-foreground", "--card"],
+    ["--muted-foreground", "--muted"],
+    ["--primary-foreground", "--primary"],
+    ["--secondary-foreground", "--secondary"],
+    ["--accent-foreground", "--accent"],
+    ["--sidebar-foreground", "--sidebar"],
+    ["--sidebar-primary-foreground", "--sidebar-primary"],
+    ["--sidebar-accent-foreground", "--sidebar-accent"],
+    ["--brand-foreground", "--background"],
+    ["--brand-foreground", "--card"],
+    ["--info-foreground", "--background"],
+    ["--info-foreground", "--card"],
+    ["--destructive-foreground", "--background"],
+    ["--destructive-foreground", "--card"],
+    ["--success-foreground", "--background"],
+    ["--success-foreground", "--card"],
+    ["--warning-foreground", "--background"],
+    ["--warning-foreground", "--card"],
+  ];
+  for (const [text, surface] of pairs)
+    expect(
+      contrast(color(t, text), color(t, surface)),
+      `${text} on ${surface}`,
+    ).toBeGreaterThanOrEqual(4.5);
+  expect(
+    contrast({ l: 1, c: 0, h: 0 }, color(t, "--brand")),
+    "white on brand",
+  ).toBeGreaterThanOrEqual(4.5);
+  // The focus ring is a control edge.
+  expect(
+    contrast(color(t, "--ring"), color(t, "--background")),
+    "ring",
+  ).toBeGreaterThanOrEqual(3);
+}
 
 describe("colour standard", () => {
   it.each(SETS.filter((name) => !name.includes("neutral")))(
@@ -107,47 +155,62 @@ describe("tilli theme", () => {
   });
   it.each(["theme-tilli-light", "theme-tilli-dark"])(
     "%s: text reads on its surfaces",
-    async (name) => {
-      const t = await set(name);
-      const pairs: [string, string][] = [
-        ["--foreground", "--background"],
-        ["--card-foreground", "--card"],
-        ["--popover-foreground", "--popover"],
-        ["--muted-foreground", "--background"],
-        ["--muted-foreground", "--card"],
-        ["--muted-foreground", "--muted"],
-        ["--primary-foreground", "--primary"],
-        ["--secondary-foreground", "--secondary"],
-        ["--accent-foreground", "--accent"],
-        ["--sidebar-foreground", "--sidebar"],
-        ["--sidebar-primary-foreground", "--sidebar-primary"],
-        ["--sidebar-accent-foreground", "--sidebar-accent"],
-        ["--brand-foreground", "--background"],
-        ["--brand-foreground", "--card"],
-        ["--info-foreground", "--background"],
-        ["--info-foreground", "--card"],
-        ["--destructive-foreground", "--background"],
-        ["--destructive-foreground", "--card"],
-        ["--success-foreground", "--background"],
-        ["--success-foreground", "--card"],
-        ["--warning-foreground", "--background"],
-        ["--warning-foreground", "--card"],
-      ];
-      for (const [text, surface] of pairs)
-        expect(
-          contrast(color(t, text), color(t, surface)),
-          `${text} on ${surface}`,
-        ).toBeGreaterThanOrEqual(4.5);
-      expect(
-        contrast({ l: 1, c: 0, h: 0 }, color(t, "--brand")),
-        "white on brand",
-      ).toBeGreaterThanOrEqual(4.5);
-      // The focus ring is a control edge.
-      expect(
-        contrast(color(t, "--ring"), color(t, "--background")),
-        "ring",
-      ).toBeGreaterThanOrEqual(3);
-    },
+    expectReadable,
+  );
+});
+
+describe("nudge theme", () => {
+  it("declares exactly the tokens ui-atoms' neutral theme does", async () => {
+    const neutral = Object.keys(await set("theme-neutral-light")).sort();
+    expect(Object.keys(await set("theme-nudge-light")).sort()).toEqual(neutral);
+    expect(Object.keys(await set("theme-nudge-dark")).sort()).toEqual(neutral);
+  });
+  it("is the product's palette: navy ink, its action blue, and the logo's green", async () => {
+    const light = await set("theme-nudge-light");
+    const dark = await set("theme-nudge-dark");
+    // The marketing site's navy carries the neutral actions.
+    expect(toHex(color(light, "--primary"))).toBe("#050f3f");
+    expect(dark["--primary-foreground"]).toBe(light["--primary"]);
+    // The application's own default brand blue; the logo's lighter blue cannot carry
+    // white text.
+    expect(toHex(color(light, "--brand"))).toBe("#0077cc");
+    expect(dark["--brand"]).toBe(light["--brand"]);
+    expect(light["--info"]).toBe(light["--brand"]);
+    expect(light["--ring"]).toBe(light["--brand"]);
+    expect(dark["--ring"]).toBe(dark["--brand-foreground"]);
+    // The logo's arrow.
+    expect(toHex(color(light, "--brand-illustration"))).toBe("#89ca86");
+    expect(dark["--brand-illustration"]).toBe(light["--brand-illustration"]);
+    expect(light["--card"]).toBe("oklch(1 0 0)");
+  });
+  it("keeps one hue for its greys and one for its blue", async () => {
+    for (const mode of ["light", "dark"]) {
+      const t = await set(`theme-nudge-${mode}`);
+      const neutralHue = color(t, "--background").h;
+      for (const key of [
+        "--background-secondary",
+        "--foreground",
+        "--muted",
+        "--muted-foreground",
+        "--border",
+        "--sidebar",
+      ])
+        expect(color(t, key).h, `${mode} ${key}`).toBe(neutralHue);
+      const blue = color(t, "--brand").h;
+      for (const key of ["--brand-foreground", "--info-foreground", "--ring"])
+        expect(color(t, key).h, `${mode} ${key}`).toBe(blue);
+    }
+  });
+  it("keeps the brand green apart from the success green", async () => {
+    // Both are green. Far enough apart in hue, an illustration is not read as "ok".
+    const t = await set("theme-nudge-light");
+    expect(
+      apart(color(t, "--brand-illustration").h, color(t, "--success").h),
+    ).toBeGreaterThanOrEqual(15);
+  });
+  it.each(["theme-nudge-light", "theme-nudge-dark"])(
+    "%s: text reads on its surfaces",
+    expectReadable,
   );
 });
 
@@ -261,9 +324,16 @@ describe("beacon theme", () => {
   });
 });
 
-describe.each(["tilli", "beacon"])(
+/** Each theme's page background, light then dark, as its entry point should emit it. */
+const ENTRY_POINTS: [theme: string, light: string, dark: string][] = [
+  ["tilli", "oklch(0.985 0.004 258)", "oklch(0.145 0.012 258)"],
+  ["beacon", "oklch(0.985 0.004 258)", "oklch(0.145 0.012 258)"],
+  ["nudge", "oklch(0.985 0.003 262)", "oklch(0.2 0.028 262)"],
+];
+
+describe.each(ENTRY_POINTS)(
   "%s: high contrast and entry point",
-  (theme) => {
+  (theme, light, dark) => {
     it("high contrast follows ui-atoms' rule", async () => {
       for (const mode of ["light", "dark"]) {
         const tokens = await set(`theme-${theme}-${mode}`);
@@ -295,12 +365,12 @@ describe.each(["tilli", "beacon"])(
           out,
           ':root, [data-theme="light"], [data-theme="system-light"]',
         )["--background"],
-      ).toBe("oklch(0.985 0.004 258)");
+      ).toBe(light);
       expect(
         declarationsFor(out, '[data-theme="dark"], [data-theme="system-dark"]')[
           "--background"
         ],
-      ).toBe("oklch(0.145 0.012 258)");
+      ).toBe(dark);
     });
   },
 );

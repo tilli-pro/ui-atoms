@@ -1,0 +1,164 @@
+@import "@tilli.dev/ui-atoms/styles/core.css";
+@import "./nudge/tokens.css";
+
+/*
+ * The nudge theme on ui-atoms' default selectors: the same wiring as
+ * "@tilli.dev/ui-atoms/styles.css", with this theme's token sets in place of the neutral
+ * ones. Import this file instead of that one. __tests__/themes.test.ts keeps the two in step.
+ */
+:root,
+[data-theme="light"],
+[data-theme="system-light"] {
+  @apply theme-nudge-light theme-mode-light;
+}
+
+[data-theme="dark"],
+[data-theme="system-dark"] {
+  @apply theme-nudge-dark theme-mode-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    @apply theme-nudge-dark theme-mode-dark;
+  }
+}
+
+/*
+ * High contrast. data-contrast and data-theme may sit on the same element or on different
+ * ones, and scopes nest, so the rules below go from least to most specific:
+ *
+ *   1. a high-contrast element, and a light scope inside one, get the light set;
+ *   2. a high-contrast element inside a dark scope, and a dark scope inside a
+ *      high-contrast one, get the dark set;
+ *   3. a high-contrast element in a light scope that is itself inside a dark one gets the
+ *      light set back;
+ *   4. an element carrying both attributes follows its own theme, whatever is around it.
+ *
+ * A theme rule re-declares --border and friends on its own element, which is why a themed
+ * element inside a high-contrast one is named explicitly. Scopes nested more than two
+ * themes deep around an element that carries only data-contrast are not resolved.
+ */
+
+/* 1 */
+:is([data-contrast="high"], [data-contrast="system-high"]),
+:is([data-contrast="high"], [data-contrast="system-high"])
+  :is([data-theme="light"], [data-theme="system-light"]) {
+  @apply theme-nudge-contrast-light;
+}
+
+@media (prefers-contrast: more) {
+  [data-contrast="system"],
+  [data-contrast="system"]
+    :is([data-theme="light"], [data-theme="system-light"]) {
+    @apply theme-nudge-contrast-light;
+  }
+}
+
+/* 2 */
+:is([data-theme="dark"], [data-theme="system-dark"])
+:is([data-contrast="high"], [data-contrast="system-high"]),
+:is([data-contrast="high"], [data-contrast="system-high"])
+  :is([data-theme="dark"], [data-theme="system-dark"]) {
+  @apply theme-nudge-contrast-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"]
+    :is([data-contrast="high"], [data-contrast="system-high"]),
+  :is([data-contrast="high"], [data-contrast="system-high"])
+    [data-theme="system"] {
+    @apply theme-nudge-contrast-dark;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :is([data-theme="dark"], [data-theme="system-dark"]) [data-contrast="system"],
+  [data-contrast="system"]
+    :is([data-theme="dark"], [data-theme="system-dark"]) {
+    @apply theme-nudge-contrast-dark;
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+  [data-theme="system"] [data-contrast="system"],
+  [data-contrast="system"] [data-theme="system"] {
+    @apply theme-nudge-contrast-dark;
+  }
+}
+
+/* 3 */
+:is([data-theme="dark"], [data-theme="system-dark"])
+  :is([data-theme="light"], [data-theme="system-light"])
+  :is([data-contrast="high"], [data-contrast="system-high"]) {
+  @apply theme-nudge-contrast-light;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"]
+    :is([data-theme="light"], [data-theme="system-light"])
+    :is([data-contrast="high"], [data-contrast="system-high"]) {
+    @apply theme-nudge-contrast-light;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :is([data-theme="dark"], [data-theme="system-dark"])
+    :is([data-theme="light"], [data-theme="system-light"])
+    [data-contrast="system"] {
+    @apply theme-nudge-contrast-light;
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+  [data-theme="system"]
+    :is([data-theme="light"], [data-theme="system-light"])
+    [data-contrast="system"] {
+    @apply theme-nudge-contrast-light;
+  }
+}
+
+/* 4 */
+[data-theme]:is([data-theme="light"], [data-theme="system-light"]):is(
+  [data-contrast="high"],
+  [data-contrast="system-high"]
+) {
+  @apply theme-nudge-contrast-light;
+}
+
+@media (prefers-contrast: more) {
+  [data-theme]:is([data-theme="light"], [data-theme="system-light"]):is(
+    [data-contrast="system"]
+  ) {
+    @apply theme-nudge-contrast-light;
+  }
+}
+
+[data-theme]:is([data-theme="dark"], [data-theme="system-dark"]):is(
+  [data-contrast="high"],
+  [data-contrast="system-high"]
+) {
+  @apply theme-nudge-contrast-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme]:is([data-theme="system"]):is(
+    [data-contrast="high"],
+    [data-contrast="system-high"]
+  ) {
+    @apply theme-nudge-contrast-dark;
+  }
+}
+
+@media (prefers-contrast: more) {
+  [data-theme]:is([data-theme="dark"], [data-theme="system-dark"]):is(
+    [data-contrast="system"]
+  ) {
+    @apply theme-nudge-contrast-dark;
+  }
+}
+
+@media (prefers-color-scheme: dark) and (prefers-contrast: more) {
+  [data-theme]:is([data-theme="system"]):is([data-contrast="system"]) {
+    @apply theme-nudge-contrast-dark;
+  }
+}

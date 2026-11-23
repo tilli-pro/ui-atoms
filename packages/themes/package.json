@@ -1,7 +1,7 @@
 {
   "name": "@tilli.dev/themes",
-  "version": "1.0.0",
-  "description": "Themes for @tilli.dev/ui-atoms: the tilli brand palette, and beacon, which adds a spectrum for telling an application's sections apart",
+  "version": "1.1.0",
+  "description": "Themes for @tilli.dev/ui-atoms: the tilli brand palette, beacon, which adds a spectrum for telling an application's sections apart, and nudge, the Nudge product's palette",
   "type": "module",
   "license": "MIT",
   "homepage": "https://tilli-pro.github.io/ui-atoms/",
@@ -18,7 +18,9 @@
     "./tilli.css": "./dist/tilli.css",
     "./tilli/tokens.css": "./dist/tilli/tokens.css",
     "./beacon.css": "./dist/beacon.css",
-    "./beacon/tokens.css": "./dist/beacon/tokens.css"
+    "./beacon/tokens.css": "./dist/beacon/tokens.css",
+    "./nudge.css": "./dist/nudge.css",
+    "./nudge/tokens.css": "./dist/nudge/tokens.css"
   },
   "scripts": {
     "build": "rm -rf dist && cp -R src dist && cp ../../LICENSE .",

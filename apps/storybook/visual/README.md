@@ -20,6 +20,6 @@ macOS-captured set fails CI's `ubuntu-latest` runner. Commit only the PNGs a
 
 Every story is captured in the neutral theme, in light and dark. The themes from
 `@tilli.dev/themes` are captured on a subset listed as `THEMED` in `stories.spec.ts`: about
-thirty stories in tilli, and the sidebar and spectrum stories in beacon. Their files are named
-`<story>-<theme>-<mode>.png`. Add a story to `THEMED` when a component could look wrong on a
+thirty stories in each of tilli and nudge, and the sidebar and spectrum stories in beacon.
+Their files are named `<story>-<theme>-<mode>.png`. Add a story to `THEMED` when a component could look wrong on a
 tinted surface in a way the token contrast tests would not catch.
