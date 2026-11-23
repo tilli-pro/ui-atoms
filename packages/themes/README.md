@@ -1,7 +1,7 @@
 # @tilli.dev/themes
 
 Themes for [`@tilli.dev/ui-atoms`](https://www.npmjs.com/package/@tilli.dev/ui-atoms). The
-default theme in ui-atoms is neutral; this package adds two more.
+default theme in ui-atoms is neutral; this package adds three more.
 
 - Documentation: https://tilli-pro.github.io/ui-atoms/storybook/ (the Theming page)
 
@@ -27,6 +27,7 @@ work as they do with the default theme.
 |---|---|---|
 | tilli | `@tilli.dev/themes/tilli.css` | The tilli brand palette: one blue for actions and information, greys tinted to match the wordmark. |
 | beacon | `@tilli.dev/themes/beacon.css` | The tilli theme plus a spectrum of six hues and a neutral for telling an application's sections apart. |
+| nudge | `@tilli.dev/themes/nudge.css` | The Nudge product's palette: navy for neutral actions, its blue for the brand and information, and the logo's green for illustration. |
 
 ### The beacon spectrum
 

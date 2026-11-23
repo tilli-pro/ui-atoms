@@ -149,7 +149,7 @@ dark one gets light tokens, but `dark:` utilities inside it still apply.
 
 ## More themes: @tilli.dev/themes
 
-The default theme is neutral: greys, with blue only in the brand tokens. Two more themes ship
+The default theme is neutral: greys, with blue only in the brand tokens. Three more themes ship
 in a separate package, `@tilli.dev/themes`:
 
 ```bash
@@ -160,11 +160,11 @@ Each is one stylesheet you import **instead of** `@tilli.dev/ui-atoms/styles.css
 
 ```css
 @import "tailwindcss";
-@import "@tilli.dev/themes/tilli.css"; /* or "@tilli.dev/themes/beacon.css" */
+@import "@tilli.dev/themes/tilli.css"; /* or beacon.css, or nudge.css */
 @source "../node_modules/@tilli.dev/ui-atoms/dist";
 ```
 
-Both respond to the same `data-theme` and `data-contrast` values, so the runtime above works
+All of them respond to the same `data-theme` and `data-contrast` values, so the runtime above works
 unchanged. The Theme control in this Storybook's toolbar switches every story between the
 built-in themes; Mode and Contrast work with any of them.
 
@@ -217,6 +217,23 @@ A foreground is the name's colour family made readable, not the fill itself: on 
 `text-spectrum-yellow-foreground` is a dark olive. The Spectrum story shows all seven in light and
 dark. These tokens exist only in the beacon theme; `THEME_TOKENS` and the token override helpers
 cover the tokens every theme shares.
+
+### nudge
+
+The Nudge product's palette. Token sets: `theme-nudge-light`, `theme-nudge-dark` and their
+`-contrast-` pairs. It declares the same tokens as the other themes, with three colours of its
+own:
+
+| Colour | Value | Where it goes |
+|---|---|---|
+| Navy | `oklch(0.2009 0.0921 266.87)`, `#050F3F` | `--primary`: the default button and other neutral actions are navy, not near-black. |
+| Blue | `oklch(0.5601 0.1577 249.8)`, `#0077CC` | `--brand`, `--info` and the focus ring. |
+| Green | `oklch(0.7779 0.1157 143.35)`, `#89CA86` | `--brand-illustration`: the logo's arrow, for illustration and gradients. |
+
+The greys are a slate blue (hue 262), and dark mode is a deep slate blue, not black. The
+logo's lighter blue (`#219DD7`) is deliberately not a fill: white text on it reaches only 3.1:1,
+so the brand token is the deeper blue the application already uses. The green is for
+illustration, never state; success keeps its own green.
 
 ## Brand colour
 
