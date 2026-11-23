@@ -1,14 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="255" height="99" viewBox="0 0 255 99" fill="none" role="img" aria-label="tilli">
+<svg
+  aria-label="tilli"
+  fill="none"
+  height="99"
+  role="img"
+  viewBox="0 0 255 99"
+  width="255"
+  xmlns="http://www.w3.org/2000/svg"
+>
   <!-- Sora SemiBold (600), letters t i l only. Copyright 2019 The Sora Project Authors, SIL Open Font License 1.1. -->
   <style>
-    @font-face {
-      font-family: "Sora";
-      font-style: normal;
-      font-weight: 600;
-      src: url("data:font/woff2;base64,d09GMgABAAAAAANUABAAAAAABxwAAAL5AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbgQYcKgZgP1NUQVQqAEQRCAqBKIEeATYCJAMQCwoABCAFhgQHIAwHG+4FKK4HbGOy9I1CalrZTG/GXEXTwzPuDqbFxk+x8ZC/99uZeXdbb0I2SalNN00QdiVBSBxCEk88CIf8/7fW/qkm8Llm5pivndgO1ui0INYs87pGKpUED/9/tfv+LDqWxgEFkvCiy0ppJ+sjt2zgm3jadJWas7V+tFT11gD/sJgLbbH/C/M5j5zK7Y+3YOcLNAWqWIHf2+Y3fh7YUtoABziR4b1a4B37wiWdbiq9+qzgEAkSRMSjyJ5z/yGBVkAKoRICzWY5cQfZswuU8/0PrygVqBGIGfHuFTECoUiNQqO0iI9tYTyFWIVxaiidHuVKdtHO02MzuwFQ0hXuGgjIbAhwWojhoxtxABRh/CZ5gVcTuHj7T3mGHiUgO+kbk3hCaBToxcEo7pZ68iEAKSCqvAKARIVevH0h3ybQqFHiqT7cYq+9ZeAACNHSIBTQiAasAUcAFEAlZVlaS2krLXUt5RpH5lJ+5ny5yL6e4OLoALdSuZvfj03Z2sWTrMWjUHjavVz+kX5Z/WFQp2MMhnX9DBuw8v3dhv4NgnVpb962VfO7hz99ek4//SJ3JMAbHCTHfSiNOsI/cVH9gz8ldQr421vogKR9HNJ/1EsQ3LtQjRnc/BAc4hc/I2uRgcVw0MYViUDRiweCrGr2EU+UTTgHgA6NzunU7jtdWXdPF4N+gHrkn26L6dBS7faTWxa0pmcp1elMJ5AyMnZuikGhYYiTnUMA0oYBgt8yMrV/aN3USBfhEIYkHMNoCmBDfdIibIwVZGNDYc6qYwesDo0M2LC5RYsz24MBsjWEGcoPaSJQjvXtm3Kysr+TQqpqqjJCgUGW7bgqKPnw22gMNs62gVCNhJ1yJAHt0sc4RBhiEY4gxwA4ak0h+Ia/F5QhNWOEYX5/OQcwhysZRRZD1hAHqzInSS53Oi3ad2Ifo2/fgb4fn05gMEZ5MaEBRmNBaLBFrENTjDGMZe1S7LOu8aDY1GSVo9VVxEfLVAthgJE00neEB9TGSbp/Rq3zvwEA") format("woff2");
-    }
+  @font-face {
+    font-family: "Sora";
+    font-style: normal;
+    font-weight: 600;
+    src: url("data:font/woff2;base64,d09GMgABAAAAAANUABAAAAAABxwAAAL5AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbgQYcKgZgP1NUQVQqAEQRCAqBKIEeATYCJAMQCwoABCAFhgQHIAwHG+4FKK4HbGOy9I1CalrZTG/GXEXTwzPuDqbFxk+x8ZC/99uZeXdbb0I2SalNN00QdiVBSBxCEk88CIf8/7fW/qkm8Llm5pivndgO1ui0INYs87pGKpUED/9/tfv+LDqWxgEFkvCiy0ppJ+sjt2zgm3jadJWas7V+tFT11gD/sJgLbbH/C/M5j5zK7Y+3YOcLNAWqWIHf2+Y3fh7YUtoABziR4b1a4B37wiWdbiq9+qzgEAkSRMSjyJ5z/yGBVkAKoRICzWY5cQfZswuU8/0PrygVqBGIGfHuFTECoUiNQqO0iI9tYTyFWIVxaiidHuVKdtHO02MzuwFQ0hXuGgjIbAhwWojhoxtxABRh/CZ5gVcTuHj7T3mGHiUgO+kbk3hCaBToxcEo7pZ68iEAKSCqvAKARIVevH0h3ybQqFHiqT7cYq+9ZeAACNHSIBTQiAasAUcAFEAlZVlaS2krLXUt5RpH5lJ+5ny5yL6e4OLoALdSuZvfj03Z2sWTrMWjUHjavVz+kX5Z/WFQp2MMhnX9DBuw8v3dhv4NgnVpb962VfO7hz99ek4//SJ3JMAbHCTHfSiNOsI/cVH9gz8ldQr421vogKR9HNJ/1EsQ3LtQjRnc/BAc4hc/I2uRgcVw0MYViUDRiweCrGr2EU+UTTgHgA6NzunU7jtdWXdPF4N+gHrkn26L6dBS7faTWxa0pmcp1elMJ5AyMnZuikGhYYiTnUMA0oYBgt8yMrV/aN3USBfhEIYkHMNoCmBDfdIibIwVZGNDYc6qYwesDo0M2LC5RYsz24MBsjWEGcoPaSJQjvXtm3Kysr+TQqpqqjJCgUGW7bgqKPnw22gMNs62gVCNhJ1yJAHt0sc4RBhiEY4gxwA4ak0h+Ia/F5QhNWOEYX5/OQcwhysZRRZD1hAHqzInSS53Oi3ad2Ifo2/fgb4fn05gMEZ5MaEBRmNBaLBFrENTjDGMZe1S7LOu8aDY1GSVo9VVxEfLVAthgJE00neEB9TGSbp/Rq3zvwEA")
+      format("woff2");
+  }
   </style>
-  <path d="M87.1665 0C87.1665 0 87.1665 31.5714 87.1665 49.5816C87.1665 80.3402 53 80.2546 53 80.2546V23.4432L87.1665 0Z" fill="#02B1FF"/>
-  <path d="M34.1665 9C34.1665 9 34.1665 49.5551 34.1665 61.3195C34.1665 82.966 53.9583 80.2709 53.9583 80.2709C53.9583 80.2709 53.0626 98.3239 34.1665 98.3239C15.2704 98.3239 0 88.399 0 66.7525C0 50.539 0 32.486 0 32.486L34.1665 9Z" fill="#325EF6"/>
-  <text x="109" y="78.3" font-family="Sora, ui-sans-serif, system-ui, sans-serif" font-size="85" font-weight="600" letter-spacing="0.025em" fill="#070A0F">tilli</text>
+  <path
+    d="M87.1665 0C87.1665 0 87.1665 31.5714 87.1665 49.5816C87.1665 80.3402 53 80.2546 53 80.2546V23.4432L87.1665 0Z"
+    fill="#02B1FF"
+  />
+  <path
+    d="M34.1665 9C34.1665 9 34.1665 49.5551 34.1665 61.3195C34.1665 82.966 53.9583 80.2709 53.9583 80.2709C53.9583 80.2709 53.0626 98.3239 34.1665 98.3239C15.2704 98.3239 0 88.399 0 66.7525C0 50.539 0 32.486 0 32.486L34.1665 9Z"
+    fill="#325EF6"
+  />
+  <text
+    fill="#070A0F"
+    font-family="Sora, ui-sans-serif, system-ui, sans-serif"
+    font-size="85"
+    font-weight="600"
+    letter-spacing="0.025em"
+    x="109"
+    y="78.3"
+  >
+    tilli
+  </text>
 </svg>

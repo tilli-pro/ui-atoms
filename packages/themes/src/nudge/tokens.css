@@ -1,0 +1,122 @@
+/*
+ * The nudge theme's token sets, as Tailwind utilities with no selector of their own. Import
+ * this after "@tilli.dev/ui-atoms/styles/core.css" and apply the sets with your own
+ * selector, or use them as classes to theme a subtree. "../nudge.css" does the wiring for
+ * the default selectors.
+ *
+ * The palette, taken from the product:
+ *   navy   oklch(0.2009 0.0921 266.87), #050F3F: the marketing site's header and headings.
+ *          It is --primary, so the neutral actions are navy, not near-black.
+ *   blue   oklch(0.5601 0.1577 249.8), #0077CC: the application's own default brand blue.
+ *          It is --brand, and carries information and the focus ring. The logo's lighter
+ *          blue (#219DD7) is not used as a fill: white text on it is 3.1:1.
+ *   green  oklch(0.7779 0.1157 143.35), #89CA86: the logo's arrow. It is
+ *          --brand-illustration, for illustration and gradients, never for state; success
+ *          keeps its own green.
+ *   greys  hue 262, with more colour in the dark steps than the light ones, so dark mode
+ *          is a deep slate blue as in the application.
+ * The sets declare exactly the tokens ui-atoms' neutral theme does. Every value is
+ * oklch(L C H) with at most four decimals of lightness and chroma and two of hue, inside
+ * sRGB.
+ */
+@utility theme-nudge-light {
+  --background: oklch(0.985 0.003 262);
+  --background-secondary: oklch(0.966 0.006 262);
+  --foreground: oklch(0.21 0.04 262);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.04 262);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.04 262);
+  --primary: oklch(0.2009 0.0921 266.87);
+  --primary-foreground: oklch(0.985 0.003 262);
+  --secondary: oklch(0.966 0.006 262);
+  --secondary-foreground: oklch(0.2009 0.0921 266.87);
+  --muted: oklch(0.966 0.006 262);
+  --muted-foreground: oklch(0.52 0.04 262);
+  --accent: oklch(0.966 0.006 262);
+  --accent-foreground: oklch(0.2009 0.0921 266.87);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.5 0.204 27.32);
+  --border: oklch(0.93 0.012 262);
+  --input: oklch(0.93 0.012 262);
+  --ring: oklch(0.5601 0.1577 249.8);
+  --chart-1: oklch(0.5601 0.1577 249.8);
+  --chart-2: oklch(0.7779 0.1157 143.35);
+  --chart-3: oklch(0.2009 0.0921 266.87);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.6297 0.1321 299.36);
+  --sidebar: oklch(0.966 0.006 262);
+  --sidebar-foreground: oklch(0.21 0.04 262);
+  --sidebar-primary: oklch(0.2009 0.0921 266.87);
+  --sidebar-primary-foreground: oklch(0.985 0.003 262);
+  --sidebar-accent: oklch(0.93 0.012 262);
+  --sidebar-accent-foreground: oklch(0.2009 0.0921 266.87);
+  --sidebar-border: oklch(0.93 0.012 262);
+  --sidebar-ring: oklch(0.5601 0.1577 249.8);
+  --info: oklch(0.5601 0.1577 249.8);
+  --info-foreground: oklch(0.5 0.14 249.8);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.508 0.106 165.61);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.555 0.149 49);
+  --brand: oklch(0.5601 0.1577 249.8);
+  --brand-foreground: oklch(0.5 0.14 249.8);
+  --brand-illustration: oklch(0.7779 0.1157 143.35);
+}
+
+@utility theme-nudge-dark {
+  --background: oklch(0.2 0.028 262);
+  --background-secondary: oklch(0.243 0.032 262);
+  --foreground: oklch(0.941 0.01 262);
+  --card: oklch(0.243 0.032 262);
+  --card-foreground: oklch(0.941 0.01 262);
+  --popover: oklch(0.243 0.032 262);
+  --popover-foreground: oklch(0.941 0.01 262);
+  --primary: oklch(0.966 0.006 262);
+  --primary-foreground: oklch(0.2009 0.0921 266.87);
+  --secondary: oklch(0.316 0.038 262);
+  --secondary-foreground: oklch(0.941 0.01 262);
+  --muted: oklch(0.316 0.038 262);
+  --muted-foreground: oklch(0.744 0.025 262);
+  --accent: oklch(0.316 0.038 262);
+  --accent-foreground: oklch(0.941 0.01 262);
+  --destructive: oklch(0.577 0.235 27.32);
+  --destructive-foreground: oklch(0.7 0.18 25.33);
+  --border: oklch(0.316 0.038 262);
+  --input: oklch(0.316 0.038 262);
+  --ring: oklch(0.6782 0.1479 249.8);
+  --chart-1: oklch(0.6782 0.1479 249.8);
+  --chart-2: oklch(0.7779 0.1157 143.35);
+  --chart-3: oklch(0.87 0.06 249.8);
+  --chart-4: oklch(0.769 0.166 70.08);
+  --chart-5: oklch(0.72 0.12 299.36);
+  --sidebar: oklch(0.243 0.032 262);
+  --sidebar-foreground: oklch(0.941 0.01 262);
+  --sidebar-primary: oklch(0.966 0.006 262);
+  --sidebar-primary-foreground: oklch(0.2009 0.0921 266.87);
+  --sidebar-accent: oklch(0.316 0.038 262);
+  --sidebar-accent-foreground: oklch(0.941 0.01 262);
+  --sidebar-border: oklch(0.316 0.038 262);
+  --sidebar-ring: oklch(0.6782 0.1479 249.8);
+  --info: oklch(0.5601 0.1577 249.8);
+  --info-foreground: oklch(0.78 0.1 249.8);
+  --success: oklch(0.696 0.151 162.48);
+  --success-foreground: oklch(0.765 0.164 163.22);
+  --warning: oklch(0.769 0.166 70.08);
+  --warning-foreground: oklch(0.828 0.169 84.43);
+  --brand: oklch(0.5601 0.1577 249.8);
+  --brand-foreground: oklch(0.6782 0.1479 249.8);
+  --brand-illustration: oklch(0.7779 0.1157 143.35);
+}
+
+@utility theme-nudge-contrast-light {
+  --muted-foreground: oklch(0.21 0.04 262);
+  --border: oklch(0.52 0.04 262);
+  --input: oklch(0.52 0.04 262);
+}
+
+@utility theme-nudge-contrast-dark {
+  --muted-foreground: oklch(0.941 0.01 262);
+  --border: oklch(0.744 0.025 262);
+  --input: oklch(0.744 0.025 262);
+}
