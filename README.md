@@ -1,3 +1,5 @@
+![@tilli.dev](./assets/tilli-wordmark-dark.svg)
+
 # @tilli.dev/ui-atoms
 
 React 19 + Tailwind CSS v4 components on `@base-ui/react`, following the coss ui
