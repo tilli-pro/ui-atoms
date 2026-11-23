@@ -33,7 +33,7 @@
       "formatter": { "enabled": false }
     },
     {
-      "includes": [".coss-base/**", ".shadcn-base/**", "__tests__/**"],
+      "includes": [".coss-base/**", ".shadcn-base/**"],
       "linter": { "enabled": false },
       "assist": { "enabled": false },
       "formatter": { "enabled": false }
