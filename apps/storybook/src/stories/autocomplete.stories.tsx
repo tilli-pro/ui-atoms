@@ -163,5 +163,10 @@ export const Interactive: Story = {
     );
     await userEvent.click(screen.getByRole("option", { name: "Madrid" }));
     await waitFor(() => expect(input).toHaveValue("Madrid"));
+    // Selecting closes the popup, which stays mounted for its exit transition. For those
+    // few frames the listbox is no longer tied to the input (its aria-controls is gone), so
+    // an accessibility check that lands there reports a nameless listbox. Wait it out, or
+    // the story fails at random.
+    await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
   },
 };
