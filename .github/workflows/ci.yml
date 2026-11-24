@@ -27,7 +27,7 @@ jobs:
           version: 10.19.0
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "22"
+          node-version-file: .tool-versions
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm gen-exports --check
@@ -81,7 +81,7 @@ jobs:
           version: 10.19.0
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "22"
+          node-version-file: .tool-versions
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
@@ -100,7 +100,7 @@ jobs:
           version: 10.19.0
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "22"
+          node-version-file: .tool-versions
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter storybook exec playwright install --with-deps chromium
@@ -120,7 +120,7 @@ jobs:
           version: 10.19.0
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "22"
+          node-version-file: .tool-versions
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter storybook exec playwright install --with-deps chromium
